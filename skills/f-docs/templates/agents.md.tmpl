@@ -1,0 +1,59 @@
+<!--
+TEMPLATE (f-docs) — this file is NOT active instruction.
+It is copied to <repo>/AGENTS.md and filled in by the f-docs skill.
+Remove this comment block after filling. Until then, treat every line below
+as a placeholder, not as project policy.
+Keep only sections and boundaries that actually apply to this repository.
+-->
+
+# AGENTS.md
+
+Short index for AI agents. Read this first, follow the links for details.
+
+## Project
+[1–2 sentences: What does this project do?]
+
+## Stack
+- [Language + version]
+- [Framework / main libraries with versions]
+
+## Commands
+- Install: `[exact command]`
+- Dev: `[exact command]`
+- Test: `[exact command]` (single file: `[command]`)
+- Lint / Typecheck: `[exact command]`
+
+## Conventions
+Follow the language-specific conventions in `docs/conventions/`. The rules below always apply:
+
+- Prefer the smallest change that fully satisfies the requirement. Do not add extra features, abstractions, or improvements.
+- Never perform drive-by changes or refactorings. Only modify what is necessary for the current task.
+- Never refactor existing code unless the task explicitly requires it.
+- Never introduce new concepts, patterns, or abstractions unless they are strictly necessary to fulfill the requirement.
+- Never add new dependencies unless explicitly requested.
+- Match the existing style, naming, and patterns in the surrounding code. Do not introduce a new style for a single change.
+- Prefer early returns over deeply nested conditionals when it reduces complexity.
+- Do not add comments that merely describe what the code does. Only add comments when the reason or constraint is non-obvious.
+
+## Boundaries
+<!-- Keep only the boundaries that apply to this repository. -->
+
+- Ask first before adding any new dependency.
+- Ask first before changing authentication, permissions, or access control.
+- Never modify the remote repository (no push, no force-push, no direct remote changes of any kind).
+- Never modify any database (no schema changes, no migrations, no data changes, no queries that alter state).
+- Never call external services at runtime unless the task explicitly requires it (for example reading a source document).
+- Never log, store, transmit, or include personal data (or any data that could identify a person) in context, logs, or output.
+- Never commit `.env` files or any secrets.
+- Never manually edit generated files.
+
+## Deeper docs
+<!-- Keep only paths that exist in this repository. -->
+
+- [docs/architecture.md](docs/architecture.md) — System structure and boundaries
+- [docs/decisions/](docs/decisions/) — Decision records
+- [docs/conventions/](docs/conventions/) — Coding standards
+- [docs/requirements/](docs/requirements/) — Requirements and acceptance criteria
+- [docs/tasks/](docs/tasks/) — Task breakdown
+- [docs/tests/](docs/tests/) — Test plans and coverage reports
+- [docs/legal/](docs/legal/) — Regulatory notes (content is manual / separate skill)
