@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-10-26
+- Index-Pflege verweist auf `references/directory-index.md` statt die gemeinsame Prozedur zu wiederholen. Vorlagenregeln für Platzhalter, leere Abschnitte und Metadaten bleiben hier.
 - Dokumentvorlage liegt jetzt unter `templates/document.md` statt `references/document-template.md` (Konvention: Vorlagen gehören nach `templates/`).
 - Einziger englischer Regelpunkt ins Deutsche übertragen.
 - Index-Regeln sprachlich an die übrigen Skills angeglichen.

@@ -1,6 +1,9 @@
 # Changelog
 
 ## 2026-10-26
+- Reports and prompts always go to `docs/debug/`, including when the failure originated from a review. The review links to the report, and the report links back when exactly one review file resolves. Nothing is written into `docs/reviews/`.
+- Directory indexes follow the shared `references/directory-index.md`.
+- A `blocked` recommendation names the user or implementing agent as the one who sets the status. This skill still does not change task status. The fix prompt says the same.
 - Debug reports carry a revision counter: re-analysis of the same unit overwrites the file and increments `Revision` instead of adding version suffixes.
 - Directory index rule aligned with the other skills (explicit parents, separate child-directory list).
 - Maintain directory indexes for saved reports and prompts, including nested paths and shared `docs/reviews/` contents. Clarify that documentation output is allowed while investigation stays read-only.

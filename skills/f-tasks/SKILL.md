@@ -35,6 +35,7 @@ If a source is referenced but content is missing, ask once for it. Do not invent
    - **Create:** collect the IDs from `docs/tasks/*.md` filenames **and** from `docs/tasks/index.md` (union of both), take the highest number and add 1. Start at `TASK-001` when neither exists. Never reuse an ID or overwrite an existing file on creation; check for the same exact ID across both legacy and slugged filenames before writing.
    - **Update:** locate and read each existing target before editing. Use the index as a path hint, then confirm a unique exact-ID match in `docs/tasks/` (`TASK-003.md` or `TASK-003-<slug>.md`, not `TASK-0030`). If a target is missing or ambiguous, ask for clarification rather than creating a replacement. Keep its ID, filename, Created date, and Status; apply any explicit status instruction according to the Status rules below. Do not allocate a new ID or reapply template defaults.
 2. Identify the input type and extract the work items. On update, merge only the requested changes; preserve unrelated criteria, existing AC identifiers, Notes, and verification/traceability links.
+   When the input contains a requirement document, read its **Status** before decomposing it. `approved` is ready for task breakdown. If the status is `draft`, warn that it is not agreed and ask whether to proceed. Stop until the user confirms. If work continues, repeat the warning in the report. Do not change the requirement status.
 3. Decompose new work into agent-sized tasks; for updates, apply these sizing rules to the requested changes without replacing existing tasks. Each task must:
    - Have one clear goal and one primary output type
    - List concrete files to touch (and files not to touch when relevant)
@@ -49,15 +50,10 @@ If a source is referenced but content is missing, ask once for it. Do not invent
    - Follow every `blocked-by` chain to its roots. Reaching the same task twice on the same active path is a cycle; shared ancestors on separate paths are not.
    - On a cycle, do not write it. Merge the tasks, drop the weaker edge, or extract the shared work into its own task.
    - Identify existing prerequisites outside the new task set and read their status. Only `done` satisfies an existing prerequisite; an open, missing, or unknown external dependency must be reported as waiting, not treated as satisfied.
-6. Order tasks topologically. Among tasks whose prerequisites are satisfied, prefer higher priority; break ties by TASK-ID.
-   - Repeatedly select tasks with no remaining predecessors, order those candidates by priority and ID, emit the next task, and remove it from the remaining graph. Every internal predecessor must appear before its dependents.
-   - Withhold tasks waiting on open external prerequisites, and their dependents, from the executable order; list them separately with the prerequisite needed to release them.
-   - Derive parallel groups from tasks whose prerequisites are satisfied at the start of that group. Later groups are conditional on completion of preceding prerequisites; do not describe them as runnable now.
-   - Graph independence is necessary but insufficient: compare `Files to touch` and known shared resources, including fixtures, databases, and generated outputs. Overlapping implementation files or conflicting resources require serial execution by default, or a split into disjoint tasks. If resource isolation is unknown, do not promise conflict-free parallel execution.
-   - Explain conflicts and the resulting order in the report. Keep `parallel-with` out of task documents. Coordinate shared status/index updates separately: serialize their integration against the latest contents, preserving other agents' rows. Shared metadata alone need not prevent otherwise independent implementation work.
-7. For creation, write each task to `docs/tasks/TASK-<id>-<short-slug>.md` using `templates/task.md` with initial **Status** `todo`. For an update, edit the resolved file in place and update **Updated** when its content changes.
+6. Read `references/ordering.md` and apply it before writing whenever there is more than one task, any dependency, or a possible parallel split. It defines topological order, priority among eligible tasks, withheld external prerequisites, parallel groups, and the serial handoff for shared index updates. A single independent task needs no parallel-group report.
+7. For creation, write each task to `docs/tasks/TASK-<id>-<short-slug>.md` using `templates/task.md` with initial **Status** `todo`. For an update, edit the resolved file in place and update **Updated** when its content changes. Remove every unfilled `{{...}}` placeholder. Omit optional sections that have no content, including `Files not to touch` and `Notes`.
    If the source is a requirement, set **Source** to the REQ-ID on creation and add any missing TASK-ID link under Traceability → Related tasks in the requirement document without duplicating existing links.
-8. Update `docs/tasks/index.md` (create from `templates/index.md` if missing), following the index rules below. Also maintain the requirement directory's index when adding a traceability link there; do not change requirement status.
+8. Update `docs/tasks/index.md` (create from `templates/index.md` if missing), following `references/directory-index.md`. Also maintain the requirement directory's index when adding a traceability link there; do not change requirement status.
 9. Report the created or updated tasks, their priorities, dependency order, and which tasks can run in parallel.
    Name waiting external prerequisites, shared-resource conflicts, and who will serialize shared metadata updates before parallel work starts.
    If the graph was resolved (cycle broken, tasks merged), say so explicitly.
@@ -76,7 +72,9 @@ The implementing agent must not set `done`.
 | `ready-for-review` | Implementing agent | Implementation and local verification finished; review pending |
 | `changes-requested` | f-code-review | Review found blocking findings; a fix prompt was issued |
 | `done` | f-code-review (APPROVED) or explicit user request | Review passed, merge-ready or merged |
-| `blocked` | Any | Waiting on dependency or decision |
+| `blocked` | User or implementing agent | Waiting on a dependency or decision |
+
+Only the user or the implementing agent sets `blocked`. `f-code-review` and `f-debug` may recommend it and must not set it.
 
 When an implementing agent finishes a task it must:
 1. Set **Status** to `ready-for-review`
@@ -133,16 +131,24 @@ All templates live relative to this skill:
 - `templates/task.md` — single task document
 - `templates/index.md` — tasks index
 
+## References
+
+- `references/ordering.md` — topological order and parallel groups. Load it from workflow step 6.
+- `references/directory-index.md` — shared `index.md` rules.
+- `references/complexity-examples.md` — calibration for the complexity table.
+
 ## Documentation Location
 
 Write all output under `docs/tasks/` in the target repository.
 
-Whenever creating or updating documentation under `docs/`, create or refresh `index.md` in each affected directory and every parent below `docs/` (not `docs/` itself), including nested directories. Build missing indexes from all existing contents, not just the current output. List direct documents except the index itself and link child directories through their `index.md` when present, using relative links. Refresh generated entries and remove stale ones while preserving authored prose and established columns. Add child-directory links as a separate list if needed. Task indexes use `ID | Title | Priority | Complexity | Status | File`. Do not create empty directories just for indexes. Serialize shared index updates against the latest contents.
+Follow `references/directory-index.md` whenever creating or updating documentation under `docs/`. Serialize shared index updates against the latest contents.
 
 ## Before you finish
 
 - Every task states a verifiable completion criterion, the files to touch, and its dependencies.
-- The dependency graph is acyclic and the reported order is topological; priority only chooses among eligible tasks. Open external prerequisites and waiting dependents are explicit.
-- Parallel groups respect prerequisite readiness, implementation-file ownership, and known resource conflicts. Later groups are conditional; shared metadata updates have a serial handoff. No `parallel-with` was stored in the documents.
+- The dependency graph is acyclic. Where step 6 applies, the reported order follows `references/ordering.md`. Open external prerequisites and waiting dependents are explicit.
+- Any parallel grouping follows `references/ordering.md`: prerequisite readiness, file and resource conflicts, conditional later groups, and a serial handoff for shared metadata. No `parallel-with` was stored in the documents.
+- No unfilled `{{...}}` placeholder remains. Empty optional sections are removed.
+- Requirement sources in `draft` were not broken down without an explicit confirmation. The report repeats that warning when tasks were still written.
 - Every new task used an unused ID. Updates kept the existing ID, path, Created date, Status (unless explicitly changed), and unrelated content and links. The index has a row per task.
-- Every affected documentation directory and parent below `docs/` has an up-to-date `index.md`; entries match existing contents and all generated links resolve.
+- Every affected documentation directory and parent below `docs/` has an up-to-date `index.md` per `references/directory-index.md`; entries match existing contents and all generated links resolve.

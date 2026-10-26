@@ -1,6 +1,11 @@
 # Changelog
 
 ## 2026-10-26
+- Ordering and parallel-group rules moved to `references/ordering.md` (workflow step 6).
+- Directory indexes follow the shared `references/directory-index.md`. The task template points at that file instead of inlining the procedure.
+- `blocked` is set only by the user or the implementing agent. `f-code-review` and `f-debug` may recommend it and must not set it.
+- Before finishing, no unfilled `{{...}}` placeholder remains and empty optional sections are removed.
+- A requirement still in `draft` is not broken into tasks until the user confirms. The report repeats the warning if work continues. Requirement status is still unchanged.
 - `references/complexity-examples.md` is now linked from the complexity section instead of being unreachable.
 - Directory index wording aligned with the other skills.
 - Separate creation from explicit updates: edit uniquely resolved tasks in place, retain identity/status/authored content and links, and initialize `todo` only for new tasks.

@@ -30,11 +30,12 @@ When finished and local verification passed:
 - Update **Updated**
 - Update the corresponding row in `docs/tasks/index.md`
 
-For documentation created or updated under `docs/`, create or refresh `index.md` in every affected directory and each parent below `docs/`, including nested directories. Rebuild missing indexes from all existing contents, using relative links to direct documents (excluding the index itself) and child directories. Preserve authored prose and established columns; task indexes use `ID | Title | Priority | Complexity | Status | File`. Remove stale generated entries and check that links resolve.
+For documentation created or updated under `docs/`, refresh `index.md` by following `references/directory-index.md` in the installed `f-docs` skill. Every installed `f-*` skill links the same file at `references/directory-index.md`. Use the tasks schema from that file and check that the links resolve.
 
 For parallel implementations, use the agreed serial handoff for shared status/index updates. Read the latest index before updating your row and preserve other agents' entries.
 
 Do not set `done` — `f-code-review` sets it after an APPROVED verdict, or the user confirms it.
+Set `blocked` only when you cannot proceed because a dependency or decision is missing, and record what unblocks the task. `f-code-review` and `f-debug` may recommend `blocked` and must not set it.
 Do not edit requirement documents. The traceability link was added by `f-tasks` at creation time; `f-code-review` owns requirement completion and review links.
 
 ## Notes

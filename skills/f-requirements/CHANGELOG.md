@@ -1,6 +1,8 @@
 # Changelog
 
 ## 2026-10-26
+- Directory indexes follow the shared `references/directory-index.md`.
+- Noted that `f-tasks` asks before deriving tasks while a requirement is `draft` and still must not change requirement status.
 - Automatic traceability writes by `f-tasks` (`Related tasks`) and `f-code-review` (`Reviews`, status) are now explicit exceptions to the explicit-update-only rule.
 - The requirement template defines `Traceability` with `Related tasks` and `Reviews` subsections, matching what the other skills write into.
 - Directory index wording aligned with the other skills.

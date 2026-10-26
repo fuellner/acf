@@ -35,10 +35,7 @@ Documentation changes are limited to review reports and the Status Propagation s
    If none of these provide clear, testable criteria, ask the user once for them.  
    Do not invent or assume acceptance criteria.
 
-3. Load any test plan or coverage report for the source (`docs/tests/TEST-<source-id>-plan.md`, `-coverage.md`):
-   - A test plan describes intended coverage, not implemented tests. A verify report describes statically inspected tests. Neither proves that tests ran successfully.
-   - Before using a verify report, validate its `Verified inputs` table: each repository-relative path must exist and its SHA-256 must match the raw file contents in the reviewed revision or working tree, as appropriate; hash a committed revision with `git show <rev>:<path> | sha256sum` and a working-tree file with `sha256sum <path>`. It must identify the source AC documents, inspected tests, and relevant test helpers/configuration.
-   - Missing metadata, unavailable inputs, changed hashes, or an AC source that cannot be matched to the reviewed criteria make the report unusable as current evidence. Without independent direct evidence, use `unverified`. Focused inspection of the diff and relevant tests is allowed under Stage 1; do not refresh the report or perform a full coverage audit.
+3. When a test plan or coverage report exists for the source (`docs/tests/TEST-<source-id>-plan.md`, `-coverage.md`), read `references/coverage-evidence.md` before using it. Apply that reference when deciding whether the report is current evidence and when assigning `covered`, `missing`, or `unverified`. Do not refresh the report or perform a full coverage audit.
 
 4. For an explicit re-review, load the previous report for the same unit or the previous findings supplied by the user. If the request refers to prior findings that are unavailable, ask once for them before issuing a verdict. Do not infer that they were resolved.
 
@@ -50,14 +47,7 @@ For each acceptance criterion or stated requirement:
 
 - Locate the implementing code in the diff.
 - Confirm it fulfills the criterion exactly (not more, not less).
-- State test coverage as `covered`, `missing`, or `unverified`:
-  - `covered` from a current verify report with a concrete matching test reference, or focused inspection of a test and its identifiable assertion that satisfies the Check in the reviewed revision or working tree.
-  - `missing` from a current verify report that documents the gap, or direct evidence from the diff and focused inspection of relevant tests. Cite the Check, the evidence, and the inspected scope; for a deleted required test, check for a replacement. A test absent from the diff or a filename search alone does not establish a gap. A plan alone is never evidence of implemented or missing tests.
-  - Map a current report's `partial` to `unverified` and note the partial coverage. A concrete documented gap may still be a finding under the rule below; never promote `partial` to `covered`.
-  - `missing` becomes a finding only when the criterion's `Check` cannot be satisfied without a test.
-  - `unverified` when neither a current report nor focused inspection establishes coverage or a concrete gap; disclose any inspection limits. `f-testing` (verify mode) owns full coverage audits and coverage reports; do not produce one here.
-
-Keep direct inspection limited to the reviewed criteria and affected test paths, including relevant helpers/configuration. Cite the evidence used for each coverage state and explain any disagreement with an existing report; direct inspection does not make a stale report current or prove that tests pass.
+- State test coverage as `covered`, `missing`, or `unverified` by applying `references/coverage-evidence.md`. Cite the evidence used for each state.
 
 Verdict per criterion: **PASS** | **FAIL** | **CONCERN** (met, but with a documented residual risk that needs attention).
 Flag anything built beyond the stated requirements as **OVER-BUILT**.
@@ -137,13 +127,13 @@ Apply only the following open findings. Keep changes minimal; do not expand scop
 - Confirm each finding is resolved; do not review the result yourself.
 
 **Status handoff:**
-- Task `TASK-xxx`: set `in-progress` when you start, `ready-for-review` when done. Do not set `done`.
+- Task `TASK-xxx`: set `in-progress` when you start, `ready-for-review` when done. Do not set `done`. Set `blocked` only when you cannot proceed because a dependency or decision is missing, and record what unblocks the task.
 ```
 ````
 
 ## Status Propagation
 
-Documentation only — never code. Update only task and requirement documents referenced by this review, plus the generated directory indexes described below.
+Documentation only — never code. Update only task and requirement documents referenced by this review, plus directory indexes per `references/directory-index.md`.
 
 Resolve a referenced TASK-ID before changing anything:
 - Use `docs/tasks/index.md` as a path hint and validate it against the filesystem. Match the exact ID: both `TASK-001.md` and `TASK-001-<slug>.md` are valid; `TASK-0010` is not a match for `TASK-001`.
@@ -156,7 +146,7 @@ Resolve a referenced TASK-ID before changing anything:
 - Update the corresponding row in `docs/tasks/index.md`.
 - If a report was written, append its path under the task's `Notes`.
 - If a requirement is linked, set its **Status** to `done` **only when every criterion of the entire requirement passes**. Approval of one partial task is insufficient.
-- Whenever setting a requirement to `done`, update its **Updated** field and synchronize its row in `docs/requirements/index.md` in the same operation. Preserve its ID, title, and actual file path. If that index is missing, rebuild it from existing requirement documents with columns `ID | Title | Status | File`; do not invent entries.
+- Whenever setting a requirement to `done`, update its **Updated** field and synchronize its row in `docs/requirements/index.md` in the same operation. Preserve its ID, title, and actual file path. If that index is missing, rebuild it from existing requirement documents using the requirements schema in `references/directory-index.md`; do not invent entries.
 - Append the review path under `Traceability → Reviews` only when a report was written.
 
 **Verdict CHANGES REQUIRED:**
@@ -166,7 +156,7 @@ Resolve a referenced TASK-ID before changing anything:
 
 **Requirement documents:** apply requirement updates only to an existing, unambiguously linked requirement. Append the review file path under `Traceability → Reviews` when a report was written. On CHANGES REQUIRED the requirement **Status** and its index status stay unchanged.
 
-Never set `blocked` or `obsolete` here, and never change task or requirement documents outside this review. Directory indexes may list those existing documents without modifying them. If a referenced document does not exist, skip its updates and mention it once in the report.
+Never set `blocked` or `obsolete`. Only the user or the implementing agent sets `blocked`. This skill may recommend `blocked` in the report and must not apply that recommendation. Never change task or requirement documents outside this review. Directory indexes may list those existing documents without modifying them. If a referenced document does not exist, skip its updates and mention it once in the report.
 
 ## Documentation
 
@@ -178,7 +168,9 @@ After a fix has been applied and the user requests a note, write a short `docs/r
 
 Keep both files minimal. Do not create them for clean APPROVED reviews unless the user asks.
 
-Whenever writing a report, fix note, or task/requirement update under `docs/`, create or refresh `index.md` in each affected directory and every parent below `docs/` (not `docs/` itself), including nested directories. Build missing indexes from all existing contents, including reports from other skills. List direct documents except the index itself and link child directories through their `index.md` when present, using relative links. Refresh generated entries and remove stale ones while preserving authored prose and established columns. Add child-directory links as a separate list if needed. New review indexes use `Document | Description`; missing task indexes use `ID | Title | Priority | Complexity | Status | File`, and requirement indexes use `ID | Title | Status | File`. Preserve requirement index statuses on CHANGES REQUIRED. Do not create `docs/reviews/` or its index for an unsaved review, or other empty directories just for indexes.
+Debug reports are not review output. They live in `docs/debug/`. When `docs/debug/<unit>-debug.md` exists for the reviewed unit, add a `Debug:` bullet under `## Residual Risk` that links to it with a relative path (`../debug/<unit>-debug.md` from `docs/reviews/`), unless that link is already present. Do not copy the debug report into `docs/reviews/`.
+
+Follow `references/directory-index.md` whenever writing a report, fix note, or task/requirement update under `docs/`. On CHANGES REQUIRED, preserve requirement **Status** values already stored in the requirement index. Do not create `docs/reviews/` or its index for an unsaved review.
 
 ## File Naming
 
@@ -191,16 +183,23 @@ Whenever writing a report, fix note, or task/requirement update under `docs/`, c
 
 - `templates/fix-prompt.md` — canonical handoff prompt for the implementing agent. Same field names as the f-debug fix prompt: Findings / Out of scope / Verification / Status handoff.
 
+## References
+
+- `references/coverage-evidence.md` — load before using a test plan or coverage report, and when assigning a coverage state.
+- `references/directory-index.md` — shared `index.md` rules.
+- `references/safety-checks.md` — extra Stage 2 checklist detail.
+
 ## Before you finish
 
 - Every criterion has a verdict (PASS | FAIL | CONCERN), and the overall verdict is consistent with them and with any open findings.
-- Every coverage state comes from a current verify report or concrete evidence from focused inspection of the reviewed diff/tests, or is `unverified`. Direct gaps name the Check and inspected scope. Plans alone never establish coverage; no test execution is claimed without evidence.
+- Every coverage state follows `references/coverage-evidence.md`. No test execution is claimed without evidence.
 - Previous findings were checked on explicit re-review; all unresolved blockers remain in the report and prevent APPROVED or `done`.
 - Every finding names a severity, a file:line, evidence, and a fix.
 - The fix prompt contains only open findings, never resolved findings or extra scope.
 - Status updates were applied to the referenced documents only, and only as described above.
 - Task paths were resolved uniquely by exact ID. After a requirement status change, its document and index agree and its Updated field is current.
-- Every affected documentation directory and parent below `docs/` has an up-to-date `index.md`; entries match existing contents and all generated links resolve. No review directory was created for an unsaved review.
+- A debug report for this unit is linked from the review when one exists, and was not copied into `docs/reviews/`.
+- Every affected documentation directory and parent below `docs/` has an up-to-date `index.md` per `references/directory-index.md`; entries match existing contents and all generated links resolve. No review directory was created for an unsaved review.
 
 ## Severity
 

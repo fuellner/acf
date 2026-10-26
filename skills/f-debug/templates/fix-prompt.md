@@ -14,3 +14,4 @@ Apply only the following minimal fix. Do not expand scope.
 **Status handoff:**
 - Set the task to `in-progress` when you start and to `ready-for-review` when done.
 - Do not set `done`; that happens in the next review.
+- Set `blocked` only when you cannot proceed because a dependency or decision is missing, and record what unblocks the task. Only the user or the implementing agent sets `blocked`.

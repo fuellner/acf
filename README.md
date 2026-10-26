@@ -47,6 +47,7 @@ skills/<name>/
 
 Erzeugte Dokumente landen im Zielrepo unter `docs/` (`requirements/`, `tasks/`, `tests/`,
 `reviews/`, `debug/`, `legal/`, `conventions/`, `decisions/`).
+`f-debug` schreibt immer nach `docs/debug/`; ein Review, das die Analyse ausgelöst hat, verlinkt den Bericht.
 
 ## Dokumentation
 

@@ -32,9 +32,8 @@ Erstellt und pflegt:
    - Neue Fassung als eigenen Abschnitt mit Datum einfügen (nicht bestehende Abschnitte überschreiben).
    - Beispielrechnung(en) direkt im jeweiligen Gültigkeitsabschnitt ergänzen.
    - Metadaten und Änderungshistorie aktualisieren.
-4. In jedem angelegten oder aktualisierten Dokumentationsverzeichnis unter `docs/legal/` sowie in allen übergeordneten Verzeichnissen bis einschließlich `docs/legal/` eine `index.md` anlegen oder aktualisieren — Vorlage: `templates/index.md`. Bei `docs/legal/pflegeversicherung/pflegegeld.md` sind also sowohl `docs/legal/pflegeversicherung/index.md` als auch `docs/legal/index.md` erforderlich.
-   - Fehlende Indizes aus allen vorhandenen Inhalten aufbauen, nicht nur aus der aktuellen Ausgabe. Direkte Dokumente außer der `index.md` selbst mit relativen Links auflisten; Unterverzeichnisse über deren `index.md` verlinken, sofern vorhanden, sonst in einer separaten Liste.
-   - Generierte Einträge aktualisieren, veraltete entfernen und verfassten Freitext sowie bestehende Spalten erhalten. Metadaten nur aus vorhandenen Dokumenten übernehmen. Keine leeren Verzeichnisse nur für einen Index erzeugen.
+4. In jedem angelegten oder aktualisierten Dokumentationsverzeichnis unter `docs/legal/` eine `index.md` anlegen oder aktualisieren. Befolge `references/directory-index.md` (dieselbe Regel wie die übrigen Skills, einschließlich aller Eltern unterhalb von `docs/`) und die Vorlage `templates/index.md`. Bei `docs/legal/pflegeversicherung/pflegegeld.md` sind also sowohl `docs/legal/pflegeversicherung/index.md` als auch `docs/legal/index.md` erforderlich.
+   - Metadaten nur aus vorhandenen Dokumenten übernehmen.
    - In neuen Vorlagenkopien Platzhalter vollständig ersetzen; den Abschnitt `Unterverzeichnisse` weglassen, wenn keine vorhanden sind. Enthält das Verzeichnis nur Unterverzeichnisse, die leere Dokumenttabelle weglassen.
 5. Kurzer Report: was angelegt/aktualisiert wurde, Quellenangabe, betroffene Zeiträume.
 
@@ -51,6 +50,7 @@ Erstellt und pflegt:
 
 - Vorlage für Dokumente: `templates/document.md`
 - Vorlage für den Index: `templates/index.md`
+- Verzeichnis-Index (gemeinsame Regel): `references/directory-index.md`
 - Extraktionsregeln: `references/extraction-guidelines.md`
 
 Lies die Vorlagen, bevor du eine neue Datei anlegst oder eine bestehende aktualisierst.
@@ -61,4 +61,4 @@ Lies die Vorlagen, bevor du eine neue Datei anlegst oder eine bestehende aktuali
 - Eine neue Fassung steht als eigener Abschnitt; bestehende Abschnitte sind unverändert.
 - Die Beispielrechnung liegt im passenden Gültigkeitsabschnitt und ist nachvollziehbar.
 - Der rechtliche Hinweis steht im Dokument, `zuletzt_geprueft` ist gesetzt und der Index ist aktualisiert.
-- Jedes betroffene Verzeichnis einschließlich aller Eltern bis `docs/legal/` hat eine aktuelle `index.md`. Die Einträge entsprechen den vorhandenen Inhalten und alle erzeugten relativen Links sind auflösbar.
+- Jedes betroffene Verzeichnis einschließlich aller Eltern bis `docs/legal/` hat eine aktuelle `index.md` gemäß `references/directory-index.md`. Die Einträge entsprechen den vorhandenen Inhalten und alle erzeugten relativen Links sind auflösbar.

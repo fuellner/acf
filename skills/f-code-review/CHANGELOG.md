@@ -1,6 +1,10 @@
 # Changelog
 
 ## 2026-10-26
+- Coverage-evidence and SHA-256 rules moved to `references/coverage-evidence.md`. Load that file before using a test plan or verify report and when assigning a coverage state.
+- Directory indexes follow the shared `references/directory-index.md` instead of an inlined copy. Review-specific constraints stay here: preserve requirement index statuses on CHANGES REQUIRED, and do not create a review directory for an unsaved review.
+- `blocked` is set only by the user or the implementing agent. This skill may recommend it and must not set it. The fix prompt says the same.
+- Debug reports stay in `docs/debug/`. A review links to one for the same unit and does not copy it into `docs/reviews/`.
 - `CONCERN` is defined, and the verdict self-check now covers consistency with open findings, not only with the criteria.
 - Security bullet clarified: missing validation at system boundaries.
 - SHA-256 validation names the hash command for a committed revision and for the working tree.

@@ -85,7 +85,7 @@ Always include:
 
 ## Status Handling
 
-This skill does not change task or requirement status.
+This skill does not change task or requirement status. It does not set `blocked`; only the user or the implementing agent does.
 If tests are missing that would later be flagged in review, note it in the coverage report. Task documents belong to f-tasks and the implementing agent; do not edit them.
 
 The verify report provides statically inspected coverage evidence for a later review, provided its inputs still match. `f-code-review` validates the recorded hashes without repeating the full coverage assessment and may also use focused inspection of the reviewed diff and relevant tests to establish coverage or a concrete gap. Missing or changed inputs invalidate the report's evidence; without independent direct evidence, use `unverified`. A report's `partial` maps to `unverified` with its documented gap retained. Direct inspection does not refresh the report. A plan alone never establishes coverage, and neither artifact proves a successful test run.
@@ -102,11 +102,12 @@ All templates live relative to this skill:
 
 Write all output under `docs/tests/` in the target repository.
 
-Whenever creating or updating documentation under `docs/`, create or refresh `index.md` in each affected directory and every parent below `docs/` (not `docs/` itself), including nested directories. Build missing indexes from all existing contents, not just the current output. List direct documents except the index itself and link child directories through their `index.md` when present, using relative links. Refresh generated entries and remove stale ones while preserving authored prose and established columns. Add child-directory links as a separate list if needed. New test indexes use `Document | Description`. Do not change task or requirement status, and do not create empty directories just for indexes.
+Follow `references/directory-index.md` whenever creating or updating documentation under `docs/`. Do not change task or requirement status.
 
 ## References
 
-Read `references/check-to-test-examples.md` when you need concrete mapping patterns.
+- `references/directory-index.md` — shared `index.md` rules. Follow it when writing documentation.
+- `references/check-to-test-examples.md` — read when you need concrete mapping patterns.
 
 ## Before you finish
 
@@ -115,4 +116,4 @@ Read `references/check-to-test-examples.md` when you need concrete mapping patte
 - Anything added beyond the Checks is marked `*(supplemented)*`.
 - The file follows the naming rule and states source + mode + revision.
 - Verify reports identify the inspected AC/test inputs and their SHA-256 hashes, or explicitly disclose why those inputs cannot be validated. Test references and coverage gaps are concrete; no test execution is claimed.
-- Every affected documentation directory and parent below `docs/` has an up-to-date `index.md`; entries match existing contents and all generated links resolve.
+- Every affected documentation directory and parent below `docs/` has an up-to-date `index.md` per `references/directory-index.md`; entries match existing contents and all generated links resolve.
