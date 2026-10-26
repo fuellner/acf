@@ -1,6 +1,8 @@
 # Changelog
 
 ## 2026-10-26
+- Implementation prompt points at the shared directory-index reference (`references/directory-index.md`, owned by `f-docs` and linked from every `f-*` skill) instead of inlining the index procedure.
+- Implementation prompt states that the implementing agent sets `blocked` only when a dependency or decision is missing.
 - Self-check no longer contradicts the skip-in-menu path: the menu requirement applies only when behavior step 2 did not skip it, and at most one entry is expanded.
 - Implementation prompt and index rule aligned with the other skills (explicit parents, separate child-directory list).
 - Implementation prompt requires current indexes for affected documentation directories and parents below `docs/`, including rebuilding missing indexes from existing contents.

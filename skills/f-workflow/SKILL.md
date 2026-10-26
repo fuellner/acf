@@ -87,9 +87,9 @@ Rules:
 - If a requirement is ambiguous or the task is not implementable as written, stop and report instead of guessing.
 
 When done: set Status to `ready-for-review`, update `Updated`, and update the row in docs/tasks/index.md.
-For every documentation directory created or updated under docs/, create or refresh index.md there and in each parent below docs/ (not docs/ itself), including nested directories. Build missing indexes from all existing contents, not just the current output. Use relative links to direct documents (except index.md) and link child directories through their index.md when present. Preserve authored prose and established columns; task indexes use ID | Title | Priority | Complexity | Status | File. Remove stale generated entries, add child-directory links as a separate list if needed, and check that links resolve.
+For every documentation directory created or updated under docs/, refresh index.md by following references/directory-index.md in the installed f-docs skill. Every installed f-* skill links the same file at references/directory-index.md. Use the tasks schema from that file and check that the links resolve.
 If the task is `changes-requested`, move it to `in-progress` while you work.
-Do not set `done` — that happens only after review.
+Set `blocked` only when you cannot proceed because a dependency or decision is missing, and record what unblocks the task. Do not set `done` — that happens only after review.
 ```
 
 ### f-code-review

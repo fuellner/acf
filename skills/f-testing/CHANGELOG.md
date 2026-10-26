@@ -1,6 +1,8 @@
 # Changelog
 
 ## 2026-10-26
+- Directory indexes follow the shared `references/directory-index.md`.
+- Status handling states that this skill does not set `blocked`.
 - f-testing no longer writes into task documents (`Verification` section); the coverage report is the only handoff, so task updates stay with f-tasks, the implementing agent, and f-code-review. Task index maintenance dropped accordingly.
 - Hash command for committed revisions added (`git show <rev>:<path> | sha256sum`).
 - Directory index wording aligned with the other skills.

@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-10-26
+- Directory-index rules now live once in `references/directory-index.md`. Other skills load that file through a symlink in their own `references/` directory. Default columns are `Document | Description`, and `Dokument | Beschreibung` for German human-facing indexes.
 - Directory index wording aligned with the other skills: every parent below `docs/` (not `docs/` itself), separate child-directory list, `Dokument | Beschreibung` fallback explicit.
 - The `AGENTS.md` self-check names the core sections instead of "critical sections".
 - Removed the `docs/.f-docs.json` provenance manifest and its `template_version` bookkeeping: the file had no consumer, duplicated information derivable from the generated files, and went stale immediately.

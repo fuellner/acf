@@ -6,6 +6,7 @@ These rules apply to all skill files in this repository.
 
 - One skill per directory: `skills/<name>/`.
 - Every skill has a `SKILL.md` and a `CHANGELOG.md`; `templates/` and `references/` exist only when they contain files.
+- The procedure for `index.md` under `docs/` lives only in `skills/f-docs/references/directory-index.md`. Other skills link that file from `references/directory-index.md` and keep only skill-specific constraints in `SKILL.md`.
 - `SKILL.md` starts with YAML frontmatter containing `name` (identical to the directory name) and `description`.
 - The description states what the skill does, when to use it, and what it must not be used for.
 

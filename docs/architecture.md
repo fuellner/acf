@@ -10,7 +10,7 @@ Das Repository enthält agentische Coding-Skills für OpenCode / Claude-kompatib
 - **`skills/f-tasks`:** Requirements, Ad-hoc-Arbeit oder Review-Findings → agentengerechte Tasks mit Priorität, Komplexität und Abhängigkeiten (`docs/tasks/`).
 - **`skills/f-testing`:** Checks aus Acceptance Criteria → Testplan oder Coverage-Report (`docs/tests/`).
 - **`skills/f-code-review`:** Diff gegen Acceptance Criteria prüfen, Sicherheits-/Performance-/Side-Effect-Checks, Fix-Prompt (`docs/reviews/`).
-- **`skills/f-debug`:** Strukturierte Fehlersuche (Repro → Root Cause → Fix-Vorschlag) ohne Codeänderung (`docs/debug/`).
+- **`skills/f-debug`:** Strukturierte Fehlersuche (Repro → Root Cause → Fix-Vorschlag) ohne Codeänderung (`docs/debug/`). Auch ein aus einem Review entstandener Bericht liegt dort; das Review verlinkt ihn.
 - **`skills/f-docs`:** Repository analysieren und AGENTS.md, README, Architektur, Conventions, Decisions erzeugen.
 - **`skills/f-legal`:** Juristische Quellen (DE/EU) → regulatorische Dokumente in `docs/legal/`.
 - **`skills/f-workflow`:** Menü und Prompt-Templates für den Ablauf; führt selbst keinen Skill aus.
@@ -21,9 +21,9 @@ Jeder Skill folgt dem Aufbau `SKILL.md` (Frontmatter + Ablauf), optional `templa
 
 1. Der Harness lädt `SKILL.md` anhand von `name` und `description` im Frontmatter.
 2. Der Skill nimmt Nutzereingaben oder vorhandene Dokumente entgegen und liest bei Bedarf seine Templates und Referenzen.
-3. Der Agent schreibt die Ergebnisse in das Zielrepo unter `docs/<bereich>/` und aktualisiert die jeweilige Index-Datei.
+3. Der Agent schreibt die Ergebnisse in das Zielrepo unter `docs/<bereich>/` und aktualisiert die jeweilige Index-Datei nach `skills/f-docs/references/directory-index.md`.
 4. `f-workflow` verweist nur auf die Skills und deren Prompt-Templates; es erzeugt keine Dokumente.
-5. Statusübergaben laufen über die Dokumente: Tasks werden von Implementierungsagenten auf `ready-for-review` gesetzt, `f-code-review` setzt `done` oder `changes-requested`.
+5. Statusübergaben laufen über die Dokumente: Tasks werden von Implementierungsagenten auf `ready-for-review` gesetzt, `f-code-review` setzt `done` oder `changes-requested`. `blocked` setzen nur der User oder der implementierende Agent; `f-code-review` und `f-debug` empfehlen diesen Status höchstens.
 
 ```mermaid
 flowchart LR

@@ -38,7 +38,7 @@ If a ticket URL or ID is given but no details are present, ask the user once for
 3. Normalize acceptance criteria to the strict format (see below); on update, limit normalization to new or changed criteria. Supplement missing or vague criteria so they are observable and checkable. Mark every supplemented criterion with `*(supplemented)*`.
 4. Fill only the sections that contain real content. Remove unfilled placeholders from new or edited sections.
 5. For creation, write `docs/requirements/REQ-<id>-<short-slug>.md` using `templates/requirement.md` with initial **Status** `draft`. For an update, edit the resolved file in place and update **Updated** when its content changes.
-6. Update `docs/requirements/index.md` (create it from `templates/index.md` if missing), following the index rules below.
+6. Update `docs/requirements/index.md` (create it from `templates/index.md` if missing), following `references/directory-index.md`.
 7. Report what was created or updated.
 
 Updates to existing documents are allowed only when the user explicitly requests an update (e.g. “update REQ-003” or “add an AC to the signup requirements”) or for the automatic traceability writes: `f-tasks` adds TASK links under `Traceability → Related tasks`, and `f-code-review` appends review paths under `Traceability → Reviews` and updates **Status** per the table below.
@@ -52,7 +52,7 @@ Updates to existing documents are allowed only when the user explicitly requests
 | `done` | Every acceptance criterion passes in review | f-code-review (all AC PASS) |
 | `obsolete` | Superseded or dropped | User |
 
-f-tasks and f-testing never change the requirement status. The review sets `done` only when every criterion of that requirement passes.
+f-tasks and f-testing never change the requirement status. f-tasks asks before deriving tasks while the status is `draft`. The review sets `done` only when every criterion of that requirement passes.
 
 ## Strict Acceptance Criteria
 
@@ -82,11 +82,15 @@ All templates live relative to this skill:
 - `templates/requirement.md` — single requirement document
 - `templates/index.md` — requirements index
 
+## References
+
+- `references/directory-index.md` — shared `index.md` rules. Follow it when writing documentation.
+
 ## Documentation Location
 
 Write all output under `docs/requirements/` in the target repository.
 
-Whenever creating or updating documentation under `docs/`, create or refresh `index.md` in each affected directory and every parent below `docs/` (not `docs/` itself), including nested directories. Build missing indexes from all existing contents, not just the current output. List direct documents except the index itself and link child directories through their `index.md` when present, using relative links. Refresh generated entries and remove stale ones while preserving authored prose and established columns. Add child-directory links as a separate list if needed. The requirements index uses `ID | Title | Status | File`. Do not create empty directories just for indexes.
+Follow `references/directory-index.md` whenever creating or updating documentation under `docs/`.
 
 ## Before you finish
 
@@ -95,4 +99,4 @@ Whenever creating or updating documentation under `docs/`, create or refresh `in
 - No unfilled placeholder remains in new or edited sections.
 - The document exists at the documented path and the index has a matching row.
 - Creation used an unused ID. An update kept the existing ID, path, Created date, Status (unless explicitly changed), and unrelated content and links.
-- Every affected documentation directory and parent below `docs/` has an up-to-date `index.md`; entries match existing contents and all generated links resolve.
+- Every affected documentation directory and parent below `docs/` has an up-to-date `index.md` per `references/directory-index.md`; entries match existing contents and all generated links resolve.
