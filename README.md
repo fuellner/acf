@@ -24,7 +24,7 @@ Repo und Installation auseinander.
 
 ```bash
 mkdir -p ~/.config/opencode/skills
-ln -s ~/dev/agents/skills/f-* ~/.config/opencode/skills/
+ln -s ~/dev/acf/skills/f-* ~/.config/opencode/skills/
 ```
 
 Prüfen:

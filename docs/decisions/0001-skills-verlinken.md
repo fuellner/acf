@@ -13,6 +13,6 @@ Das Repository ist die einzige Quelle für die Skills. Kopien würden nach Ände
 
 ## Konsequenzen
 
-- Installation erfolgt mit `ln -s ~/dev/agents/skills/f-* ~/.config/opencode/skills/`.
+- Installation erfolgt mit `ln -s ~/dev/acf/skills/f-* ~/.config/opencode/skills/`.
 - Änderungen im Repo wirken sofort in der Installation; es gibt keinen Synchronisationsschritt.
 - Ein Umbenennen oder Verschieben eines Skill-Verzeichnisses bricht bestehende Symlinks und muss bewusst erfolgen.
