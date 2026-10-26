@@ -1,6 +1,8 @@
 # Changelog
 
 ## 2026-10-26
+- Named the `docs/features/` index schema (`ID | Title | Status | File`) in `references/directory-index.md`.
+- Deeper-docs template lists `docs/features/` so the link is kept when that directory exists.
 - Directory-index rules now live once in `references/directory-index.md`. Other skills load that file through a symlink in their own `references/` directory. Default columns are `Document | Description`, and `Dokument | Beschreibung` for German human-facing indexes.
 - Directory index wording aligned with the other skills: every parent below `docs/` (not `docs/` itself), separate child-directory list, `Dokument | Beschreibung` fallback explicit.
 - The `AGENTS.md` self-check names the core sections instead of "critical sections".
