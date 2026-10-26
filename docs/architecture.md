@@ -13,6 +13,7 @@ Das Repository enthält agentische Coding-Skills für OpenCode / Claude-kompatib
 - **`skills/f-debug`:** Strukturierte Fehlersuche (Repro → Root Cause → Fix-Vorschlag) ohne Codeänderung (`docs/debug/`). Auch ein aus einem Review entstandener Bericht liegt dort; das Review verlinkt ihn.
 - **`skills/f-docs`:** Repository analysieren und AGENTS.md, README, Architektur, Conventions, Decisions erzeugen.
 - **`skills/f-legal`:** Juristische Quellen (DE/EU) → regulatorische Dokumente in `docs/legal/`.
+- **`skills/f-feature-summary`:** Implementierte Fachlogik → übersichtliche Feature-Dokumente für Product Owner (`docs/features/`).
 - **`skills/f-workflow`:** Menü und Prompt-Templates für den Ablauf; führt selbst keinen Skill aus.
 
 Jeder Skill folgt dem Aufbau `SKILL.md` (Frontmatter + Ablauf), optional `templates/`, `references/` und `CHANGELOG.md`.
@@ -37,6 +38,7 @@ flowchart LR
   H[f-debug] --> E
   I[f-docs] --> J[docs/]
   K[f-legal] --> L[docs/legal/]
+  M[f-feature-summary] --> N[docs/features/]
 ```
 
 ## Externe Abhängigkeiten

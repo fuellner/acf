@@ -14,6 +14,7 @@ These rules apply to all skill files in this repository.
 
 - Skill instructions and templates are English.
 - `f-legal`, its templates, and generated `docs/legal/` content are German.
+- `f-feature-summary` instructions stay English. Its templates and generated `docs/features/` content are German.
 - Human-facing repository documents (README, architecture, decisions) are German.
 
 ## Templates

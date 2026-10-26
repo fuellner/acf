@@ -26,7 +26,7 @@ Follow the conventions in `docs/conventions/`. The rules below always apply:
 - Never perform drive-by changes or refactorings. Only modify what is necessary for the current task.
 - Never introduce new concepts, patterns, or abstractions unless they are strictly necessary to fulfill the requirement.
 - Match the existing style, naming, and structure of the surrounding skill. Do not introduce a new style for a single change.
-- Keep skill instructions English. Human-facing documents in the target repository (README, architecture, decisions) are German; `f-legal` and `docs/legal/` are German.
+- Keep skill instructions English. Human-facing documents in the target repository (README, architecture, decisions) are German. `f-legal` (templates and `docs/legal/`) and `f-feature-summary` templates plus generated `docs/features/` are German.
 - Do not add comments or sections that merely restate what is already obvious. Only document reasons and constraints that are non-obvious.
 
 ## Boundaries

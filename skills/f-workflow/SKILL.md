@@ -3,7 +3,7 @@ name: f-workflow
 description: >
   Presents the available agentic-coding skills as an ordered menu following the
   recommended sequence. Clearly separates the core implementation cycle from
-  optional / outside skills (f-docs, f-legal). When a menu item is selected,
+  optional / outside skills (f-docs, f-legal, f-feature-summary). When a menu item is selected,
   outputs the skill handle plus a ready-to-use prompt template.
   Use only when the user explicitly asks for the skill menu or menu navigation:
   "skill menu", "skill workflow", "workflow menu", "welche skills", "zeige Menü",
@@ -44,6 +44,7 @@ Does not perform domain work. Only displays the menu and supplies prompt templat
 
 - **f-docs** — Generate or refresh project documentation (AGENTS.md, README, architecture, conventions).  
 - **f-legal** — Extract developer-relevant requirements from German/EU legal sources into `docs/legal/`.
+- **f-feature-summary** — Create or update scannable feature summaries (individual units + overall overview) for product owners.
 
 ## Prompt Templates
 
@@ -121,6 +122,16 @@ Please use the f-legal skill to process the following legal source(s) and extrac
 
 Source(s): [paste law text, regulation, or link description]
 Focus area (optional): [e.g. calculation rules, data retention, …]
+```
+
+### f-feature-summary
+```
+Please use the f-feature-summary skill to create or update scannable feature summaries of the implemented functionality.
+
+Mode: individual units | overview | both
+Scope / source: [describe modules, paste description, or point to existing docs/features/]
+
+Prefer tables and structured bullets. Generate individuals first, then the overview if requested.
 ```
 
 ## Rules

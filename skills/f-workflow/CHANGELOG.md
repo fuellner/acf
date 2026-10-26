@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-10-26
+- Optional menu lists `f-feature-summary` and includes its prompt template.
 - Implementation prompt points at the shared directory-index reference (`references/directory-index.md`, owned by `f-docs` and linked from every `f-*` skill) instead of inlining the index procedure.
 - Implementation prompt states that the implementing agent sets `blocked` only when a dependency or decision is missing.
 - Self-check no longer contradicts the skip-in-menu path: the menu requirement applies only when behavior step 2 did not skip it, and at most one entry is expanded.

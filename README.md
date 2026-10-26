@@ -13,6 +13,7 @@ Meine Sammlung agentischer Coding-Skills (OpenCode / Claude-kompatibel).
 | `f-debug` | Strukturierte Fehlersuche (Repro → Root Cause → Fix-Vorschlag) |
 | `f-docs` | AGENTS.md, README, Architektur, Conventions aus dem Repo erzeugen |
 | `f-legal` | Regulatorische Vorgaben (DE/EU) → `docs/legal/` |
+| `f-feature-summary` | Implementierte Fachlogik → übersichtliche Feature-Dokumente (`docs/features/`) |
 | `f-workflow` | Menü + Prompt-Templates für den Ablauf (führt selbst nichts aus) |
 
 Der Kernzyklus: Requirements → Tasks → Testing → Implementation → Review. `f-debug` ist der Seitenzweig, wenn etwas fehlschlägt.
@@ -46,7 +47,7 @@ skills/<name>/
 ```
 
 Erzeugte Dokumente landen im Zielrepo unter `docs/` (`requirements/`, `tasks/`, `tests/`,
-`reviews/`, `debug/`, `legal/`, `conventions/`, `decisions/`).
+`reviews/`, `debug/`, `legal/`, `features/`, `conventions/`, `decisions/`).
 `f-debug` schreibt immer nach `docs/debug/`; ein Review, das die Analyse ausgelöst hat, verlinkt den Bericht.
 
 ## Dokumentation
