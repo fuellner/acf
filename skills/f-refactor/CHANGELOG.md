@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-10-27
+- `references/workflow.md` is the human-readable map of phases, artifacts, status, and handoffs. `references/toolchain.md` is the tool gate: detect what `composer.json` already has, ask before installing, and do not override a failing check.
 - `references/tool-licenses.md` lists every external tool this skill names, with the SPDX id and license link re-checked against the GitHub API.
 - `f-refactor` is a separate workflow with its own phase menu, parallel to `f-workflow`. It reuses `f-tasks`, `f-testing`, `f-code-review`, `f-debug`, and `f-docs`.
 - Index columns gain Phase and Effort. The index is the cross-unit progress view.

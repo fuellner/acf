@@ -132,11 +132,13 @@ Do not invent other values.
 
 ## References
 
+- `references/workflow.md` — end-to-end map for a person: phases, artifacts, status, resume, handoffs. Load when the user asks how the workflow fits together. Run a phase from `phases.md`, not from this map.
 - `references/phases.md` — exit criteria and handoff prompts. Load before running a phase.
 - `references/php-version-upgrade.md` — target, hops, fast path, mitigations, audit, parity, performance. Load for every migration inventory, plan, or step.
 - `references/large-legacy-codebases.md` — context limits, map, hotspots, dead code. Load before scanning a large or legacy repo.
 - `references/strategies.md` — refactor strategies. Load for a refactor plan or step.
 - `references/php.md` — PHP tools and framework caveats. Load when naming tools.
+- `references/toolchain.md` — which tool runs in which phase, example commands, and how to read a failure. Load together with `php.md`. A failing check is not overridden.
 - `references/tool-licenses.md` — SPDX id, license link, and commercial-use note for every tool this skill names. Load together with `php.md`, and again before adding a tool.
 - `references/database.md` — expand/contract. Load when a step touches schema or data.
 - `references/characterization-tests.md` — oracles and golden masters. Load for the safety net and before editing behavior-bearing code.

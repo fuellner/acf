@@ -57,3 +57,5 @@ Erzeugte Dokumente landen im Zielrepo unter `docs/` (`requirements/`, `tasks/`, 
 - [docs/architecture.md](docs/architecture.md) — Aufbau und Datenfluss
 - [docs/decisions/index.md](docs/decisions/index.md) — Inhaltsverzeichnis der Entscheidungen
 - [docs/conventions/index.md](docs/conventions/index.md) — Inhaltsverzeichnis der Konventionen für die Skill-Dateien
+- [f-refactor Ablauf](skills/f-refactor/references/workflow.md) — Phasen, Artefakte, Status, Übergaben
+- [f-refactor Werkzeuge](skills/f-refactor/references/toolchain.md) — welche Prüfung welches Werkzeug liefert
