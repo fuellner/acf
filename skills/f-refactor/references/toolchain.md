@@ -8,7 +8,7 @@ Licenses and the commercial-use note are in `tool-licenses.md`. Framework caveat
 
 Read `composer.json` (`require-dev` and `scripts`), the existing config (`rector.php`, `phpstan.neon` or `phpstan.neon.dist`, `psalm.xml`, `deptrac.yaml`, `phpcs.xml` or `phpcs.xml.dist`, `phpunit.xml` or `phpunit.xml.dist`), and the CI config. Use the binary and the config the repository already runs. If both PHPStan and Psalm are present, use the one CI runs.
 
-Do not `composer require` a missing tool, and do not add a CI job for a tool the repository does not have, until you ask and the user accepts the dependency. Record a missing tool as a gap. Do not pretend the check ran.
+Do not `composer require` a missing tool, and do not add a CI job for a tool the repository does not have, until you ask and the user accepts the dependency. The optional installer is `scripts/install-tools.sh`. Ask before running it, including a dry-run. Record a missing tool as a gap. Do not pretend the check ran.
 
 Commands below are examples. Substitute the path and the version the repository actually uses. The PHP minor comes from the php.net page fetched this session, not from memory.
 
@@ -17,9 +17,9 @@ Commands below are examples. Substitute the path and the version the repository 
 | Tool | Phase | What it decides | Example | How to read it |
 |------|-------|-----------------|---------|----------------|
 | Rector | `execute` (a migration hop or a codemod) | Mechanical diff for one rule set | `vendor/bin/rector process src --dry-run` | Review the diff. Dry-run first. One set per PR. A clean run is not proof that behavior held. An unexpected edit stops the step. Phalcon C-extension classes are invisible without stubs. |
-| PHPCompatibility on PHP_CodeSniffer | `inventory`, `plan`, `execute` for a migration | Source that will not run on the target PHP | `vendor/bin/phpcs --standard=PHPCompatibility --runtime-set testVersion <target> src` | Errors are forced-fix candidates. Confirm each one against the migration guide fetched for that hop. Do not silence a sniff to go green. |
+| PHPCompatibility on PHP_CodeSniffer | `inventory`, `plan`, `execute` for a migration | Source that will not run on the target PHP | `vendor/bin/phpcs --standard=vendor/phpcompatibility/php-compatibility/PHPCompatibility --runtime-set testVersion <target> src` | Errors are forced-fix candidates. Confirm each one against the migration guide fetched for that hop. Do not silence a sniff to go green. If the project already registers the standard, `--standard=PHPCompatibility` is enough. The installer does not add a Composer plugin to register it. |
 | PHPStan or Psalm | `execute` | New static errors against the committed baseline | `vendor/bin/phpstan analyse` or `vendor/bin/psalm` | New errors fail the step. Do not clear baseline entries as a side effect. Set the language level to the target on a migration and to the current runtime on a refactor. |
-| Deptrac | `plan` and `execute` for a refactor boundary | Whether a new module boundary holds | `vendor/bin/deptrac analyse` | A new violation fails the step. Add a rule only for the boundary this step introduces. The upstream repository is archived; prefer the boundary tool the repo already runs. |
+| Deptrac | `plan` and `execute` for a refactor boundary | Whether a new module boundary holds | `vendor/bin/deptrac analyse` | A new violation fails the step. Add a rule only for the boundary this step introduces. Prefer the boundary tool the repo already runs. The installer adds `deptrac/deptrac` and does not add the abandoned `qossmic/deptrac` package. |
 | PHPUnit, including golden masters | `safety-net` (the plan, via `f-testing`) and `execute` | Observed behavior at the seam | `vendor/bin/phpunit --filter <seam>` | Tests must pass on the unchanged code before the edit. A migration runs the same suite on the old runtime and the target and diffs normalized output. A failure or a golden diff means behavior changed. Do not edit the expected value. Timestamps, ids, session tokens, and random values are normalized first. |
 | Composer `why-not` | `inventory`, `plan` | Which packages block the target PHP | `composer why-not php <target>` | A blocking package is a migration fact, not a reason to ignore the platform. Replacing it needs approval. `config.platform.php` can lie; check the real runtime too. |
 | Composer `audit` | `inventory`, `close-out` | Known dependency advisories | `composer audit` | Findings are recorded. An abandoned package is removed or explicitly accepted. Do not `composer update` without approval. Installed packages keep their own licenses. |
@@ -32,4 +32,59 @@ Commands below are examples. Substitute the path and the version the repository 
 
 The agent selects the seam, runs the tool that is already installed, and writes the command and the result into the step record or the inventory. Interpretation stops at what the tool printed.
 
-The agent does not treat a green Rector run as a behavior proof, a PHPStan baseline as permission to edit unrelated errors, or a missing tool as a passed check. Characterization oracles and golden masters are the behavior gate. Static tools are the mechanical gate. Both have to pass.
+The agent does not treat a green Rector run as a behavior proof, a PHPStan baseline as permission to edit unrelated errors, or a missing tool as a passed check. Characterization oracles and golden masters are the behavior gate. Static tools are the mechanical gate. Both have to pass. A Composer resolution failure is not fixed by `--ignore-platform-reqs`.
+
+## Optional installer
+
+`scripts/install-tools.sh` adds tools to one existing project. It does not create `composer.json`, does not search parent directories, and does not install anything globally.
+
+```bash
+scripts/install-tools.sh --help
+scripts/install-tools.sh --project-dir /path/to/app --phpstan --phpunit
+scripts/install-tools.sh --project-dir /path/to/app --all
+scripts/install-tools.sh --project-dir /path/to/app --install --phpcs --phpcompatibility
+```
+
+Ask the user before any of these. The first three are dry-runs. Only `--install` runs Composer.
+
+What it will do:
+
+- `composer require --dev` for the selected packages, with `--no-interaction`, `--no-plugins`, and `--no-scripts`. Project Composer scripts do not run.
+- Skip a package that is already in `require-dev`, and leave that constraint unchanged.
+- Skip a package that is already in `require`. It does not move or upgrade non-dev dependencies.
+- Choose the constraint from the table below using the composer platform PHP: `config.platform.php` when set, otherwise the `php` on `PATH`.
+- Print each selected package's SPDX id and the path to `tool-licenses.md`.
+- Require PHP CLI and Composer 2.2 or newer. It does not download or upgrade Composer.
+
+`--all` selects Rector, PHPStan, Deptrac, PHP_CodeSniffer, PHPCompatibility, and PHPUnit. Psalm is the alternative to PHPStan and is not in `--all`. `--phalcon-stubs` needs the extension major (`3`, `4`, or `5`) because the PHP version does not imply it. PHPCompatibility also selects PHP_CodeSniffer 3 when that package is not already a dev dependency. PHPCompatibility 9 does not run on PHP_CodeSniffer 4, and an existing `^4` pin is not downgraded.
+
+When the platform PHP is too old for a tool, the tool is skipped. The script tells you to run that tool from a separate modern PHP toolchain whose own `composer.json` is not pinned to the legacy version, and to point the tool at this source tree. A `php:8.3-cli` container with the repository mounted is enough. Tests that claim behavior on the old runtime still run on that runtime. The script does not install PHPUnit 4, 5, or 6, and it does not install PHP_CodeSniffer 2.
+
+| Platform PHP | Package |
+|--------------|---------|
+| `>= 7.4` | `rector/rector:^2.0` |
+| `>= 7.2` and `< 7.4` | `rector/rector:^1.2` |
+| `>= 7.4` | `phpstan/phpstan:^2.0` |
+| `>= 7.2` and `< 7.4` | `phpstan/phpstan:^1.12` |
+| `>= 8.4.3` and `< 8.6` | `vimeo/psalm:^6.0` |
+| `>= 7.4` and `< 8.4` | `vimeo/psalm:^5.26` |
+| `>= 7.1` and `< 7.4` | `vimeo/psalm:^4.30` |
+| `8.4.0`–`8.4.2` | Psalm skipped. Psalm 6 requires `>= 8.4.3` on that line, and Psalm 5 does not support 8.4. |
+| `>= 8.2` and `< 9` | `deptrac/deptrac:^4.0` |
+| `>= 8.1` and `< 8.2` | `deptrac/deptrac:^3.0` |
+| `>= 5.4` | `squizlabs/php_codesniffer:^3.13` |
+| `>= 5.4` | `phpcompatibility/php-compatibility:^9.3` |
+| `>= 8.4.1` | `phpunit/phpunit:^13.0` |
+| `>= 8.3` and `< 8.4.1` | `phpunit/phpunit:^12.0` |
+| `>= 8.2` and `< 8.3` | `phpunit/phpunit:^11.0` |
+| `>= 8.1` and `< 8.2` | `phpunit/phpunit:^10.5` |
+| `>= 7.3` and `< 8.1` | `phpunit/phpunit:^9.6` |
+| `>= 7.2` and `< 7.3` | `phpunit/phpunit:^8.5` |
+| `>= 7.1` and `< 7.2` | `phpunit/phpunit:^7.5` |
+| `>= 8.1`, `--phalcon-stubs 5` | `phalcon/ide-stubs:^5.0` |
+| `>= 7.2`, `--phalcon-stubs 4` | `phalcon/ide-stubs:^4.0` |
+| `--phalcon-stubs 3` | `phalcon/ide-stubs:^3.4` (the 3.4.3 release publishes no PHP requirement; confirm the major) |
+
+Anything older is skipped. PHP 5.3 gets no packages from this script.
+
+Exit codes: `0` plan or install finished, including "already present"; `1` bad usage; `2` missing PHP, Composer, or `composer.json`, or Composer older than 2.2; `3` `composer require` failed; `4` nothing was added and every selected tool was refused. Keep this table in step with `choose_constraint` in the script.

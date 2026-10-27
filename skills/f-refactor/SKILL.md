@@ -31,6 +31,8 @@ Production access is off-limits: no production shell, database, logs, or deploy.
 
 Stop and get a human approval before running a database migration or backfill, accessing staging, changing dependency versions, deleting code, or any deploy or rollout. The operator performs those actions. Record the approval in the handoff.
 
+Ask before running `scripts/install-tools.sh`, including a dry-run. It only adds `require-dev` packages, and only when the user passes `--install`. Do not run it to fill a gap on your own.
+
 ## Confidential data
 
 No production or customer data in tests, golden masters, docs, or logs. Anonymize or synthesize fixtures. Never copy a secret. A hardcoded credential is a security finding: file and line only, not the value. Hand rotation to `f-workflow`. Do not fix it inside this unit.
@@ -144,11 +146,16 @@ Do not invent other values.
 - `references/characterization-tests.md` — oracles and golden masters. Load for the safety net and before editing behavior-bearing code.
 - `references/directory-index.md` — shared `index.md` rules.
 
+## Scripts
+
+- `scripts/install-tools.sh` — optional per-project dev dependencies. Dry-run unless `--install`. Ask the user before running it. Version picks and the refusal rules are in `references/toolchain.md`.
+
 ## Before you finish
 
 - One phase ran, or the menu was shown because the user asked where to start or which phase is next.
 - Type is the same in the plan header and the index. The other type was not mixed in.
 - No production access. No database migration, staging access, dependency change, deletion, or deploy without a recorded human approval.
+- `scripts/install-tools.sh` was not run unless the user asked for that run.
 - Nothing written contains customer data or a secret value.
 - A new session can continue from the index, the plan, the newest handoff, and open questions.
 - Every artifact matches its template. Index Phase, Effort, and Status match the plan header.
