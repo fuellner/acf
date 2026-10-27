@@ -64,7 +64,7 @@ All templates are located in `templates/` relative to this skill:
 - Prefer the smallest change that fulfills the requirement.
 - Never invent content that cannot be derived from the repository.
 - Keep documentation as short and simple as possible while remaining complete enough for humans and agents.
-- AGENTS.md and skill instructions are in English. Human-facing documents (README, architecture, decisions) are in German.
+- AGENTS.md and skill instructions are in English. Exception: `f-legal` instructions, its templates, and `docs/legal/` are German; this skill does not create or edit them. Human-facing documents (README, architecture, decisions) are in German. `f-feature-summary` instructions stay English; its templates and `docs/features/` are German.
 - Progressive disclosure: AGENTS.md is the short index; deeper docs are linked.
 
 ## Before you finish

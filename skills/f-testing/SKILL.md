@@ -62,8 +62,9 @@ This is static inspection, not test execution; the report does not establish tha
 5. Write the output using the appropriate template:
    - `docs/tests/TEST-<source-id>-plan.md` (generate)
    - `docs/tests/TEST-<source-id>-coverage.md` (verify)
-   Name the file after the reviewed unit (`REQ-001`, `TASK-004`), never after the date or the author. On an explicit update request, overwrite the same file, increment `Revision`, and update `**Updated**` inside it; do not add version suffixes — Git is the history.
-6. Report what was created or updated.
+   Name the file after the reviewed unit (`REQ-001`, `TASK-004`), never after the date or the author. The source-id is the exact ID: `TEST-REQ-001-plan.md` matches `REQ-001`, and `TEST-REQ-0010-plan.md` does not. On an explicit update request, overwrite the same file, increment `Revision`, and update `**Updated**` inside it; do not add version suffixes — Git is the history.
+6. Update `docs/tests/index.md` (create it from `templates/index.md` if missing). One row per plan or coverage file: Source is the exact source-id, Mode is `generate` or `verify`, Revision is the document's revision, File is the relative link. Follow `references/directory-index.md`, including its rule that a default `Document | Description` table in this directory is replaced by that schema.
+7. Report what was created or updated.
 
 Updates to existing test plans are allowed only when the user explicitly requests an update.
 
@@ -99,6 +100,7 @@ All templates live relative to this skill:
 - `templates/test-plan.md` — generated test plan
 - `templates/coverage-report.md` — coverage check result
 - `templates/test-skeleton.md` — optional test skeleton (JavaScript example; adapt to the project's language)
+- `templates/index.md` — tests index (`Source | Mode | Revision | File`)
 
 ## Documentation Location
 
@@ -117,6 +119,7 @@ Follow `references/directory-index.md` whenever creating or updating documentati
 - Every test name references its AC or Check.
 - Anything added beyond the Checks is marked `*(supplemented)*`.
 - The file follows the naming rule and states source + mode + revision.
+- `docs/tests/index.md` lists each plan and coverage file with Source, Mode, Revision, and File. Source is the exact source-id used in the filename.
 - Verify reports identify the inspected AC/test inputs and their SHA-256 hashes, or explicitly disclose why those inputs cannot be validated. Test references and coverage gaps are concrete; no test execution is claimed.
 - No unfilled `{{...}}` placeholder or `…` filler remains in new or edited sections.
 - Every affected documentation directory and parent below `docs/` has an up-to-date `index.md` per `references/directory-index.md`; entries match existing contents and all generated links resolve.
