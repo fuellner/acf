@@ -31,4 +31,4 @@ description: "Regeln zur Extraktion developer-relevanter Anforderungen aus juris
 - Bevorzuge offizielle Quellen (gesetze-im-internet.de, EUR-Lex, Ministeriums- oder Behörden-Seiten).
 - Immer die Fundstelle und das Datum der Fassung angeben.
 - Bei Unklarheiten die Quelle verlinken und den relevanten Ausschnitt kurz zitieren.
-- Wenn eine Regel nicht eindeutig aus dem Text folgt, den Ausschnitt zitieren und die Aussage als `ungeprüft` markieren — nicht als gesicherte Anforderung formulieren.
+- Wenn eine Regel nicht eindeutig aus dem Text folgt, den Ausschnitt zitieren und die Aussage als `ungeprüft` markieren — nicht als gesicherte Anforderung formulieren. Die Markierung steht beim betroffenen Punkt (z. B. unter „Relevante Anforderungen“ oder in der Beispielrechnung des Gültigkeitsabschnitts) und bleibt dort sichtbar.

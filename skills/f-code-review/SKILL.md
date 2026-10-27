@@ -113,22 +113,7 @@ Always produce exactly this structure:
 - …
 
 ## Fix-Prompt
-```prompt
-Apply only the following open findings. Keep changes minimal; do not expand scope or re-architect.
-
-**Findings:**
-1. [High] path/to/file.ts:42 — Problem: … — Proposed fix: …
-
-**Out of scope:**
-- Refactors, renames, or style changes not required by a finding.
-
-**Verification you must perform:**
-- Run the tests named in the findings or the relevant suite.
-- Confirm each finding is resolved; do not review the result yourself.
-
-**Status handoff:**
-- Task `TASK-xxx`: set `in-progress` when you start, `ready-for-review` when done. Do not set `done`. Set `blocked` only when you cannot proceed because a dependency or decision is missing, and record what unblocks the task.
-```
+Generate the prompt from `templates/fix-prompt.md` (canonical) — read it and fill its placeholders from the open findings. When no findings remain open, state that no fix prompt is needed.
 ````
 
 ## Status Propagation

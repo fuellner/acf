@@ -60,9 +60,9 @@ Follow these phases in order. Complete each before moving to the next. Stop and 
 
 Produce a Debug Report using the template at `templates/debug-report.md`.
 
-Optionally (and by default when a fix is proposed) also produce a short Fix Prompt using `templates/fix-prompt.md`. The Fix Prompt is written for the implementing agent and should be copy-paste ready.
+Optionally (and by default when a fix is proposed) also produce a short Fix Prompt using `templates/fix-prompt.md`. The Fix Prompt is written for the implementing agent and should be copy-paste ready. Findings in the fix prompt use the severity scale Critical / High / Medium / Low (the same scale as `f-code-review`); a complete analysis typically has one finding, for its isolated root cause.
 
-Save the report (and prompt) under `docs/debug/`, including when the failure originated from a review finding. Use a filename that includes the Task ID when available, e.g. `docs/debug/TASK-042-debug.md`. When the origin is a review, use that review's unit key: `docs/debug/<unit>-debug.md` for `docs/reviews/<unit>-review.md`. Create the directory only if needed. On an explicit re-analysis of the same unit, overwrite the same file and increment `Revision` inside it; do not add version suffixes — Git is the history. Do not write the report or prompt into `docs/reviews/`.
+Save the report (and prompt) under `docs/debug/`, including when the failure originated from a review finding. Use a filename that includes the Task ID when available, e.g. `docs/debug/TASK-042-debug.md`. When the origin is a review, use that review's unit key: `docs/debug/<unit>-debug.md` for `docs/reviews/<unit>-review.md`. Create the directory only if needed. On an explicit re-analysis of the same unit, overwrite the same file, increment `Revision`, and update `**Updated**` inside it; do not add version suffixes — Git is the history. Do not write the report or prompt into `docs/reviews/`.
 
 When the failure originated from a review and exactly one review file for that unit exists under `docs/reviews/`, add a `Debug:` bullet under `## Residual Risk` in that review (create that heading at the end if it is missing), linking to this report with a relative path (`../debug/<file>` from `docs/reviews/`). Do not add a second bullet for the same report. Link that review from the debug report's Notes. If the review file is missing or ambiguous, name it in the debug report and do not create a review document.
 
@@ -76,7 +76,7 @@ Follow `references/directory-index.md` whenever saving documentation under `docs
 
 ## Templates and References
 
-- `templates/debug-report.md` — structured report (Problem, Evidence, Root Cause, Proposed Fix, Verification).
+- `templates/debug-report.md` — structured report (Metadata, Reproduction, Problem, Evidence, Root Cause, Proposed Fix, Verification, Notes).
 - `templates/fix-prompt.md` — short, focused prompt for the implementing agent.
 - `references/debugging-notes.md` — optional lightweight heuristics (load only if the failure type is unusual).
 - `references/directory-index.md` — shared `index.md` rules. Follow it when saving documentation.

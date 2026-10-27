@@ -1,8 +1,8 @@
 # REQ-{{ID}}: {{TITLE}}
 
-**Status**: draft
-**Source**: {{SOURCE}}
-**Created**: {{CREATED}}
+**Status**: draft  
+**Source**: {{SOURCE}}  
+**Created**: {{CREATED}}  
 **Updated**: {{UPDATED}}
 
 ## Intent

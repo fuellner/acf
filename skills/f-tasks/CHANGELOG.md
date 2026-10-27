@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-27
+- Task template: metadata moved to the bold-line style with hard breaks shared by the other templates; the `Model recommendation` placeholder names the tier + reasoning format; the directory-index paragraph was trimmed to the one sentence the implementing agent needs; the traceability sentence is conditional on the task deriving from a requirement.
+- `references/ordering.md`: the conflicts rule names the f-tasks report explicitly instead of an unspecified "the report".
+
 ## 2026-10-26
 - Ordering and parallel-group rules moved to `references/ordering.md` (workflow step 6).
 - Directory indexes follow the shared `references/directory-index.md`. The task template points at that file instead of inlining the procedure.

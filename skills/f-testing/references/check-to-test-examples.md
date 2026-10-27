@@ -22,7 +22,7 @@ Use these patterns when translating a Check from a strict acceptance criterion i
 
 ## CLI / Command
 
-**AC Check**: exit code is 0 and stdout contains "ok"
+**AC**: Given a configured project, **When** `tool --check` is run as documented, **Check**: exit code is 0 and stdout contains "ok"
 
 **Suggested test**:
 - Name: `command_succeeds_and_prints_ok`
@@ -33,5 +33,6 @@ Use these patterns when translating a Check from a strict acceptance criterion i
 
 - Prefer one test per Check.
 - Encode the AC or Check reference in the test name or a comment.
+- Record the criterion's `Must not` constraint in the entry's **Must not** line; omit when the criterion has none.
 - Only add extra tests when the original Check is ambiguous; mark them `*(supplemented)*`.
 - Do not invent assertions that are not supported by the Check.

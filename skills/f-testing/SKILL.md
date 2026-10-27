@@ -48,7 +48,9 @@ This is static inspection, not test execution; the report does not establish tha
 3. For **generate**:
    - Create one test entry per Check.
    - Suggest a test name that includes the AC or Check reference.
+   - Fill `**Maps to**` with the criterion's AC identifier (`AC-2`) or its Check reference.
    - Map Given/When/Then to setup / action / assertion.
+   - Carry the criterion's `Must not` constraint into the entry's `**Must not**` line; omit the line when the criterion has none.
    - Mark any test that goes beyond the original Checks with `*(supplemented)*`.
    - Note the expected test type (unit / integration / e2e) only when obvious from context.
 4. For **verify**:
@@ -60,7 +62,7 @@ This is static inspection, not test execution; the report does not establish tha
 5. Write the output using the appropriate template:
    - `docs/tests/TEST-<source-id>-plan.md` (generate)
    - `docs/tests/TEST-<source-id>-coverage.md` (verify)
-   Name the file after the reviewed unit (`REQ-001`, `TASK-004`), never after the date or the author. On an explicit update request, overwrite the same file and increment `Revision` inside it; do not add version suffixes — Git is the history.
+   Name the file after the reviewed unit (`REQ-001`, `TASK-004`), never after the date or the author. On an explicit update request, overwrite the same file, increment `Revision`, and update `**Updated**` inside it; do not add version suffixes — Git is the history.
 6. Report what was created or updated.
 
 Updates to existing test plans are allowed only when the user explicitly requests an update.
@@ -96,7 +98,7 @@ All templates live relative to this skill:
 
 - `templates/test-plan.md` — generated test plan
 - `templates/coverage-report.md` — coverage check result
-- `templates/test-skeleton.md` — optional language-neutral test skeleton
+- `templates/test-skeleton.md` — optional test skeleton (JavaScript example; adapt to the project's language)
 
 ## Documentation Location
 
@@ -116,4 +118,5 @@ Follow `references/directory-index.md` whenever creating or updating documentati
 - Anything added beyond the Checks is marked `*(supplemented)*`.
 - The file follows the naming rule and states source + mode + revision.
 - Verify reports identify the inspected AC/test inputs and their SHA-256 hashes, or explicitly disclose why those inputs cannot be validated. Test references and coverage gaps are concrete; no test execution is claimed.
+- No unfilled `{{...}}` placeholder or `…` filler remains in new or edited sections.
 - Every affected documentation directory and parent below `docs/` has an up-to-date `index.md` per `references/directory-index.md`; entries match existing contents and all generated links resolve.

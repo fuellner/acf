@@ -56,9 +56,10 @@ f-tasks and f-testing never change the requirement status. f-tasks asks before d
 
 ## Strict Acceptance Criteria
 
-Prefer the Given / When / Then form plus an explicit Check and a Must-not statement.
+Prefer the Given / When / Then form plus an explicit Check and a `Must not` statement.
 
-- One observable result per criterion.
+- One observable result per criterion; tightly coupled side conditions of the same action may share the criterion.
+- Every acceptance criterion carries an identifier (`AC-1`, `AC-2`, …). Downstream skills (f-testing, f-code-review) reference these identifiers in tests and coverage states.
 - Always include a concrete Check (command, test name, response field, DOM assertion, exit code).
 - Include relevant failure or edge cases.
 - State what must not change.

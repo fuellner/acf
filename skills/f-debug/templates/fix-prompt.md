@@ -1,4 +1,4 @@
-# Fix Prompt: {{TASK-ID}}
+# Fix Prompt: {{TASK-ID or n/a}}
 
 Apply only the following minimal fix. Do not expand scope.
 

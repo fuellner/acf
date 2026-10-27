@@ -1,8 +1,8 @@
 # FEAT-{{ID}}: {{TITLE}}
 
-**Status**: {{STATUS}}
-**Source**: {{SOURCE}}
-**Created**: {{CREATED}}
+**Status**: {{STATUS}}  
+**Source**: {{SOURCE}}  
+**Created**: {{CREATED}}  
 **Updated**: {{UPDATED}}
 
 ## Kurzbeschreibung

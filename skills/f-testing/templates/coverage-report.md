@@ -1,11 +1,12 @@
 # Coverage Report: {{SOURCE}}
 
-**Source**: {{SOURCE}}
-**Mode**: verify
-**Revision**: 1
-**Created**: {{CREATED}}
-**Updated**: {{UPDATED}}
-**Evidence**: Static inspection only; tests were not executed.
+**Source**: {{SOURCE}}  
+**Mode**: verify  
+**Revision**: 1  
+**Created**: {{CREATED}}  
+**Updated**: {{UPDATED}}  
+**Evidence**: Static inspection only; tests were not executed.  
+**Status values**: covered | partial | missing — a review treats a report's `partial` as `unverified` (handled by `f-code-review`).
 
 **Verified inputs**:
 
@@ -17,7 +18,7 @@
 
 | Check | Status | Test reference | Note |
 |-------|--------|----------------|------|
-| …     | covered / partial / missing | … | … |
+| …     | …      | …              | …    |
 
 ## Missing (would fail review)
 - …

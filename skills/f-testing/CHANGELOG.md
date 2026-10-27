@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-27
+- Removed the hardcoded `*(supplemented)*` marker from the test-plan template block; supplementation stays conditional per the generate rule.
+- The test-plan's `Maps to` field is documented as the criterion's AC identifier (`AC-n`) or Check reference, and `Must not` is defined as the carried-over criterion constraint.
+- The coverage-report metadata states the legal status values and that reviews treat `partial` as `unverified`.
+- The test skeleton is fenced code with a `Must not` hint; the "language-neutral" claim was dropped in favor of "JavaScript example, adapt as needed".
+- Check-to-test examples: the CLI example now shows Given/When invocation context, and the rules cover the `Must not` line.
+- Updates increment `Revision` and update `**Updated**`; the self-check also rejects leftover `…` fillers.
+
 ## 2026-10-26
 - Directory indexes follow the shared `references/directory-index.md`.
 - Status handling states that this skill does not set `blocked`.
@@ -7,7 +15,7 @@
 - Hash command for committed revisions added (`git show <rev>:<path> | sha256sum`).
 - Directory index wording aligned with the other skills.
 - Align the review handoff with focused direct diff/test evidence while retaining hash validation and ownership of full coverage audits/reports.
-- Maintain directory indexes for test artifacts, task Verification updates, and nested parents below `docs/`, rebuilding missing indexes from existing contents without changing statuses.
+- Maintain directory indexes for test artifacts and nested parents below `docs/`, rebuilding missing indexes from existing contents without changing statuses.
 - Review fix F-01: distinguish planned coverage, static test inspection, and executed tests. Verify reports record SHA-256 fingerprints for AC documents, tests, and relevant helpers/configuration.
 - The coverage template now includes Verified inputs, Updated, and an explicit static-inspection evidence statement. Reviews must validate report freshness; partial coverage never becomes covered.
 - Added a file-naming and revision rule: one file per source unit, no dated or versioned copies, `Revision` increments on update.

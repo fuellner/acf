@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-27
+- Fix prompt consolidated: `templates/fix-prompt.md` is now the single canonical source; the inline copy in the output template was removed (both had drifted). The template heading follows the file-naming chain vocabulary, the verification placeholder explains its default, the `blocked` ownership sentence matches the f-debug fix prompt, and the no-open-findings case is documented.
+- `references/coverage-evidence.md` defines `Check` up front and lists the three coverage states before the mapping rules.
+
 ## 2026-10-26
 - Coverage-evidence and SHA-256 rules moved to `references/coverage-evidence.md`. Load that file before using a test plan or verify report and when assigning a coverage state.
 - Directory indexes follow the shared `references/directory-index.md` instead of an inlined copy. Review-specific constraints stay here: preserve requirement index statuses on CHANGES REQUIRED, and do not create a review directory for an unsaved review.

@@ -34,7 +34,7 @@ Erstellt und pflegt:
    - Metadaten und Änderungshistorie aktualisieren.
 4. In jedem angelegten oder aktualisierten Dokumentationsverzeichnis unter `docs/legal/` eine `index.md` anlegen oder aktualisieren. Befolge `references/directory-index.md` (dieselbe Regel wie die übrigen Skills, einschließlich aller Eltern unterhalb von `docs/`) und die Vorlage `templates/index.md`. Bei `docs/legal/pflegeversicherung/pflegegeld.md` sind also sowohl `docs/legal/pflegeversicherung/index.md` als auch `docs/legal/index.md` erforderlich.
    - Metadaten nur aus vorhandenen Dokumenten übernehmen.
-   - In neuen Vorlagenkopien Platzhalter vollständig ersetzen; den Abschnitt `Unterverzeichnisse` weglassen, wenn keine vorhanden sind. Enthält das Verzeichnis nur Unterverzeichnisse, die leere Dokumenttabelle weglassen.
+   - In neuen Vorlagenkopien Platzhalter vollständig ersetzen; den Abschnitt `Unterverzeichnisse` weglassen, wenn keine vorhanden sind. Enthält das Verzeichnis nur Unterverzeichnisse, dann wird die leere Dokumenttabelle weggelassen.
 5. Kurzer Report: was angelegt/aktualisiert wurde, Quellenangabe, betroffene Zeiträume.
 
 ## Regeln

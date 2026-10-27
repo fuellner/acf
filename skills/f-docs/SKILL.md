@@ -28,7 +28,7 @@ Templates live in this skill directory and are copied only when the individual t
 1. Analyze the repository (languages, stack, versions, commands, entry points, existing docs). Check each target file's existence separately.
 2. For each missing target file: copy the relevant template from the skill's `templates/` directory into the target repository and fill it with analysis results.
    - Rename `agents.md.tmpl` to `AGENTS.md`.
-   - Remove the `TEMPLATE (f-docs)` comment block at the top of the copied file.
+   - Remove the `TEMPLATE (f-docs)` comment block from the copied `AGENTS.md` (only this template carries one).
    - Replace stack placeholders with the detected values (database, framework, package manager).
    - Remove placeholder sections, boundary lines, and rules that do not apply or contradict the detected stack.
    - Keep only links in `AGENTS.md` and `README.md` whose target actually exists in the repository.

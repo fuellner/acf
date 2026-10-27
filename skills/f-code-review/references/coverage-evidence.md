@@ -22,12 +22,15 @@ Missing metadata, unavailable inputs, changed hashes, or an AC source that canno
 
 ## Coverage states
 
-State test coverage as `covered`, `missing`, or `unverified`:
+A `Check` is the concrete verification statement of an acceptance criterion (defined by `f-requirements`; mapped to tests by `f-testing`). State test coverage as `covered`, `missing`, or `unverified`:
 
 - `covered` from a current verify report with a concrete matching test reference, or focused inspection of a test and its identifiable assertion that satisfies the Check in the reviewed revision or working tree.
 - `missing` from a current verify report that documents the gap, or direct evidence from the diff and focused inspection of relevant tests. Cite the Check, the evidence, and the inspected scope; for a deleted required test, check for a replacement. A test absent from the diff or a filename search alone does not establish a gap. A plan alone is never evidence of implemented or missing tests.
+- `unverified` when neither a current report nor focused inspection establishes coverage or a concrete gap; disclose any inspection limits.
+
+Rules:
+
 - Map a current report's `partial` to `unverified` and note the partial coverage. A concrete documented gap may still be a finding under the rule below; never promote `partial` to `covered`.
 - `missing` becomes a finding only when the criterion's `Check` cannot be satisfied without a test.
-- `unverified` when neither a current report nor focused inspection establishes coverage or a concrete gap; disclose any inspection limits.
 
 Keep direct inspection limited to the reviewed criteria and affected test paths, including relevant helpers/configuration. Cite the evidence used for each coverage state and explain any disagreement with an existing report. Direct inspection does not make a stale report current or prove that tests pass.

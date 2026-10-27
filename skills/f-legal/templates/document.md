@@ -56,7 +56,6 @@ zuletzt_geprueft: YYYY-MM-DD
 
 ## Hinweise zur Verwendung
 
-- Neue Fassungen immer als zusätzlichen Abschnitt oben oder chronologisch sinnvoll einfügen.
-- Bestehende Abschnitte nicht überschreiben.
-- Beispiele immer im zugehörigen Gültigkeitsabschnitt halten.
+- Das Verhalten beim Aktualisieren (neue Fassung als eigener Abschnitt, Historie nicht überschreiben, Beispiele im zugehörigen Gültigkeitsabschnitt) ist in `SKILL.md` (Verhalten, Schritt 3) geregelt; dort gültigen Wortlaut verwenden.
+- Neue Fassungen oben einfügen (neueste zuerst), passend zur gezeigten Abschnittsstruktur.
 - Tabellen für Zahlenwerte und Schwellenwerte bevorzugen.

@@ -12,5 +12,5 @@ Load this reference before writing tasks whenever there is more than one task, a
 
 - Derive parallel groups from tasks whose prerequisites are satisfied at the start of that group. Later groups are conditional on completion of preceding prerequisites; do not describe them as runnable now.
 - Graph independence is necessary but insufficient: compare `Files to touch` and known shared resources, including fixtures, databases, and generated outputs. Overlapping implementation files or conflicting resources require serial execution by default, or a split into disjoint tasks. If resource isolation is unknown, do not promise conflict-free parallel execution.
-- Explain conflicts and the resulting order in the report. Keep `parallel-with` out of task documents.
+- Explain conflicts and the resulting order in the f-tasks report. Keep `parallel-with` out of task documents.
 - Coordinate shared status and index updates separately: serialize their integration against the latest contents, preserving other agents' rows. Shared metadata alone need not prevent otherwise independent implementation work.

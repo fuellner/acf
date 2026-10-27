@@ -2,7 +2,7 @@
 
 [1–2 Sätze: Was macht das Projekt?]
 
-## Tech Stack
+## Technologie-Stack
 
 - **Sprache:** [Sprache] [Version]
 - **Framework:** [Framework] [Version]
@@ -45,5 +45,5 @@
 - [AGENTS.md](AGENTS.md) — Hinweise für AI-Agenten
 - [docs/architecture.md](docs/architecture.md) — Architektur
 - [Entscheidungen](docs/decisions/index.md) — Inhaltsverzeichnis der Entscheidungsdokumente
-- [Coding Conventions](docs/conventions/index.md) — Inhaltsverzeichnis der Coding Conventions
+- [Konventionen](docs/conventions/index.md) — Inhaltsverzeichnis der Konventionen
 - [Regulatorische Hinweise](docs/legal/index.md) — Inhaltsverzeichnis der regulatorischen Dokumentation

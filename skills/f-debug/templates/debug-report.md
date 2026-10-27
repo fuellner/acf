@@ -2,30 +2,31 @@
 
 **Task ID:** {{TASK-ID or n/a}}  
 **Requirement ID:** {{REQ-ID or n/a}}  
-**Date:** {{YYYY-MM-DD}}  
-**Revision:** 1
+**Date:** {{CREATED}}  
+**Revision:** 1  
+**Updated:** {{UPDATED}}
 
 ## Problem
-{{Concise description of the failure, including observed vs. expected behavior.}}
+{{PROBLEM}}
 
 ## Reproduction
 - **Reproducible:** Yes / No / Unknown
 - **Steps:**
-  1. {{step}}
-- **Environment / assumptions:** {{brief}}
-- **Missing information (if any):** {{list or "none"}}
+  1. {{REPRO_STEP}}
+- **Environment / assumptions:** {{ENVIRONMENT_ASSUMPTIONS}}
+- **Missing information (if any):** {{MISSING_INFORMATION or "none"}}
 
 ## Evidence
-{{Concrete evidence only: relevant stack frames, log lines, assertion messages, code locations. Quote or cite precisely.}}
+{{EVIDENCE}}
 
 ## Root Cause
-{{Precise, evidence-backed explanation of the cause. If uncertain, rank hypotheses and state what evidence is still needed.}}
+{{ROOT_CAUSE}}
 
 ## Proposed Fix
-{{Minimal change description. Explicitly note what is out of scope.}}
+{{PROPOSED_FIX}}
 
 ## Verification
-{{Exact steps the implementing agent should take and the expected outcome.}}
+{{VERIFICATION}}
 
 ## Notes
-{{Optional: links to related files, review findings, or residual risks.}}
+{{NOTES}}

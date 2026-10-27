@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-27
+- Index-Regel: Grammatikfehler behoben („dann wird die leere Dokumenttabelle weggelassen“).
+- Dokumentvorlage: Einfügeregel auf neueste-ganz-oben festgelegt (passend zur gezeigten Struktur); die mit SKILL.md verdoppelten Verwendungsregeln sind durch einen Verweis auf „Verhalten, Schritt 3“ ersetzt.
+- Extraktionsrichtlinien: der `ungeprüft`-Marker hat jetzt einen festen Ort im Dokument (beim betroffenen Punkt), statt nur definiert zu sein.
+
 ## 2026-10-26
 - Index-Pflege verweist auf `references/directory-index.md` statt die gemeinsame Prozedur zu wiederholen. Vorlagenregeln für Platzhalter, leere Abschnitte und Metadaten bleiben hier.
 - Dokumentvorlage liegt jetzt unter `templates/document.md` statt `references/document-template.md` (Konvention: Vorlagen gehören nach `templates/`).

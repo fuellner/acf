@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-27
+- Every acceptance criterion must now carry an `AC-n` identifier so f-testing and f-code-review can reference it.
+- The one-observable-result rule now permits tightly coupled side conditions of the same action, matching the bundled examples.
+- Template metadata uses the bold-line style with hard breaks, shared with the other skills' templates.
+
 ## 2026-10-26
 - Directory indexes follow the shared `references/directory-index.md`.
 - Noted that `f-tasks` asks before deriving tasks while a requirement is `draft` and still must not change requirement status.
@@ -10,7 +15,7 @@
 - Require current directory indexes for every affected path and parent below `docs/`, including nested directories. Rebuild missing indexes from existing contents, preserve authored prose, and validate relative links.
 - On creation, the next ID is derived from the filesystem union index, and existing files are never overwritten.
 - Added a status model (`draft`, `approved`, `done`, `obsolete`) with explicit actors.
-- Template: `Status` defaults to `draft`; traceability is a single placeholder so the section can be dropped when empty.
+- Template: `Status` defaults to `draft`.
 - Added a "Before you finish" self-check.
 
 ## 2026-10-25
