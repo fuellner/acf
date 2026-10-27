@@ -22,3 +22,5 @@ Optional paid add-ons exist, including PHPStan Pro and commercial Rector upgrade
 | [Phalcon (cphalcon)](https://github.com/phalcon/cphalcon) | BSD-3-Clause | [LICENSE.txt](https://github.com/phalcon/cphalcon/blob/master/LICENSE.txt) | Allowed. If the extension is shipped in the product image, keep the license notice with that distribution. |
 | [phalcon/ide-stubs](https://github.com/phalcon/ide-stubs) | BSD-3-Clause | [LICENSE.txt](https://github.com/phalcon/ide-stubs/blob/master/LICENSE.txt) | Allowed. Keep the notice. Do not use the authors' names to endorse a product. The GitHub license API returns `NOASSERTION`; the file text is the 3-clause BSD license. |
 | [PHPCompatibility](https://github.com/PHPCompatibility/PHPCompatibility) | LGPL-3.0 | [LICENSE](https://github.com/PHPCompatibility/PHPCompatibility/blob/develop/LICENSE) | Allowed. Dev-time use that does not ship the library has no distribution duty. |
+
+Deptrac is the repository GitHub serves for `qossmic/deptrac` (`opensoftwareconsulting/deptrac`). That repository is archived. Prefer the boundary tool the target repo already runs when it has one.
