@@ -49,14 +49,14 @@ Updates to existing documents are allowed only when the user explicitly requests
 |--------|---------|-------------|
 | `draft` | Captured, not yet agreed | f-requirements on creation |
 | `approved` | Agreed and ready for task breakdown | User |
-| `done` | Every acceptance criterion passes in review | f-code-review (all AC PASS) |
+| `done` | Every acceptance criterion is met (PASS or CONCERN) with review evidence | f-code-review (all AC PASS or CONCERN) |
 | `obsolete` | Superseded or dropped | User |
 
-f-tasks and f-testing never change the requirement status. f-tasks asks before deriving tasks while the status is `draft`. The review sets `done` only when every criterion of that requirement passes.
+f-tasks and f-testing never change the requirement status. f-tasks asks before deriving tasks while the status is `draft`. The review sets `done` only when every criterion of that requirement is PASS or CONCERN.
 
 ## Strict Acceptance Criteria
 
-Prefer the Given / When / Then form plus an explicit Check and a `Must not` statement.
+Use the Given / When / Then form for behavioral criteria, plus an explicit Check and a `Must not` statement. A criterion that is not behavioral (for example a documentation or configuration constraint) still needs a concrete Check and a `Must not`.
 
 - One observable result per criterion; tightly coupled side conditions of the same action may share the criterion.
 - Every acceptance criterion carries an identifier (`AC-1`, `AC-2`, …). Downstream skills (f-testing, f-code-review) reference these identifiers in tests and coverage states.
@@ -95,7 +95,7 @@ Follow `references/directory-index.md` whenever creating or updating documentati
 
 ## Before you finish
 
-- Every new or changed acceptance criterion has Given/When/Then, a concrete `Check`, and a `Must not`.
+- Every new or changed acceptance criterion has a concrete `Check` and a `Must not`; behavioral criteria use Given/When/Then.
 - Every added or rewritten criterion is marked `*(supplemented)*`.
 - No unfilled placeholder remains in new or edited sections.
 - The document exists at the documented path and the index has a matching row.

@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-10-27
+- Debug-report metadata field renamed from `Date` to `Created`, matching the changelog and the other templates.
 - Debug-report placeholders unified to one `UPPER_SNAKE` style; the metadata block gained a `Created`/`Updated` split so the date semantics are unambiguous on revision overwrite, and updates increment `Revision` and update `**Updated**`.
 - Fix prompt: the `TASK-ID` placeholder gained the same "or n/a" fallback as the report, severity is defined as the Critical / High / Medium / Low scale shared with `f-code-review`, and the template mirrors f-code-review's `blocked` ownership sentence.
 - The template summary in SKILL.md now lists the actual report sections (Metadata, Reproduction, …).

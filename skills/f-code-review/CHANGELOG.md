@@ -1,6 +1,8 @@
 # Changelog
 
 ## 2026-10-27
+- Requirement completion now tests review evidence instead of the coverage term `unverified`; `[test: unverified]` coverage alone does not block `done` when the criterion has review evidence.
+- `CONCERN` no longer blocks completion: overall Spec Compliance can be PASS, CONCERN, or FAIL, and the APPROVED transition accepts PASS or CONCERN. Requirement `done` now requires review evidence for every criterion of the linked requirement.
 - Fix prompt consolidated: `templates/fix-prompt.md` is now the single canonical source; the inline copy in the output template was removed (both had drifted). The template heading follows the file-naming chain vocabulary, the verification placeholder explains its default, the `blocked` ownership sentence matches the f-debug fix prompt, and the no-open-findings case is documented.
 - `references/coverage-evidence.md` defines `Check` up front and lists the three coverage states before the mapping rules.
 

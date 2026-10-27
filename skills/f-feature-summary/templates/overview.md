@@ -1,5 +1,6 @@
 # Feature-Übersicht
 
+**Status**: {{STATUS}}  
 **Updated**: {{UPDATED}}
 
 ## Kurzüberblick

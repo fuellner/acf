@@ -11,7 +11,7 @@ description: >
   Do NOT trigger on the bare word "workflow" or on workflow-related topics in
   general (CI workflows, workflow engines, process diagrams). Do NOT use for
   executing the actual work of any listed skill (requirements, tasks, testing,
-  review, debug, docs, or legal).
+  review, debug, docs, legal, or feature summaries).
 ---
 
 # Workflow Menu

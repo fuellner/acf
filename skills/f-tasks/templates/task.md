@@ -30,7 +30,7 @@ When finished and local verification passed:
 - Update **Updated**
 - Update the corresponding row in `docs/tasks/index.md`
 
-For documentation created or updated under `docs/`, refresh `index.md` by following `references/directory-index.md` (shared by every installed `f-*` skill). Use the tasks schema from that file and check that the links resolve.
+For documentation created or updated under `docs/`, refresh `index.md` by following `references/directory-index.md` in the installed `f-docs` skill. Every installed `f-*` skill links the same file at `references/directory-index.md`. Use the tasks schema from that file and check that the links resolve.
 
 For parallel implementations, use the agreed serial handoff for shared status/index updates. Read the latest index before updating your row and preserve other agents' entries.
 

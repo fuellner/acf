@@ -50,6 +50,7 @@ For each acceptance criterion or stated requirement:
 - State test coverage as `covered`, `missing`, or `unverified` by applying `references/coverage-evidence.md`. Cite the evidence used for each state.
 
 Verdict per criterion: **PASS** | **FAIL** | **CONCERN** (met, but with a documented residual risk that needs attention).
+Overall **Spec Compliance** is **FAIL** if any criterion is FAIL, **CONCERN** if any is CONCERN and none is FAIL, otherwise **PASS**. A CONCERN does not block completion on its own; record its residual risk under `## Residual Risk`.
 Flag anything built beyond the stated requirements as **OVER-BUILT**.
 
 If any criterion is FAIL → overall verdict is **CHANGES REQUIRED**. Continue only for information.
@@ -96,7 +97,7 @@ Always produce exactly this structure:
 **Target**: <commit or branch>
 **Revision**: N
 **Verdict**: APPROVED | CHANGES REQUIRED
-**Spec Compliance**: PASS | FAIL
+**Spec Compliance**: PASS | CONCERN | FAIL
 
 ## Acceptance Criteria
 - <criterion>: PASS | FAIL | CONCERN — <one-line note> [test: covered | missing | unverified]
@@ -126,11 +127,11 @@ Resolve a referenced TASK-ID before changing anything:
 - With no matching file, skip the task updates and mention the missing document once in the report. With multiple matches, change none of them and report the ambiguity.
 - Use the uniquely resolved path for all task status, date, Notes, and index updates. The report filename still uses the TASK-ID.
 
-**Verdict APPROVED and every criterion PASS:**
+**Verdict APPROVED (every criterion PASS or CONCERN):**
 - Set the task **Status** to `done` and update its **Updated** field.
 - Update the corresponding row in `docs/tasks/index.md`.
 - If a report was written, append its path under the task's `Notes`.
-- If a requirement is linked, set its **Status** to `done` **only when every criterion of the entire requirement passes**. Approval of one partial task is insufficient.
+- If a requirement is linked, set its **Status** to `done` **only when every criterion of the entire requirement is PASS or CONCERN and has review evidence**: either inspected in this review or recorded as PASS/CONCERN in an existing report under `docs/reviews/`. If a criterion is FAIL or has no review evidence, leave the requirement status unchanged and name the FAIL or evidence-less criteria in the report. Test coverage marked `[test: unverified]` does not by itself block `done` when the criterion has review evidence. Approval of one partial task is insufficient.
 - Whenever setting a requirement to `done`, update its **Updated** field and synchronize its row in `docs/requirements/index.md` in the same operation. Preserve its ID, title, and actual file path. If that index is missing, rebuild it from existing requirement documents using the requirements schema in `references/directory-index.md`; do not invent entries.
 - Append the review path under `Traceability → Reviews` only when a report was written.
 
@@ -183,6 +184,7 @@ Follow `references/directory-index.md` whenever writing a report, fix note, or t
 - The fix prompt contains only open findings, never resolved findings or extra scope.
 - Status updates were applied to the referenced documents only, and only as described above.
 - Task paths were resolved uniquely by exact ID. After a requirement status change, its document and index agree and its Updated field is current.
+- Requirement completion names evidence (this review or an existing review report) for every criterion; criteria without review evidence leave the status unchanged. `[test: unverified]` coverage alone does not block completion.
 - A debug report for this unit is linked from the review when one exists, and was not copied into `docs/reviews/`.
 - Every affected documentation directory and parent below `docs/` has an up-to-date `index.md` per `references/directory-index.md`; entries match existing contents and all generated links resolve. No review directory was created for an unsaved review.
 

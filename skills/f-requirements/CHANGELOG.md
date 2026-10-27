@@ -1,6 +1,8 @@
 # Changelog
 
 ## 2026-10-27
+- Given/When/Then is required for behavioral criteria; the self-check now matches the body, with `Check` and `Must not` required for every criterion.
+- Requirement `done` accepts CONCERN criteria with review evidence, matching `f-code-review`.
 - Every acceptance criterion must now carry an `AC-n` identifier so f-testing and f-code-review can reference it.
 - The one-observable-result rule now permits tightly coupled side conditions of the same action, matching the bundled examples.
 - Template metadata uses the bold-line style with hard breaks, shared with the other skills' templates.

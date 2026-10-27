@@ -1,6 +1,8 @@
 # Changelog
 
 ## 2026-10-27
+- Overview `Status` follows its sources: `current` only when every summarized unit is `current`, otherwise `outdated` unless re-verified.
+- Defined the feature `Status` vocabulary (`current` / `outdated`) and its actors; the overview document now carries a Status, and updates apply only documented transitions.
 - Template metadata uses hard breaks so the Status/Source/Created/Updated lines render individually.
 
 ## 2026-10-26

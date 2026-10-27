@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-10-27
+- Description's do-not list includes feature summaries, matching the Optional menu.
+
 ## 2026-10-26
 - Optional menu lists `f-feature-summary` and includes its prompt template.
 - Implementation prompt points at the shared directory-index reference (`references/directory-index.md`, owned by `f-docs` and linked from every `f-*` skill) instead of inlining the index procedure.

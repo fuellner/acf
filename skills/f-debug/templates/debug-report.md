@@ -2,7 +2,7 @@
 
 **Task ID:** {{TASK-ID or n/a}}  
 **Requirement ID:** {{REQ-ID or n/a}}  
-**Date:** {{CREATED}}  
+**Created:** {{CREATED}}  
 **Revision:** 1  
 **Updated:** {{UPDATED}}
 
