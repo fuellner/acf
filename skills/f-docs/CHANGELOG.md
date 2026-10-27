@@ -1,6 +1,8 @@
 # Changelog
 
 ## 2026-10-27
+- Named the `docs/refactor/` index schema (`ID | Title | Type | Priority | Status | File`) in `references/directory-index.md`. The File column is the child-directory entry, so that index does not also list the unit directories. Unit and `steps/` directories stay on `Document | Description`.
+- Deeper-docs template lists `docs/refactor/` so the link is kept when that directory exists.
 - Changelog corrections: the stale `template_version` reference and the misplaced legal index template attribution (that template lives in `f-legal`) were fixed.
 - The copy step now reflects that only `agents.md.tmpl` carries a `TEMPLATE (f-docs)` block.
 - `agents.md.tmpl`: the two overlapping drive-by/refactor bullets were merged into one.

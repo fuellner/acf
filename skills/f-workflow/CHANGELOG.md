@@ -1,6 +1,8 @@
 # Changelog
 
 ## 2026-10-27
+- Optional menu lists `f-refactor` first and includes its prompt template. The Implementation prompt sends `f-refactor` tasks to that skill's step mode. The task, testing, and review prompts name the refactor handoff.
+- Description's do-not list includes migrations and refactors, matching the Optional menu.
 - Description's do-not list includes feature summaries, matching the Optional menu.
 
 ## 2026-10-26

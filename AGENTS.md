@@ -26,7 +26,7 @@ Follow the conventions in `docs/conventions/`. The rules below always apply:
 - Never perform drive-by changes or refactorings. Only modify what is necessary for the current task.
 - Never introduce new concepts, patterns, or abstractions unless they are strictly necessary to fulfill the requirement.
 - Match the existing style, naming, and structure of the surrounding skill. Do not introduce a new style for a single change.
-- Keep skill instructions English. Human-facing documents in the target repository (README, architecture, decisions) are German. `f-legal` (templates and `docs/legal/`) and `f-feature-summary` templates plus generated `docs/features/` are German.
+- Keep skill instructions English. Human-facing documents in the target repository (README, architecture, decisions) are German. `f-legal` (templates and `docs/legal/`) and `f-feature-summary` templates plus generated `docs/features/` are German. `f-refactor` templates and generated `docs/refactor/` are English.
 - Do not add comments or sections that merely restate what is already obvious. Only document reasons and constraints that are non-obvious.
 
 ## Boundaries
@@ -35,6 +35,7 @@ Follow the conventions in `docs/conventions/`. The rules below always apply:
 - Never modify the remote repository (no push, no force-push, no direct remote changes of any kind).
 - Never commit `.env` files or any secrets.
 - `docs/legal/` is owned exclusively by `f-legal`. `f-docs` must never create, fill, or update it.
+- `docs/refactor/` in a target repository belongs to `f-refactor`. Other skills write there only the task links and status updates those skills already define.
 - `skills/<name>/templates/` is the source of truth. Running a skill must not modify the templates in this repository; generated documents belong in the target repository.
 - Do not create a template named `AGENTS.md` — agent harnesses auto-load that filename as active instructions.
 

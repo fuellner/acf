@@ -14,9 +14,10 @@ Meine Sammlung agentischer Coding-Skills (OpenCode / Claude-kompatibel).
 | `f-docs` | AGENTS.md, README, Architektur, Conventions aus dem Repo erzeugen |
 | `f-legal` | Regulatorische Vorgaben (DE/EU) → `docs/legal/` |
 | `f-feature-summary` | Implementierte Fachlogik → übersichtliche Feature-Dokumente (`docs/features/`) |
+| `f-refactor` | Verhaltensgleiche PHP-Migration (vorrangig) oder Struktur-Refactor in kleinen, auslieferbaren Schritten → `docs/refactor/` |
 | `f-workflow` | Menü + Prompt-Templates für den Ablauf (führt selbst nichts aus) |
 
-Der Kernzyklus: Requirements → Tasks → Testing → Implementation → Review. `f-debug` ist der Seitenzweig, wenn etwas fehlschlägt.
+Der Kernzyklus: Requirements → Tasks → Testing → Implementation → Review. `f-debug` ist der Seitenzweig, wenn etwas fehlschlägt. `f-refactor` liegt außerhalb dieses Zyklus. Ein angenommener Plan geht über `f-tasks` zurück in den Zyklus; die Ausführung eines Schritts folgt `f-refactor`, nicht dem allgemeinen Implementation-Prompt.
 
 ## Installation
 
@@ -47,7 +48,7 @@ skills/<name>/
 ```
 
 Erzeugte Dokumente landen im Zielrepo unter `docs/` (`requirements/`, `tasks/`, `tests/`,
-`reviews/`, `debug/`, `legal/`, `features/`, `conventions/`, `decisions/`).
+`reviews/`, `debug/`, `legal/`, `features/`, `refactor/`, `conventions/`, `decisions/`).
 `f-debug` schreibt immer nach `docs/debug/`; ein Review, das die Analyse ausgelöst hat, verlinkt den Bericht.
 
 ## Dokumentation

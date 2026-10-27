@@ -22,3 +22,23 @@ Load only when Stage 2 needs more detail.
 - No new global state or singleton side effects
 
 Only raise a finding when you can point to the exact lines and explain the concrete risk.
+
+## Behavior preservation (f-refactor)
+
+Apply only when the task source, the linked plan, or the user identifies the change as an `f-refactor` unit. Read `Type` from the plan header.
+
+Both types:
+
+- Observable behavior outside the stated step is unchanged.
+- A bug fixed in this diff, instead of recorded on the step, is a finding.
+- A follow-up unit of the other type is not a defect.
+
+Migration:
+
+- Every change is forced by the target runtime, framework, or dependency upgrade, or is a deletion the plan marks as proven-dead.
+- A rename, restructure, new abstraction, or voluntary dependency swap is a finding.
+
+Refactor:
+
+- No PHP, framework, or dependency version bump.
+- A characterization assertion edited to match new behavior is a finding.
