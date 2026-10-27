@@ -54,7 +54,8 @@ This is static inspection, not test execution; the report does not establish tha
    - Map Given/When/Then to setup / action / assertion.
    - Carry the criterion's `Must not` constraint into the entry's `**Must not**` line; omit the line when the criterion has none.
    - Mark any test that goes beyond the original Checks with `*(supplemented)*`.
-   - When the source is an `f-refactor` step or plan that asks to lock current behavior, treat each named behavior as the Check. The entry asserts the observed result, including quirks, and is marked `*(characterization)*`. Do not add entries for desired behavior the code does not have, and do not cover modules the step does not name.
+   - When the source is an `f-refactor` step, plan, or safety-net that asks to lock current behavior, treat each named behavior as the Check. The entry asserts the observed result, including quirks, and is marked `*(characterization)*`. Do not add entries for desired behavior the code does not have, and do not cover modules the step does not name.
+   - When the source asks for a golden master, name the fields that are normalized before compare (timestamps, ids, session tokens, random values, plus any field the safety-net lists). State that a golden-file change needs a written reason. Do not plan a blind snapshot refresh. Do not use production or customer data.
    - Note the expected test type (unit / integration / e2e) only when obvious from context.
 4. For **verify**:
    - Locate the relevant existing tests (user-provided or obvious paths).

@@ -1,7 +1,7 @@
 # Changelog
 
 ## 2026-10-27
-- A refactor or migration plan is a task source: one task per `todo` step, type and order preserved, task id written back to the plan. Recorded bugs are not turned into tasks. A step that is too large is sent back to `f-refactor` instead of being split here.
+- A refactor or migration plan is a task source: one task per `todo` step, type and order preserved, task id written back to the plan. Recorded bugs are not turned into tasks. A step that is too large is sent back to `f-refactor` instead of being split here. Execution of those tasks is the `f-refactor` step-execution phase.
 - The copied directory-index handoff now names the `f-docs` skill and the shared file, matching the Implementation prompt and decision 0003.
 - Task template: metadata moved to the bold-line style with hard breaks shared by the other templates; the `Model recommendation` placeholder names the tier + reasoning format; the directory-index paragraph was trimmed to the one sentence the implementing agent needs; the traceability sentence is conditional on the task deriving from a requirement.
 - `references/ordering.md`: the conflicts rule names the f-tasks report explicitly instead of an unspecified "the report".

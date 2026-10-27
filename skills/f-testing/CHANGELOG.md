@@ -2,6 +2,7 @@
 
 ## 2026-10-27
 - A refactor or migration step can be a generate source. Entries that lock observed behavior, including quirks, are marked `*(characterization)*` and stay inside the named seam.
+- A golden master from an f-refactor safety net names the normalized fields and forbids a snapshot refresh without a written reason. Fixtures do not use production or customer data.
 - Removed the hardcoded `*(supplemented)*` marker from the test-plan template block; supplementation stays conditional per the generate rule.
 - The test-plan's `Maps to` field is documented as the criterion's AC identifier (`AC-n`) or Check reference, and `Must not` is defined as the carried-over criterion constraint.
 - The coverage-report metadata states the legal status values and that reviews treat `partial` as `unverified`.

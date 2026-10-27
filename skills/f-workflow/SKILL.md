@@ -1,9 +1,9 @@
 ---
 name: f-workflow
 description: >
-  Presents the available agentic-coding skills as an ordered menu following the
-  recommended sequence. Clearly separates the core implementation cycle from
-  optional / outside skills (f-refactor, f-docs, f-legal, f-feature-summary). When a menu item is selected,
+  Presents the feature-cycle skills as an ordered menu. Separates that cycle from
+  optional skills (f-docs, f-legal, f-feature-summary) and from the separate
+  f-refactor workflow, which appears only as a handoff. When a menu item is selected,
   outputs the skill handle plus a ready-to-use prompt template.
   Use only when the user explicitly asks for the skill menu or menu navigation:
   "skill menu", "skill workflow", "workflow menu", "welche skills", "zeige Menü",
@@ -11,7 +11,8 @@ description: >
   Do NOT trigger on the bare word "workflow" or on workflow-related topics in
   general (CI workflows, workflow engines, process diagrams). Do NOT use for
   executing the actual work of any listed skill (requirements, tasks, testing,
-  review, debug, docs, legal, feature summaries, migrations, or refactors).
+  review, debug, docs, legal, or feature summaries). Do NOT use for a migration
+  or a refactor; that workflow is f-refactor.
 ---
 
 # Workflow Menu
@@ -21,7 +22,7 @@ Does not perform domain work. Only displays the menu and supplies prompt templat
 
 ## Behavior
 
-1. Display the menu exactly as structured below (Core first, then Optional).
+1. Display the menu exactly as structured below (Core first, then Optional, then the separate workflow).
 2. If the user has already named a skill or number, skip the menu and jump to the corresponding entry.
 3. For the selected entry output:
    - Skill handle (e.g. `f-requirements`)
@@ -42,10 +43,13 @@ Does not perform domain work. Only displays the menu and supplies prompt templat
 
 ### Optional / Outside Core
 
-- **f-refactor** — Plan or execute one behavior-preserving unit. Migration (primary) upgrades PHP or a framework with forced fixes only. Refactor changes structure at the current runtime. An accepted plan re-enters this menu at f-tasks; the step itself is f-refactor, not the Implementation prompt.
 - **f-docs** — Generate or refresh project documentation (AGENTS.md, README, architecture, conventions).  
 - **f-legal** — Extract developer-relevant requirements from German/EU legal sources into `docs/legal/`.
 - **f-feature-summary** — Create or update scannable feature summaries (individual units + overall overview) for product owners.
+
+### Separate workflow
+
+- **f-refactor** — Behavior-preserving migration or refactor, with its own phase menu and status under `docs/refactor/`. This menu only hands off. It does not run a phase.
 
 ## Prompt Templates
 
@@ -84,7 +88,7 @@ Test plan (if available): [docs/tests/TEST-xxx-plan.md]
 
 Rules:
 - Touch only the files listed in the task, plus the status fields and directory indexes described below. Do not refactor, rename, or "improve" surrounding code.
-- If this task's source is an `f-refactor` step, stop and use the `f-refactor` skill in step mode instead of this prompt.
+- If this task's source is an `f-refactor` step, stop and use the `f-refactor` skill's step-execution phase instead of this prompt.
 - Implement the tests from the test plan; do not add tests that are not derived from a Check.
 - Do not modify acceptance criteria or task documents except the status fields described below.
 - If a requirement is ambiguous or the task is not implementable as written, stop and report instead of guessing.
@@ -113,15 +117,10 @@ Relevant context (TASK/REQ, logs, diff): [paste]
 
 ### f-refactor
 ```
-Please use the f-refactor skill.
+Please use the f-refactor skill. It is a separate workflow with its own phase menu. Do not run it from the feature cycle.
 
-Type: migration | refactor
-Mode: plan | step
-
-[For plan: app or module, current PHP or framework if known, what must stay in production]
-[For step: REF-id and the single step to execute, or "resume"]
-
-Do not mix the other type into this unit. Record bugs; do not fix them.
+[New unit: app or module, and whether this is a migration or a refactor]
+[Resume: REF-id, or "resume"]
 ```
 
 ### f-docs
@@ -153,12 +152,12 @@ Prefer tables and structured bullets. Generate individuals first, then the overv
 
 - Language: English.
 - Keep output short and scannable.
-- Always mark the Optional section clearly.
+- Always mark the Optional section and the separate workflow clearly.
 - Never rename the numbered steps or reorder the core cycle. The only step without a skill handle is **Implementation** — do not invent an `f-implement` / `f-coding` handle for it.
 - Do not execute any of the listed skills.
 
 ## Before you finish
 
-- The menu is shown exactly as structured (Core first, Optional clearly marked), unless behavior step 2 skipped it.
+- The menu is shown exactly as structured (Core first, then Optional, then the separate workflow), unless behavior step 2 skipped it.
 - At most one entry was expanded with handle, role, and prompt template.
 - No skill was invoked and no domain work was started.

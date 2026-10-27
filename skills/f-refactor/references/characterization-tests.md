@@ -20,6 +20,16 @@ The same tests pass without edited assertions. An assertion edit means the step 
 
 On a migration, run the oracle on the current production runtime and on the hop target when the step claims both. A fast-path migration characterizes the outer seams it can run and records the uncovered inner code in the step. Thin inner coverage is acceptable. No oracle at the seam being edited is not.
 
+## Golden masters
+
+Use a golden master when the seam's output is a page, a report, a payload, or a result set. Before comparing, normalize nondeterministic fields to a fixed stand-in: timestamps, generated ids, session tokens, and random values. Record those fields in `safety-net.md`. Anything else that moves between runs gets the same treatment. A diff on a normalized field is a behavior change, not a reason to regenerate the file.
+
+Golden files are versioned with the tests. Updating one requires a reason on the step record: what changed in the output and why it is still the same behavior, or why the user accepted a difference. Do not refresh a snapshot to make a step pass. `f-code-review` treats a silent refresh as a finding.
+
+For a migration, run the same suite under the old runtime and the target runtime and diff the normalized output. A PHP comparison change that shows up only in that diff stops the step.
+
+Fixtures are anonymized or synthesized. No production rows, no customer payloads, no secrets copied out of config or the database.
+
 ## What not to characterize
 
 - Proven-dead code you are about to delete. The evidence for deletion is the production trace, not a new test.

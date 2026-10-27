@@ -34,7 +34,7 @@ These schemas replace the two-column default when that index is created:
 - Requirements (`docs/requirements/`): `ID | Title | Status | File`
 - Tasks (`docs/tasks/`): `ID | Title | Priority | Complexity | Status | File`
 - Features (`docs/features/`): `ID | Title | Status | File`. The documents are German; this schema still replaces the `Dokument | Beschreibung` default.
-- Refactor (`docs/refactor/`): `ID | Title | Type | Priority | Status | File`. English. One row per unit. `File` links to that unit's `plan.md`. `Type` is `migration` or `refactor`. Do not add a second list of the same unit directories. Unit subdirectories and `steps/` keep the `Document | Description` default.
+- Refactor (`docs/refactor/`): `ID | Title | Type | Priority | Phase | Effort | Status | File`. English. One row per unit. `File` links to that unit's `plan.md`. `Type` is `migration` or `refactor`. `Phase` is the current phase. `Effort` is `S`, `M`, `L`, or `XL`. Do not add a second list of the same unit directories. This index is the cross-unit progress view. Unit subdirectories and `steps/` keep the `Document | Description` default.
 - Legal (`docs/legal/`): the columns in the `f-legal` template `templates/index.md` (`Bereich | Dokument | Rechtsgrundlage | Gültig ab | Zuletzt geprüft`)
 
 Skill-specific constraints (who may change a status, whether a directory may be created, serialization of shared updates) stay in the skill that owns them.

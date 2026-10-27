@@ -2,6 +2,7 @@
 
 ## 2026-10-27
 - Refactor and migration units get a behavior-preservation check (`references/safety-checks.md`): a migration fails on a non-forced change, a refactor fails on a version bump, and a bug fixed instead of recorded is a finding.
+- A golden-master update without a reason on the step is a finding. A migration review expects the same suite diffed on the old and target runtimes.
 - An APPROVED or CHANGES REQUIRED review updates the linked `f-refactor` step status. The unit becomes `done` only when the user asked to close it, every step is `done` or `skipped`, and the done criteria were reviewed.
 - Requirement completion now tests review evidence instead of the coverage term `unverified`; `[test: unverified]` coverage alone does not block `done` when the criterion has review evidence.
 - `CONCERN` no longer blocks completion: overall Spec Compliance can be PASS, CONCERN, or FAIL, and the APPROVED transition accepts PASS or CONCERN. Requirement `done` now requires review evidence for every criterion of the linked requirement.

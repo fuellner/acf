@@ -14,8 +14,8 @@ Das Repository enthält agentische Coding-Skills für OpenCode / Claude-kompatib
 - **`skills/f-docs`:** Repository analysieren und AGENTS.md, README, Architektur, Conventions, Decisions erzeugen.
 - **`skills/f-legal`:** Juristische Quellen (DE/EU) → regulatorische Dokumente in `docs/legal/`.
 - **`skills/f-feature-summary`:** Implementierte Fachlogik → übersichtliche Feature-Dokumente für Product Owner (`docs/features/`).
-- **`skills/f-refactor`:** Verhaltensbewahrende PHP-Migration (vorrangig) oder Strukturänderung in einzeln auslieferbaren Schritten (`docs/refactor/`). Der Schritt-Modus darf Anwendungscode im Zielrepo ändern; der Plan-Modus nicht. `done` setzt dieser Skill nicht.
-- **`skills/f-workflow`:** Menü und Prompt-Templates für den Ablauf; führt selbst keinen Skill aus.
+- **`skills/f-refactor`:** Eigener Ablauf neben `f-workflow` für verhaltensbewahrende PHP-Migration (vorrangig) oder Strukturänderung. Phasenmenü und Status liegen unter `docs/refactor/`. Aufgaben, Tests, Review, Fehlersuche und ADRs bleiben bei den bestehenden Skills. `done` setzt dieser Skill nicht. Produktion ist für den Agenten gesperrt.
+- **`skills/f-workflow`:** Menü und Prompt-Templates für den Feature-Ablauf. An `f-refactor` wird nur übergeben.
 
 Jeder Skill folgt dem Aufbau `SKILL.md` (Frontmatter + Ablauf), optional `templates/`, `references/` und `CHANGELOG.md`.
 
@@ -26,7 +26,7 @@ Jeder Skill folgt dem Aufbau `SKILL.md` (Frontmatter + Ablauf), optional `templa
 3. Der Agent schreibt die Ergebnisse in das Zielrepo unter `docs/<bereich>/` und aktualisiert die jeweilige Index-Datei nach `skills/f-docs/references/directory-index.md`.
 4. `f-workflow` verweist nur auf die Skills und deren Prompt-Templates; es erzeugt keine Dokumente.
 5. Statusübergaben laufen über die Dokumente: Tasks werden von Implementierungsagenten auf `ready-for-review` gesetzt, `f-code-review` setzt `done` oder `changes-requested`. `blocked` setzen nur der User oder der implementierende Agent; `f-code-review` und `f-debug` empfehlen diesen Status höchstens.
-6. `f-refactor` schreibt Pläne und Schrittprotokolle nach `docs/refactor/`. Ein angenommener Plan wird über `f-tasks` in Tasks zerlegt. Die Ausführung eines Schritts folgt `f-refactor` und nicht dem skill-losen Implementation-Prompt. `f-code-review` setzt den Schritt auf `done`.
+6. `f-refactor` ist ein eigener Ablauf neben `f-workflow`. Es schreibt die Dokumente unter `docs/refactor/` und übergibt an `f-tasks`, `f-testing`, `f-code-review`, `f-debug` und `f-docs`. Feature- und Bugfix-Arbeit geht zurück an `f-workflow`. `f-workflow` führt keine Phase von `f-refactor` aus.
 
 ```mermaid
 flowchart LR
@@ -41,9 +41,14 @@ flowchart LR
   I[f-docs] --> J[docs/]
   K[f-legal] --> L[docs/legal/]
   M[f-feature-summary] --> N[docs/features/]
-  O[f-refactor] --> P[docs/refactor/]
-  O -->|Plan| C
-  C -->|Schritt| O
+  A -->|Handoff| O[f-refactor]
+  O -->|Feature oder Bugfix| A
+  O --> P[docs/refactor/]
+  O --> C
+  O --> D
+  O --> F
+  O --> H
+  O --> I
 ```
 
 ## Externe Abhängigkeiten
@@ -58,4 +63,5 @@ flowchart LR
 - Skills führen keine Codeänderungen an der zu prüfenden Änderung aus, außer wenn der Ablauf es ausdrücklich vorsieht (Implementierung ist kein Skill).
 - `f-docs` erzeugt und pflegt `docs/legal/` nicht; dieses Verzeichnis gehört ausschließlich `f-legal`.
 - `docs/refactor/` gehört `f-refactor`. Andere Skills schreiben dort nur die in `f-tasks` und `f-code-review` beschriebenen Status- und Task-Verweise.
+- Migration und Refactor sind kein Schritt von `f-workflow`. Der Feature-Ablauf übergibt nur.
 - Die Templates in `skills/*/templates/` sind Quelle, nicht generiertes Ergebnis.

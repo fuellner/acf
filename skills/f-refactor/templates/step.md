@@ -36,7 +36,16 @@
 {{bugs observed and not fixed, or "None."}}
 
 ## Rollback
-{{how to revert this step alone}}
+
+The agent does not roll this step back in production. The operator does.
+
+### Revert path
+- Code: {{revert commit or previous image}}
+- Flag: {{flag to turn off, or "no flag"}}
+- Database: {{how the expand is safe to leave, or the contract reversal. "No schema change" when none.}}
+
+### Production signals
+{{error rate, log pattern, or golden-master mismatch that means roll back. Not a threshold invented without the operator.}}
 
 ## Follow-ups
 {{new units or later steps, or "None."}}

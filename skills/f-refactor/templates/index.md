@@ -1,5 +1,5 @@
 # Refactor
 
-| ID | Title | Type | Priority | Status | File |
-|----|-------|------|----------|--------|------|
+| ID | Title | Type | Priority | Phase | Effort | Status | File |
+|----|-------|------|----------|-------|--------|--------|------|
 {{ROWS}}

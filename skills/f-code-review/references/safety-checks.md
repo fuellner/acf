@@ -42,3 +42,4 @@ Refactor:
 
 - No PHP, framework, or dependency version bump.
 - A characterization assertion edited to match new behavior is a finding.
+- A golden-master file changed without a reason on the step record is a finding. On a migration, the same suite must have been diffed on the old runtime and the target runtime.

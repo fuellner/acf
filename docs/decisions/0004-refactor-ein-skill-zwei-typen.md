@@ -20,7 +20,7 @@ Zwei Skills würden Index, Status, Fortsetzen über Sitzungen hinweg und die Rev
 
 ## Konsequenzen
 
-- Der Typ steht im Plan und in `docs/refactor/index.md` (`ID | Title | Type | Priority | Status | File`).
+- Der Typ steht im Plan und in `docs/refactor/index.md`. Die Spalten nennt `skills/f-docs/references/directory-index.md`. Dass der Ablauf ein eigener Workflow neben `f-workflow` ist, steht in 0005.
 - `f-code-review` prüft bei diesen Einheiten Verhaltensgleichheit. Bei `migration` ist eine nicht erzwungene Änderung ein Befund, bei `refactor` ein Versionswechsel.
 - `f-tasks` macht aus geplanten Schritten Tasks, ohne Schritte zusammenzuziehen oder den Typ zu wechseln.
 - Versionen, die php.net weder als aktiv unterstützt noch als Security-only führt, gehen nicht in Produktion. Ein Security-only-Stand ist nur ein zeitweiser Produktionsschritt, wenn der User das Restrisiko akzeptiert.

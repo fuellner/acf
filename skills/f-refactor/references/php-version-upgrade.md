@@ -85,7 +85,9 @@ A framework upgrade that the target PHP requires is part of this migration, foll
 
 ## Infrastructure
 
-The image, `php.ini`, and extension list move with the app. Extend the existing CI so the suite and characterization checks run on the production runtime and on the hop target. Drop the old runtime from the required matrix only when production no longer runs it.
+The image, `php.ini`, and extension list move with the app. Local, CI, staging, and production carry the same PHP version, the same extensions (including the Phalcon extension version when that extension is installed), and the same behavior-relevant ini settings. Record them in the inventory. A migration step is not `ready-for-review` until that parity holds for the runtimes the step claims. The agent checks local and CI. Staging needs an approval. Production is the operator's record.
+
+Extend the existing CI so the suite and the golden-master checks run on the production runtime and on the hop target, and diff the normalized output. Drop the old runtime from the required matrix only when production no longer runs it.
 
 Cut over by canary: a slice on the new image, compare errors and the oracles, roll back by redeploying the previous image. The previous image must still work with the schema. If a hop forces a schema or data change, follow the database reference (expand, then contract in a later release).
 
@@ -98,6 +100,8 @@ A migration unit is not done until all of these are true:
 - The dependency audit was run. Remaining findings and any abandoned package that stays are written down with who accepted them.
 - A patch cadence is recorded: who applies PHP and dependency security updates, and that CI stays on a php.net-supported version.
 - No non-forced structural change landed. Follow-up refactor units are `draft` or `deferred`, not silently dropped.
+- Environment parity in the inventory was checked again at close-out: local and CI by the agent, staging and production by an approval or the operator.
+- Key pages and jobs named in the inventory have a before and after measurement from CI, approved staging, or the operator. Missing numbers stay open. They are not invented.
 
 ## Staying current
 

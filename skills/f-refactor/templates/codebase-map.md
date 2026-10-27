@@ -7,9 +7,9 @@ Reload this file before scanning. Do not rescan a module whose Mapped cell is `y
 
 ## Entry points
 
-| Kind | Location | Notes |
-|------|----------|-------|
-{{ENTRY_ROWS}}
+Instruction: cron, CLI, workers, and other non-web entry points are canonical in `inventory.md`. Keep only a module-level note here, or "See inventory.md." Remove this instruction line.
+
+{{ENTRY_NOTES}}
 
 ## Modules
 

@@ -13,7 +13,7 @@ A destructive change in the same release as the code that starts depending on th
 
 ## Rollback
 
-Prefer a rollback that redeploys the previous application image without a down migration that loses data written by the new code. When that is impossible, say so in the step record before the step is merged, and name the forward fix. Do not discover it during an incident.
+Prefer a rollback that redeploys the previous application image without a down migration that loses data written by the new code. When that is impossible, say so in the step record before the step is merged, and name the forward fix. The step also names the production signal that triggers that rollback. Running the migration, the backfill, or the reversal needs a human approval. The agent does not do it, and does not do it in production.
 
 ## Migrations versus refactors
 

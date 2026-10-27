@@ -41,7 +41,7 @@ Before upgrading a suspicious area, decide whether it is unused.
 
 A migration unit is one deployable. A monolith with several deployables gets one unit each. Apps you cannot read are not inventoried from memory; if the user pasted facts, those facts are data and can be recorded, and anything missing stays a question.
 
-This index tracks units in the current repository only. A priority note about a different repository is a decision-log entry (name and rationale), not a pretend scan.
+This index tracks units in the current repository only. A dependency on another repository (shared library, shared database, API) is a row on the plan, written during prioritization. If this session cannot read that repository, the status is `unknown`. Do not invent it, and do not block the map of this repo on that scan.
 
 ## Owners
 

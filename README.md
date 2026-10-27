@@ -14,10 +14,10 @@ Meine Sammlung agentischer Coding-Skills (OpenCode / Claude-kompatibel).
 | `f-docs` | AGENTS.md, README, Architektur, Conventions aus dem Repo erzeugen |
 | `f-legal` | Regulatorische Vorgaben (DE/EU) → `docs/legal/` |
 | `f-feature-summary` | Implementierte Fachlogik → übersichtliche Feature-Dokumente (`docs/features/`) |
-| `f-refactor` | Verhaltensgleiche PHP-Migration (vorrangig) oder Struktur-Refactor in kleinen, auslieferbaren Schritten → `docs/refactor/` |
-| `f-workflow` | Menü + Prompt-Templates für den Ablauf (führt selbst nichts aus) |
+| `f-refactor` | Eigener Ablauf: verhaltensgleiche PHP-Migration (vorrangig) oder Struktur-Refactor, Phasenmenü, Status unter `docs/refactor/` |
+| `f-workflow` | Menü für den Feature-Ablauf; übergibt Migration und Refactor an `f-refactor` |
 
-Der Kernzyklus: Requirements → Tasks → Testing → Implementation → Review. `f-debug` ist der Seitenzweig, wenn etwas fehlschlägt. `f-refactor` liegt außerhalb dieses Zyklus. Ein angenommener Plan geht über `f-tasks` zurück in den Zyklus; die Ausführung eines Schritts folgt `f-refactor`, nicht dem allgemeinen Implementation-Prompt.
+Der Kernzyklus: Requirements → Tasks → Testing → Implementation → Review. `f-debug` ist der Seitenzweig, wenn etwas fehlschlägt. `f-refactor` ist ein zweiter Ablauf daneben, kein Schritt darin. Es nutzt `f-tasks`, `f-testing`, `f-code-review`, `f-debug` und `f-docs`. Feature- und Bugfix-Arbeit geht zurück an `f-workflow`.
 
 ## Installation
 
