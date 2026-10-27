@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-10-27
+- `docs/tests/index.md` uses `Source | Mode | Revision | File` (template `templates/index.md`). Source is the exact source-id in the filename. A default two-column index in that directory is replaced by this schema.
 - Removed the hardcoded `*(supplemented)*` marker from the test-plan template block; supplementation stays conditional per the generate rule.
 - The test-plan's `Maps to` field is documented as the criterion's AC identifier (`AC-n`) or Check reference, and `Must not` is defined as the carried-over criterion constraint.
 - The coverage-report metadata states the legal status values and that reviews treat `partial` as `unverified`.

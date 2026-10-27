@@ -4,9 +4,22 @@ Load this reference before using a test plan or coverage report, and whenever a 
 
 `f-testing` (verify mode) owns full coverage audits and coverage reports. Do not produce or refresh one in a review.
 
+## Which files
+
+Resolve candidates before applying the evidence rules. Use `docs/tests/index.md` (`Source | Mode | Revision | File`) as a path hint and confirm each candidate on the filesystem. A missing or stale index does not hide a unique filename match.
+
+A filename matches only when it is exactly `TEST-<source-id>-plan.md` or `TEST-<source-id>-coverage.md`. `TEST-REQ-0010-plan.md` is not a match for `REQ-001`.
+
+Resolve:
+
+- the reviewed unit (`TASK-004`, `REQ-001`, or the branch slug from File Naming in the skill)
+- when that unit is a task whose **Source** is a REQ-ID, also `TEST-<REQ-ID>-plan.md` and `TEST-<REQ-ID>-coverage.md`
+
+Read every unique match. Apply the evidence rules below to each coverage report on its own. Cite the file that supports each coverage state.
+
 ## Test plans and verify reports
 
-Paths: `docs/tests/TEST-<source-id>-plan.md` and `docs/tests/TEST-<source-id>-coverage.md`.
+Paths: `docs/tests/TEST-<source-id>-plan.md` and `docs/tests/TEST-<source-id>-coverage.md`. When a reviewed task's Source is a REQ-ID, those two filenames for that REQ-ID are paths as well.
 
 A test plan describes intended coverage, not implemented tests. A verify report describes statically inspected tests. Neither proves that tests ran successfully.
 

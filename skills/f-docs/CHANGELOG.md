@@ -1,6 +1,8 @@
 # Changelog
 
 ## 2026-10-27
+- Language rule names the `f-legal` exception: its instructions, templates, and `docs/legal/` stay German, and this skill does not edit them. `f-feature-summary` instructions stay English.
+- `docs/tests/` index schema is `Source | Mode | Revision | File`. A default `Document | Description` table in that directory is replaced by this schema.
 - Changelog corrections: the stale `template_version` reference and the misplaced legal index template attribution (that template lives in `f-legal`) were fixed.
 - The copy step now reflects that only `agents.md.tmpl` carries a `TEMPLATE (f-docs)` block.
 - `agents.md.tmpl`: the two overlapping drive-by/refactor bullets were merged into one.
