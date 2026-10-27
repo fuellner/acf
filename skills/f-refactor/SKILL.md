@@ -137,6 +137,7 @@ Do not invent other values.
 - `references/large-legacy-codebases.md` — context limits, map, hotspots, dead code. Load before scanning a large or legacy repo.
 - `references/strategies.md` — refactor strategies. Load for a refactor plan or step.
 - `references/php.md` — PHP tools and framework caveats. Load when naming tools.
+- `references/tool-licenses.md` — SPDX id, license link, and commercial-use note for every tool this skill names. Load together with `php.md`, and again before adding a tool.
 - `references/database.md` — expand/contract. Load when a step touches schema or data.
 - `references/characterization-tests.md` — oracles and golden masters. Load for the safety net and before editing behavior-bearing code.
 - `references/directory-index.md` — shared `index.md` rules.

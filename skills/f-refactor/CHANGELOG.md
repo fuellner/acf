@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-10-27
+- `references/tool-licenses.md` lists every external tool this skill names, with the SPDX id and license link re-checked against the GitHub API.
 - `f-refactor` is a separate workflow with its own phase menu, parallel to `f-workflow`. It reuses `f-tasks`, `f-testing`, `f-code-review`, `f-debug`, and `f-docs`.
 - Index columns gain Phase and Effort. The index is the cross-unit progress view.
 - Guardrails: production access is off-limits; database migrations, staging, dependency upgrades, deletions, and deploys need human approval.

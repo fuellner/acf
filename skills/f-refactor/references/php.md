@@ -4,6 +4,8 @@ Load when a plan or step will name PHP tools. Detect the stack from `composer.js
 
 ## Tools
 
+Read `tool-licenses.md` before naming a tool. A tool that is not listed there is not recommended until its license is added to that file.
+
 - **Rector**: mechanical changes. Pick the set that matches the step (a PHP level set for a migration hop, a single rule for a codemod). One set per PR. Read the diff. Rector output is not a behavior proof. Phalcon classes that live in the C extension are invisible without stubs (`phalcon/ide-stubs` or the stubs the repo already has).
 - **PHPStan or Psalm**: keep the committed baseline. A step must not add new errors. Do not clear baseline entries as a side effect. If both tools are present, use the one CI runs. Set the language level to the runtime this unit is allowed to use: the target on a migration, the current runtime on a refactor.
 - **PHPCompatibility**: a CodeSniffer standard aimed at a target PHP version. Migration plans use it as a finder. It does not replace the test suite.
