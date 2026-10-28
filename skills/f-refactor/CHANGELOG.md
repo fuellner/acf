@@ -1,7 +1,8 @@
 # Changelog
 
 ## 2026-10-28
-- `scripts/install-tools.sh` refuses a missing `composer.lock` in dry-run and in `--install` (exit 6) before `composer require`. Without a lock, require would resolve every dependency. It also refuses a global Composer repository that is not packagist.org, and it refuses `COMPOSER_CAFILE`, `SSL_CERT_FILE`, and `COMPOSER_AUTH`. `COMPOSER_HOME` is a loud warning because that home is included in the global repository check.
+- Tools are no longer installed with `composer require --dev` in the application. `scripts/toolchain/` builds a container image (Docker or Podman) or installs the same lock into a directory outside the app. One Composer source: packagist.org, or one internal HTTPS repository with packagist.org disabled. The tool lock is required. `--write-lock` is the explicit step that creates it. `run.sh` uses `--network none`, a read-only application mount, and writes reports to a separate directory. Rector and phpcbf stay on diff output.
+- `scripts/install-tools.sh` was removed. It refused a missing application `composer.lock` before `composer require`. That lock check now applies to the tool project.
 - Feature flag is a strategy: default off, a named owner, rollout by turning the flag on, and removal as a later step of the same unit.
 - A wide PHP gap in CI is 5.6, then 7.4 (read the 7.0–7.3 migration guides), then 8.0, 8.1, 8.2, and on to the fetched target.
 - PHPCompatibility's SPDX id is `LGPL-3.0-or-later`. The toolchain example sets `testVersion` to a range from the current runtime to the target. An existing PHP_CodeSniffer `^4` or `>=4` pin is not downgraded. Commit `composer.lock` and review the lock diff before committing.

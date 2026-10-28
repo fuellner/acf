@@ -1,6 +1,6 @@
 # PHP tools and frameworks
 
-Load when a plan or step will name PHP tools. Detect the stack from `composer.json`, the framework bootstrap, and CI. Tools below are examples. Use what the repo already runs. Do not add a tool unless the user accepts the dependency.
+Load when a plan or step will name PHP tools. Detect the stack from `composer.json`, the framework bootstrap, and CI. Tools below are examples. Use what the repo already runs. Do not add a tool to the application's Composer files. An analysis tool the application cannot run comes from the isolated toolchain in `toolchain.md`, after the user accepts that run.
 
 ## Tools
 

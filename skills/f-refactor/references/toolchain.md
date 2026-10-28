@@ -2,129 +2,239 @@
 
 Deterministic checks are the gate. The agent chooses a seam, reads the output, and records it. It does not override a failing check, delete a sniff, edit an assertion, or refresh a golden file to make a step look green. A red result means the step is not `ready-for-review`.
 
-Licenses and the commercial-use note are in `tool-licenses.md`. Framework caveats are in `php.md`. Golden-master rules are in `characterization-tests.md`.
+Licenses and the base-image note are in `tool-licenses.md`. Framework caveats are in `php.md`. Golden-master rules are in `characterization-tests.md`. The decision to keep tools out of the application is [0006](../../../docs/decisions/0006-werkzeugkette-container-eine-composer-quelle.md).
 
-## Detect, then ask
+## Why the tools are not in the application
 
-Read `composer.json` (`require-dev` and `scripts`), the existing config (`rector.php`, `phpstan.neon` or `phpstan.neon.dist`, `psalm.xml`, `deptrac.yaml`, `phpcs.xml` or `phpcs.xml.dist`, `phpunit.xml` or `phpunit.xml.dist`), and the CI config. Use the binary and the config the repository already runs. If both PHPStan and Psalm are present, use the one CI runs.
+`composer require --dev` inside the application is not this skill's install path.
 
-Do not `composer require` a missing tool, and do not add a CI job for a tool the repository does not have, until you ask and the user accepts the dependency. The optional installer is `scripts/install-tools.sh`. Ask before running it, including a dry-run. Record a missing tool as a gap. Do not pretend the check ran.
+Two constraints make that install wrong. The application may use a Composer repository that does not offer `https://repo.packagist.org`. And the application may run PHP 5.3 or another old runtime, while Rector 2, PHPStan 2, and Psalm 6 need PHP 8.4. Putting those packages in the application's `require-dev` would either fail the resolve or change production dependencies.
 
-Commands below are examples. Substitute the path and the version the repository actually uses. The PHP minor comes from the php.net page fetched this session, not from memory.
+The tools live in their own Composer project:
+
+- Primary: a container image built from `scripts/toolchain/`. The application tree is mounted read-only at run time.
+- Fallback: a directory outside the application repo, with the same `composer.json` and `composer.lock`.
+
+The application's `composer.json`, `composer.lock`, and `vendor/` are not modified. Ask before running any of these scripts, including a dry-run.
+
+## Layout
+
+```text
+scripts/toolchain/
+  Dockerfile          # tool image, PHP base pinned by digest
+  composer.json       # direct tool requirements only
+  composer.lock       # committed lock for that project
+  build.sh            # dry-run unless --build or --write-lock
+  run.sh              # dry-run unless --run
+  install-host.sh     # directory fallback, dry-run unless --install, --write-lock, or --run
+  image-install.sh    # runs inside the image build
+  entry.sh            # forces Rector --dry-run and a phpcbf diff
+```
+
+## Container
+
+The image is the primary way to run the tools. It is built on a PHP 8.4 CLI base so the tools have the runtime they need even when the application does not. `run.sh` starts the container with:
+
+- `--network none`
+- the application mounted read-only (`--volume <app>:/app:ro`)
+- one output directory mounted writable at `/out`
+- `--read-only` and tmpfs on `/tmp` and `/var/tmp`
+- `--cap-drop ALL` and `--security-opt no-new-privileges`
+- `--rm` and a non-root user (uid 10001 in the image, or the caller's uid when that uid is not 0)
+- no secrets and no host Composer config
+
+Docker and Podman both accept these flags. `build.sh` and `run.sh` use `docker` when it is on `PATH`, otherwise `podman`. `--runtime docker` or `--runtime podman` overrides that.
+
+Rector always receives `--dry-run`. Its cache file is `/tmp/rector.cache`. `phpcbf` is rewritten to `phpcs --report=diff` and writes `/out/phpcs.diff`. The wrapper does not apply either diff. A person, in the reviewed implementation step, applies a patch from the output directory after reading it. This skill does not write that patch into the application.
+
+The image's PHPUnit binary runs only code that already executes on PHP 8.4. A suite that must prove behavior on PHP 5.3 still runs on PHP 5.3, outside this image.
+
+## Build, version, and an internal registry
+
+`scripts/toolchain/build.sh` prints the engine command and does not build. `--build` runs it. The script does not push.
+
+```bash
+scripts/toolchain/build.sh
+scripts/toolchain/build.sh --build
+scripts/toolchain/build.sh --tag registry.example/f-refactor-toolchain:a74fa99cc8638d34a8ab039c051ce5e5 --build
+```
+
+The dry-run prints `suggested-tag:` from `composer.lock`'s `content-hash`. Use that hash, or the date you rebuilt, as the tag you push. Do not retag a changed lock as an existing name.
+
+```bash
+docker tag f-refactor-toolchain:local registry.example/f-refactor-toolchain:<content-hash>
+docker push registry.example/f-refactor-toolchain:<content-hash>
+```
+
+Podman uses the same `tag` and `push` verbs. Point `run.sh --image` at the tag you pushed. This skill does not log into a registry and does not store credentials.
+
+### Base image digest
+
+The default `ARG PHP_IMAGE` in `scripts/toolchain/Dockerfile` is the Docker Official Image `php:8.4-cli`, pinned by the manifest-list digest. `ARG COMPOSER_IMAGE` is the Docker Official Image `composer:2.8`, also pinned by digest. The image build copies `/usr/bin/composer` from that image. It does not download Composer with `curl`.
+
+Pinned on 2026-10-28:
+
+- `php@sha256:debadc2e36b857657846e2e952cbaf52702e55482dd3c2c43806f68d8c534a70` (`php:8.4-cli`)
+- `composer@sha256:5248900ab8b5f7f880c2d62180e40960cd87f60149ec9a1abfd62ac72a02577c` (`composer:2.8`)
+
+To move the pin:
+
+1. `docker buildx imagetools inspect php:8.4-cli` and read the digest of the manifest list (the same value `docker buildx imagetools inspect` prints as the image digest, not one platform blob).
+2. Confirm provenance: `docker buildx imagetools inspect php@sha256:<digest> --format '{{json .Provenance}}'`. The repository is the official `php` image.
+3. Confirm the runtime: `docker run --rm --entrypoint php php@sha256:<digest> -v` reports PHP >= 8.4.3. Psalm 6 and the tool lock's platform pin need that.
+4. Repeat for `composer:2.8` if that pin moves. The copied binary is only the Composer installer.
+5. Replace the `ARG` defaults in the Dockerfile. `build.sh` reads those defaults. Rebuild with `--build`. The Dockerfile runs `composer audit --locked` and fails the build on advisories.
+
+`--php-image` and `--composer-image` override the defaults for one build, so an internal registry can mirror the same images (`registry.example/php@sha256:...`). A reference without `@sha256:` produces a warning. Do not point these arguments at an image this skill has not described. The only names these docs use are the Docker Official Image `php`, the Docker Official Image `composer`, and a registry mirror the user configured for those two.
+
+The Dockerfile installs `ca-certificates` and `unzip` with the base image's package manager (`apt-get` on the Debian php image) and then switches to user `toolchain` (uid 10001). An Alpine base is not the default. The `apt-get` line will not work there.
+
+## One Composer source
+
+The tool project has exactly one Composer source.
+
+- Default: `https://repo.packagist.org`. `composer.json` has no `repositories` key, so Packagist stays the only source.
+- Internal: an `https://` URL passed as `--composer-repo`. `packagist.org` is set to `false` in that tool project's `composer.json`, and one `type: composer` repository remains. `build.sh` prints `packagist.org: disabled`.
+
+```bash
+scripts/toolchain/build.sh --composer-repo https://composer.example.test
+```
+
+`http://`, a URL with a user or a query, a path repository, a VCS repository, and a second repository are refused (exit 6). Host global Composer config must be packagist.org only, or exactly that same internal source. `COMPOSER`, `COMPOSER_DISABLE_TLS`, `COMPOSER_CAFILE`, and `SSL_CERT_FILE` are refused. `COMPOSER_HOME` is a warning because that directory is part of the host check. `COMPOSER_AUTH` in the environment is refused.
+
+An internal repository may need auth at build time. Pass `--composer-auth-file` pointing at a regular file. `build.sh --build` mounts it as the BuildKit secret `composer_auth` (`--secret id=composer_auth,src=...`). The Dockerfile reads that file inside one `RUN` and deletes Composer home in the same `RUN`. The value is not a build arg, not an `ENV`, and not printed. `DOCKER_BUILDKIT=1` is required for `docker build --secret`. Podman accepts the same `--secret` flag. Do not `COPY` the file into the image.
+
+A lock generated against packagist.org still contains dist URLs on other hosts. `--composer-repo` pointing at an internal host refuses that lock (exit 6). Create a new lock against the internal source first.
+
+## Lock
+
+The tool project's `composer.lock` is required before a build or a host install. Without it, `composer update` or `composer require` would resolve the whole tool tree. Dry-run and `--build` both refuse a missing lock:
+
+`no composer.lock in the tool project; resolving dependencies would select every package version; create the lock with --write-lock and explicit approval first`
+
+Creating or refreshing the lock is explicit:
+
+```bash
+scripts/toolchain/build.sh --write-lock
+```
+
+That runs `composer update --no-install` in the tool directory only, then `composer audit --locked`. It does not run unless `--write-lock` is passed. Review the lock diff and commit `composer.lock` with `composer.json`. Audit findings fail the command (exit 5) and are not ignored. The lock file is still written so it can be reviewed.
+
+For an internal source, run `--write-lock` with `--toolchain-dir` set to a copy of the tool project that is allowed to record that URL. The script writes `packagist.org: false` and the one repository into that copy's `composer.json`, then updates the lock. Dist URLs in the new lock must use that repository's host.
+
+`composer install` inside the image and in the host fallback uses the lock (`--no-plugins --no-scripts --no-interaction --prefer-dist`). It is not a bare `composer update`.
+
+## Run
+
+Ask, then:
+
+```bash
+scripts/toolchain/run.sh --help
+scripts/toolchain/run.sh --app /path/to/app --out /path/to/reports -- phpstan analyse src
+scripts/toolchain/run.sh --app /path/to/app --out /path/to/reports --run -- phpstan analyse src
+```
+
+Dry-run prints the engine command, including `--network none` and the `:ro` mount, and does not start a container. `--run` executes it and writes the combined log to `<out>/<tool>.log`.
+
+| Tool | Command after `--` | Report |
+|------|--------------------|--------|
+| PHPStan | `phpstan analyse src` | `<out>/phpstan.log` |
+| Psalm | `psalm` | `<out>/psalm.log` |
+| Rector | `rector process src` | `<out>/rector.log`. The engine command includes `--dry-run`. |
+| PHP_CodeSniffer | `phpcs --standard=/opt/toolchain/vendor/phpcompatibility/php-compatibility/PHPCompatibility --runtime-set testVersion 5.6-8.3 src` | `<out>/phpcs.log` |
+| phpcbf | `phpcbf src` | Rewritten to a diff at `/out/phpcs.diff` (the host's `<out>/phpcs.diff`). |
+| Deptrac | `deptrac analyse` | `<out>/deptrac.log` |
+| PHPUnit | `phpunit --filter <seam>` | `<out>/phpunit.log`. Only for a suite that runs on PHP 8.4. |
+
+`testVersion` is a range from the current production minor to the hop target, for example `5.6-8.3`. PHPCompatibility then reports a break on any version in the range, so the same tree stays compatible with the current runtime and the target. A single version would miss the other end of that window. The standard path is inside the image. The project is not given a Composer plugin to register it. If the application already has its own PHP_CodeSniffer 4, this image does not downgrade it: the image carries PHP_CodeSniffer `^3.13` only, and the application's pin is untouched. PHPCompatibility 9 does not run on PHP_CodeSniffer `^4` or `>=4`.
+
+Stdout of a dry-run Rector is the diff to review. Applying it is a later reviewed change, not `--run`.
+
+## Host fallback
+
+Use this when no container engine is available. The tools still do not go into the application.
+
+```bash
+scripts/toolchain/install-host.sh
+scripts/toolchain/install-host.sh --install
+scripts/toolchain/install-host.sh --name ci --install
+scripts/toolchain/install-host.sh --app /path/to/app --out /path/to/reports -- phpstan analyse src
+```
+
+The default directory is `${XDG_DATA_HOME:-$HOME/.local/share}/f-refactor-tools/<name>` with `<name>` defaulting to `default`. `--tools-dir` overrides it. The directory must be outside the application tree.
+
+`--install` copies the tool `composer.json` and `composer.lock` into that directory and runs `composer install` there. The host PHP must be >= 8.4.3, because that is the platform the lock was solved for. PHP 5.3 on the host cannot execute these binaries. Keep the old runtime for the application's own tests.
+
+`--run` uses `<tools-dir>/vendor/bin` and the same Rector and phpcbf rewriting. There is no `--network none` and no read-only mount in this mode. That is why the container is primary.
+
+## What the agent runs
+
+Detect what the application CI already runs. A check the repository already executes still counts. Do not add a dev dependency to the application to reproduce it. For a tool the application cannot run, use this toolchain after the user accepts the run.
+
+The agent selects the seam, runs the tool, and writes the command and the result into the step record or the inventory. Interpretation stops at what the tool printed.
+
+The agent does not treat a green Rector run as a behavior proof, a PHPStan baseline as permission to edit unrelated errors, or a missing tool as a passed check. Characterization oracles and golden masters are the behavior gate. Static tools are the mechanical gate. Both have to pass. A Composer resolution failure in the application is not fixed by `--ignore-platform-reqs`.
 
 ## Tools
 
 | Tool | Phase | What it decides | Example | How to read it |
 |------|-------|-----------------|---------|----------------|
-| Rector | `execute` (a migration hop or a codemod) | Mechanical diff for one rule set | `vendor/bin/rector process src --dry-run` | Review the diff. Dry-run first. One set per PR. A clean run is not proof that behavior held. An unexpected edit stops the step. Phalcon C-extension classes are invisible without stubs. |
-| PHPCompatibility on PHP_CodeSniffer | `inventory`, `plan`, `execute` for a migration | Source that will not run on the current or the target PHP | `vendor/bin/phpcs --standard=vendor/phpcompatibility/php-compatibility/PHPCompatibility --runtime-set testVersion <current>-<target> src` | Use a range, for example `--runtime-set testVersion 5.6-8.3`, not only the target. PHPCompatibility then reports a break that affects any version in that range, so the same tree stays compatible with the current production runtime and the hop target. A single version would miss breaks on the other end of that window. Errors are forced-fix candidates. Confirm each one against the migration guide fetched for that hop. Do not silence a sniff to go green. If the project already registers the standard, `--standard=PHPCompatibility` is enough. The installer does not add a Composer plugin to register it. |
-| PHPStan or Psalm | `execute` | New static errors against the committed baseline | `vendor/bin/phpstan analyse` or `vendor/bin/psalm` | New errors fail the step. Do not clear baseline entries as a side effect. Set the language level to the target on a migration and to the current runtime on a refactor. |
-| Deptrac | `plan` and `execute` for a refactor boundary | Whether a new module boundary holds | `vendor/bin/deptrac analyse` | A new violation fails the step. Add a rule only for the boundary this step introduces. Prefer the boundary tool the repo already runs. The installer adds `deptrac/deptrac` and does not add the abandoned `qossmic/deptrac` package. |
-| PHPUnit, including golden masters | `safety-net` (the plan, via `f-testing`) and `execute` | Observed behavior at the seam | `vendor/bin/phpunit --filter <seam>` | Tests must pass on the unchanged code before the edit. A migration runs the same suite on the old runtime and the target and diffs normalized output. A failure or a golden diff means behavior changed. Do not edit the expected value. Timestamps, ids, session tokens, and random values are normalized first. |
-| Composer `why-not` | `inventory`, `plan` | Which packages block the target PHP | `composer why-not php <target>` | A blocking package is a migration fact, not a reason to ignore the platform. Replacing it needs approval. `config.platform.php` can lie; check the real runtime too. |
-| Composer `audit` | `inventory`, `close-out` | Known dependency advisories | `composer audit` | Findings are recorded. An abandoned package is removed or explicitly accepted. Do not `composer update` without approval. Installed packages keep their own licenses. |
-| Git history | `inventory`, `prioritize` | Where churn is, inside a security tier | `git log --since=<window> --pretty=format: --name-only` | Record the command and the window. High churn on the planned path is a tie-break. Low churn is not proof that code is unused. Dead code still needs production evidence. |
-| CI version matrix | `plan`, `execute`, `close-out` | The suite on the production runtime and the hop target | The repository's existing CI config | Add the hop target next to the current production runtime. A red job fails the step. Drop the old runtime only when production no longer runs it. Do not delete a job to go green. |
+| Rector | `execute` (a migration hop or a codemod) | Mechanical diff for one rule set | `scripts/toolchain/run.sh --app <app> --out <out> -- rector process src` | The wrapper adds `--dry-run`. Review the diff under `<out>`. One set per PR. A clean run is not proof that behavior held. An unexpected edit stops the step. Do not apply the diff here. Phalcon C-extension classes are invisible without stubs. |
+| PHPCompatibility on PHP_CodeSniffer | `inventory`, `plan`, `execute` for a migration | Source that will not run on the current or the target PHP | `scripts/toolchain/run.sh --app <app> --out <out> -- phpcs --standard=/opt/toolchain/vendor/phpcompatibility/php-compatibility/PHPCompatibility --runtime-set testVersion 5.6-8.3 src` | Use a range from the current minor to the target. Errors are forced-fix candidates. Confirm each one against the migration guide fetched for that hop. Do not silence a sniff to go green. |
+| PHPStan or Psalm | `execute` | New static errors against the committed baseline | `scripts/toolchain/run.sh --app <app> --out <out> -- phpstan analyse` or `psalm` | New errors fail the step. Do not clear baseline entries as a side effect. Set the language level to the target on a migration and to the current runtime on a refactor. |
+| Deptrac | `plan` and `execute` for a refactor boundary | Whether a new module boundary holds | `scripts/toolchain/run.sh --app <app> --out <out> -- deptrac analyse` | A new violation fails the step. Add a rule only for the boundary this step introduces. The package is `deptrac/deptrac`. |
+| PHPUnit, including golden masters | `safety-net` (the plan, via `f-testing`) and `execute` | Observed behavior at the seam | The application's PHPUnit on the runtime that claim is about. The image binary only when that runtime is PHP 8.4. | Tests must pass on the unchanged code before the edit. A migration runs the suite on the old runtime and the target and diffs normalized output. Do not edit the expected value. |
+| Composer `why-not` | `inventory`, `plan` | Which application packages block the target PHP | `composer why-not php <target>` in the application | A blocking package is a migration fact. Replacing it needs approval. This does not install tools. |
+| Composer `audit` | `inventory`, `close-out`, and after a tool-lock write | Known advisories | `composer audit` in the application. `composer audit --locked` in the tool project | Findings are recorded. The tool-project audit failure stops the build (exit 5). |
+| Git history | `inventory`, `prioritize` | Where churn is, inside a security tier | `git log --since=<window> --pretty=format: --name-only` | Record the command and the window. High churn on the planned path is a tie-break. |
+| CI version matrix | `plan`, `execute`, `close-out` | The suite on the production runtime and the hop target | The repository's existing CI config | Add the hop target next to the current production runtime. A red job fails the step. |
 
-`phalcon/ide-stubs` is a detection aid for Rector and PHPStan when the app uses Phalcon. It is not a gate. Ask before adding it.
-
-## What the agent does
-
-The agent selects the seam, runs the tool that is already installed, and writes the command and the result into the step record or the inventory. Interpretation stops at what the tool printed.
-
-The agent does not treat a green Rector run as a behavior proof, a PHPStan baseline as permission to edit unrelated errors, or a missing tool as a passed check. Characterization oracles and golden masters are the behavior gate. Static tools are the mechanical gate. Both have to pass. A Composer resolution failure is not fixed by `--ignore-platform-reqs`.
-
-## Optional installer
-
-`scripts/install-tools.sh` adds tools to one existing project. It does not create `composer.json`, does not search parent directories, and does not install anything globally.
-
-```bash
-scripts/install-tools.sh --help
-scripts/install-tools.sh --project-dir /path/to/app --phpstan --phpunit
-scripts/install-tools.sh --project-dir /path/to/app --all
-scripts/install-tools.sh --project-dir /path/to/app --install --phpcs --phpcompatibility
-```
-
-Ask the user before any of these. The first three are dry-runs. Only `--install` runs Composer.
-
-What it will do:
-
-- `composer require --dev` for the selected packages, with `--no-interaction`, `--no-plugins`, and `--no-scripts`. Project Composer scripts do not run.
-- Skip a package that is already in `require-dev`, and leave that constraint unchanged.
-- Skip a package that is already in `require`. It does not move or upgrade non-dev dependencies.
-- Choose the constraint from the table below using the composer platform PHP: `config.platform.php` when set, otherwise the `php` on `PATH`.
-- Print each selected package's SPDX id and the path to `tool-licenses.md`.
-- Require PHP CLI and Composer 2.4 or newer (`composer audit` shipped in 2.4). It does not download or upgrade Composer.
-
-`--all` selects Rector, PHPStan, Deptrac, PHP_CodeSniffer, PHPCompatibility, and PHPUnit. Psalm is the alternative to PHPStan and is not in `--all`. `--phalcon-stubs` needs the extension major (`3`, `4`, or `5`) because the PHP version does not imply it. PHPCompatibility also selects PHP_CodeSniffer 3 when that package is not already a dev dependency. PHPCompatibility 9 does not run on PHP_CodeSniffer `^4` or `>=4`. An existing `^4`, `>=4`, `~4`, or bare `4.*` pin is not downgraded.
-
-When the platform PHP is too old for a tool, the tool is skipped. Run this same script in a separate Composer project on a newer PHP, and point the tools at the legacy tree. Tests that claim behavior on the old runtime still run on that runtime. The script does not install PHPUnit 4, 5, or 6, and it does not install PHP_CodeSniffer 2.
+`phalcon/ide-stubs` is allowlisted but not in the default tool `composer.json`. Adding it is a `--write-lock` change with a `^MAJOR.MINOR` constraint (`^3.4`, `^4.0`, or `^5.0`). It is not a gate.
 
 ## Supply chain
 
-Installation from this skill is Composer against `https://repo.packagist.org` only. The script refuses anything else before it changes the project.
-
-Official package names, checked on 2026-10-27 against each project's README and the Packagist repository URL:
+Direct requirements in the tool `composer.json` must be on this list, each with a `^MAJOR.MINOR` constraint. `php` must be `>=8.4.3` or `^8.4`. `require-dev` is refused. Abandoned names are refused.
 
 | Tool | Packagist name | Not accepted |
 |------|----------------|--------------|
 | Rector | `rector/rector` | Any other Rector package or fork |
 | PHPStan | `phpstan/phpstan` | |
 | Psalm | `vimeo/psalm` | |
-| Deptrac | `deptrac/deptrac` | `qossmic/deptrac` (Packagist marks it abandoned) |
-| PHP_CodeSniffer | `squizlabs/php_codesniffer` | `phpcsstandards/php_codesniffer` (Packagist marks it abandoned and points back at `squizlabs/php_codesniffer`). The GitHub repository is `PHPCSStandards/PHP_CodeSniffer`; the Composer name did not change. |
+| Deptrac | `deptrac/deptrac` | `qossmic/deptrac` |
+| PHP_CodeSniffer | `squizlabs/php_codesniffer` | `phpcsstandards/php_codesniffer`. The GitHub repository is `PHPCSStandards/PHP_CodeSniffer`. |
 | PHPCompatibility | `phpcompatibility/php-compatibility` | |
 | PHPUnit | `phpunit/phpunit` | |
-| Phalcon stubs | `phalcon/ide-stubs` | |
+| Phalcon stubs | `phalcon/ide-stubs` | Optional. Not in the default lock. |
 
-The script hardcodes that list. A constraint must be `^MAJOR.MINOR` for one of those names. `*`, `dev-`, a git URL, a path, and a fork are refused.
+Names were checked on 2026-10-27 against each project's README. The default constraints, solved for PHP 8.4.3, are:
 
-Composer must already be installed. This script does not run `curl | sh`, `wget`, or a PHAR download, and it does not add a repository.
+| Package | Constraint |
+|---------|------------|
+| `rector/rector` | `^2.0` |
+| `phpstan/phpstan` | `^2.0` |
+| `vimeo/psalm` | `^6.0` |
+| `deptrac/deptrac` | `^4.0` |
+| `squizlabs/php_codesniffer` | `^3.13` |
+| `phpcompatibility/php-compatibility` | `^9.3` |
+| `phpunit/phpunit` | `^13.0` |
 
-- `secure-http` must be `true`. `disable-tls` must be `false`. `COMPOSER_DISABLE_TLS` must be unset.
-- `COMPOSER_HOME` is a loud warning. Global config from that directory is part of the repository check. Unset it when you mean the default Composer home. `COMPOSER_CAFILE`, `SSL_CERT_FILE`, and `COMPOSER_AUTH` are refused (exit 6). A custom CA or inline auth can redirect HTTPS trust outside the repository list.
-- The effective repository list must be only `https://repo.packagist.org`. The script checks the project list and `composer config --global --json repositories`. A mirror, a path repository, a VCS repository, or `packagist.org: false` is refused in either place. The script does not add one.
-- The script checks for `composer.lock` before it prints or runs `composer require`. Dry-run and `--install` both refuse a missing lock with exit 6 (`no composer.lock; a require would resolve every dependency; create the lock with explicit approval first`). Without a lock, `composer require --dev` resolves the whole tree and can upgrade production packages.
-- When the lock exists, `composer require --dev` updates `composer.lock` for the added packages and their dependencies. It does not run a bare `composer update`, so other locked packages stay at the versions already in the lock. Commit `composer.lock` and review the lock diff before committing.
-- After a successful require, the script runs `composer audit --locked`. Advisories fail the run (exit 5). The script does not pass `--no-dev` and does not hide abandoned packages. Findings that were already in the lock are still reported.
+- `secure-http` stays `true`. `disable-tls` stays `false`.
+- One source only. A mirror, a path repository, a VCS repository, or a second URL is exit 6. An internal source disables packagist.org in the tool project.
+- The tool `composer.lock` must already exist, except during `--write-lock`. Commit it and review the diff.
+- Install and audit use `--no-plugins --no-scripts --no-interaction`. Audit uses `--locked`.
+- No `curl \| sh`, no PHAR download, no `composer global`, no `--ignore-platform-reqs`.
+- Auth and custom CA material are not taken from the environment. Build-time auth is a BuildKit secret. It is not written into a layer.
 
-Exit `6` means the package, the TLS settings, or the repository list was outside this rule. `composer.json` is left unchanged in that case.
+Exit codes: `0` plan, build, install, or a clean tool run; `1` bad usage; `2` a required program, directory, or engine is missing; `3` `composer` or the engine failed; `5` `composer audit` reported advisories; `6` the source, lock, TLS setting, auth channel, or package is outside this rule. A tool's own non-zero status is passed through by `run.sh --run`.
 
-### Newer PHP, still the same installer
+## Troubleshooting
 
-A PHP that is too old to run a tool needs a newer PHP binary. The tools are still installed by this script, from packagist.org, in a Composer project that is not pinned to the legacy version.
-
-The only container image these docs name is the Docker Official Image `php`, built from [docker-library/php](https://github.com/docker-library/php) and published as `php` (not a third-party name). Do not use a fork or a community PHP image. Before using a tag, inspect its provenance as documented by Docker: `docker buildx imagetools inspect php:<tag> --format '{{json .Provenance}}'` ([Build attestations](https://docs.docker.com/build/metadata/attestations/)). Confirm the repository is the official `php` image. Then run this script inside that environment.
-
-### PHARs are not an install path
-
-Upstream READMEs also show PHAR downloads (`https://phars.phpcodesniffer.com`, `https://phar.phpunit.de`, and similar). This skill does not run those commands and does not treat a PHAR as a substitute for the allowlist. If an operator installs a PHAR outside this skill, the only acceptable file is one from that project's own release, checked the way that project documents. For PHP_CodeSniffer that is the PHAR from `phars.phpcodesniffer.com` or the `PHPCSStandards/PHP_CodeSniffer` GitHub release, signed with the release key fingerprint `D91D86963AF3A29B6520462297B02DD8E5071466`, and for 3.10.3 or newer `gh attestation verify phpcs.phar -o PHPCSStandards`. Do not take the file from a mirror, a fork, or an unsigned copy.
-
-| Platform PHP | Package |
-|--------------|---------|
-| `>= 7.4` | `rector/rector:^2.0` |
-| `>= 7.2` and `< 7.4` | `rector/rector:^1.2` |
-| `>= 7.4` | `phpstan/phpstan:^2.0` |
-| `>= 7.2` and `< 7.4` | `phpstan/phpstan:^1.12` |
-| `>= 8.4.3` and `< 8.6` | `vimeo/psalm:^6.0` |
-| `>= 7.4` and `< 8.4` | `vimeo/psalm:^5.26` |
-| `>= 7.1` and `< 7.4` | `vimeo/psalm:^4.30` |
-| `8.4.0`–`8.4.2` | Psalm skipped. Psalm 6 requires `>= 8.4.3` on that line, and Psalm 5 does not support 8.4. |
-| `>= 8.2` and `< 9` | `deptrac/deptrac:^4.0` |
-| `>= 8.1` and `< 8.2` | `deptrac/deptrac:^3.0` |
-| `>= 5.4` | `squizlabs/php_codesniffer:^3.13` |
-| `>= 5.4` | `phpcompatibility/php-compatibility:^9.3` |
-| `>= 8.4.1` | `phpunit/phpunit:^13.0` |
-| `>= 8.3` and `< 8.4.1` | `phpunit/phpunit:^12.0` |
-| `>= 8.2` and `< 8.3` | `phpunit/phpunit:^11.0` |
-| `>= 8.1` and `< 8.2` | `phpunit/phpunit:^10.5` |
-| `>= 7.3` and `< 8.1` | `phpunit/phpunit:^9.6` |
-| `>= 7.2` and `< 7.3` | `phpunit/phpunit:^8.5` |
-| `>= 7.1` and `< 7.2` | `phpunit/phpunit:^7.5` |
-| `>= 8.1`, `--phalcon-stubs 5` | `phalcon/ide-stubs:^5.0` |
-| `>= 7.2`, `--phalcon-stubs 4` | `phalcon/ide-stubs:^4.0` |
-| `--phalcon-stubs 3` | `phalcon/ide-stubs:^3.4` (the 3.4.3 release publishes no PHP requirement; confirm the major) |
-
-Anything older is skipped. PHP 5.3 gets no packages from this script.
-
-Exit codes: `0` plan or install finished, including "already present" and a clean audit; `1` bad usage; `2` missing PHP, Composer, or `composer.json`, or Composer older than 2.4; `3` `composer require` failed; `4` nothing was added and every selected tool was refused; `5` `composer audit` reported advisories; `6` the package, TLS setting, repository (project or global), trust or auth environment, or a missing `composer.lock` is outside the packagist.org rule. Keep this table in step with `choose_constraint` in the script.
+- **Build cannot reach packagist.org.** Use `--composer-repo https://...` and `--write-lock` so the lock's dist hosts are that repository. Do not point a packagist lock at an internal repo.
+- **`--build` says the lock is missing or the dist host does not match.** The refusal is the lock check. Create the lock with `--write-lock` against the same `--composer-repo`.
+- **Audit exit 5.** Read the advisory list. Do not add an ignore. Remove the package or wait for a release, then `--write-lock` again.
+- **`docker build` does not accept `--secret`.** Set `DOCKER_BUILDKIT=1`, or use Podman. Do not switch the secret to a build arg.
+- **Container user cannot write `/out`.** The mount is the host path given to `--out`. On a rootless engine, the `--user` value must be allowed to write that directory.
+- **Rector or PHPStan tries to write inside the application.** The mount is `:ro`. Cache belongs under `/tmp`. Do not remove `--read-only` or `:ro`.
+- **Host install says the PHP platform is too old.** The fallback needs PHP >= 8.4.3 on `PATH`. Use the container instead of changing the application's `config.platform.php`.
+- **The tool directory was refused.** It overlaps the application tree. Pick a path outside that repo.
+- **A global Composer repository changed the resolve.** Clear the extra global repository or point `COMPOSER_HOME` at an empty directory and pass that warning. The script refuses a global source that is not packagist.org and not the one configured URL.

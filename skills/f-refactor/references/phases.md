@@ -58,7 +58,7 @@ When the task exists:
 
 - Load `characterization-tests.md` before editing behavior-bearing code. Add tests only from the linked test plan, and see them pass before the transformation.
 - Load `database.md` when the step touches schema or data. Do not run a migration or backfill without approval.
-- Load `php-version-upgrade.md` for a migration step and `php.md` when naming tools. Load `strategies.md` for a refactor step.
+- Load `php-version-upgrade.md` for a migration step and `php.md` when naming tools. Load `strategies.md` for a refactor step. Run PHP tools from the isolated toolchain in `toolchain.md`. Do not add them to the application's Composer files. Leave Rector and phpcbf output in the report directory. Do not apply that diff in this phase.
 - Migration: forced fixes only. A migration step is not `ready-for-review` until parity for the runtimes it claims matches the inventory (local and CI checked by the agent; staging and production from an approval or the operator).
 - Refactor: no version bump.
 - Record bugs on the step and on the plan. Do not fix them. Send other-type work to a new `draft` unit.
