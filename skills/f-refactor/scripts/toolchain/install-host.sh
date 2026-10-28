@@ -237,9 +237,9 @@ if [[ "$mode" == "run" || $# -gt 0 ]]; then
   fi
   bin="${host_cmd[0]}"
   [[ -x "$bin" ]] || die 2 "Tool binary not found: ${bin}. Pass --install first."
-  mkdir -p -- "$out_dir"
   app_dir=$(physical_path "$app_dir") || die 2 "Could not resolve --app"
   assert_no_overlap "$app_dir" "$out_dir" "application tree" "output directory"
+  mkdir -p -- "$out_dir"
   log="${out_dir}/$(basename -- "$1").log"
   set +e
   (cd -- "$app_dir" && "${host_cmd[@]}") >"$log" 2>&1

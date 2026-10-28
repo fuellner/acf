@@ -1,6 +1,10 @@
 # Changelog
 
 ## 2026-10-28
+- Step execution hands the code change to `f-implement` and names `characterization-tests.md`, `toolchain.md` (`scripts/toolchain/run.sh`), plus the migration, refactor, and database references. The prompt includes the step's gate commands. An in-progress task with a log gets a resume prompt, not a stop.
+- `php-version-upgrade.md` labels PHPCompatibility as `phpcompatibility/php-compatibility:^9.3`.
+- `install-host.sh` creates the output directory only after the overlap check.
+- `toolchain.md` notes that `--memory` and `--cpus` can fail on rootless Podman with cgroup v1, and how to override them.
 - A failing tool no longer looks successful: `run.sh` and `install-host.sh` keep the command's status, and container-engine exits 125–127 become exit 3. The output directory may not overlap the application tree. Image references cannot start with `-`, and base images must be `@sha256:` digests. Mounts use `--mount` and reject paths that contain `,` or `:`.
 - `build.sh` dry-run and `--build` do not need host PHP or Composer. `--write-lock` writes a copy outside the skill checkout. PHPCompatibility 9.3.5 is documented as covering PHP through 7.4 only.
 - Tools are no longer installed with `composer require --dev` in the application. `scripts/toolchain/` builds a container image (Docker or Podman) or installs the same lock into a directory outside the app. One Composer source: packagist.org, or one internal HTTPS repository with packagist.org disabled. The tool lock is required. `--write-lock` is the explicit step that creates it. `run.sh` uses `--network none`, a read-only application mount, and writes reports to a separate directory. Rector and phpcbf stay on diff output.

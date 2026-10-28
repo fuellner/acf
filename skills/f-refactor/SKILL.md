@@ -6,7 +6,7 @@ description: >
   step execution, rollout, close-out. Status lives in docs/refactor/. Migration (primary)
   upgrades PHP, the framework, or dependencies with forced fixes only. Refactor changes
   structure at the current runtime and does not bump versions. Reuses f-tasks, f-testing,
-  f-code-review, f-debug, and f-docs. Bugs are recorded, not fixed.
+  f-implement, f-code-review, f-debug, and f-docs. Bugs are recorded, not fixed.
   Use for "upgrade PHP", "migrate to PHP 8", "EOL PHP", "security PHP upgrade",
   "migrate to Laravel", "Symfony upgrade", "Phalcon upgrade", "refactor",
   "modularize", "split the monolith", "strangler fig", "resume the migration",
@@ -17,7 +17,7 @@ description: >
 
 # Refactor
 
-Separate workflow, parallel to `f-workflow`. One skill, two unit types. Migration is the primary path. This skill writes `docs/refactor/` and the phase menu. It does not re-implement task breakdown, test plans, review, debugging, or ADRs.
+Separate workflow, parallel to `f-workflow`. One skill, two unit types. Migration is the primary path. This skill writes `docs/refactor/` and the phase menu. It does not re-implement task breakdown, test plans, the code change of a step, review, debugging, or ADRs. The step phase hands that code change to `f-implement`.
 
 A fresh session resumes from `docs/refactor/` alone. One phase per invocation. This skill does not set `done`.
 
@@ -47,7 +47,7 @@ A migration or refactor request, a resume, or a named phase. An upgrade of PHP, 
 2. Resolve one unit (`REF-001` matches `REF-001-<slug>/`, not `REF-0010`). Several open units and no name: ask.
 3. Read `plan.md`, the newest `handoff.md` entry, and open questions.
 4. Read `codebase-map.md` before scanning. Do not rescan a mapped module. Do not read the repository end to end.
-5. If the plan header and the index disagree, repair the index from the plan. If a step and its task disagree, the step row wins, except a `done` without an APPROVED review or an explicit user confirmation goes back to `ready-for-review`.
+5. If the plan header and the index disagree, repair the index from the plan. If a step and its task disagree: a `done` without an APPROVED review or an explicit user confirmation goes back to `ready-for-review`. If the task is `ready-for-review` or `blocked` and the step has not caught up, copy the task status onto the step. Otherwise the step row wins. Do not move the task backward to match a stale step.
 
 On every stop: append a handoff, update the phase and status this phase may set, and refresh indexes.
 
@@ -59,7 +59,7 @@ Show this menu when the user asks where to start or which phase is next. On resu
 2. **Prioritization** — security order, cross-repo dependencies, what waits.
 3. **Safety net** — seams and golden-master rules. `f-testing` writes the test plan.
 4. **Plan** — scope, steps, team, rollback, done criteria. Draft until accepted.
-5. **Step execution** — one step. `f-tasks` when it has no task. `f-code-review` after it.
+5. **Step execution** — one step. `f-tasks` when it has no task. `f-implement` for the code change. `f-code-review` after it.
 6. **Rollout** — canary record and rollback signals. The operator deploys.
 7. **Close-out** — evidence against the done criteria. `f-docs` when an ADR is due. `f-code-review` closes the unit.
 
@@ -161,5 +161,5 @@ Do not invent other values.
 - Nothing written contains customer data or a secret value.
 - A new session can continue from the index, the plan, the newest handoff, and open questions.
 - Every artifact matches its template. Index Phase, Effort, and Status match the plan header.
-- The execute phase changed code for at most one step, left the build green, and did not set `done`.
+- The execute phase handed at most one step to `f-implement`, did not edit application code itself, and did not set `done`. A return visit writes the step record only after the task is `ready-for-review`, or records `blocked`.
 - Every affected documentation directory and parent below `docs/` has an up-to-date `index.md` per `references/directory-index.md`; links resolve.

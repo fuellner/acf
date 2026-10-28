@@ -11,7 +11,7 @@ description: >
   Do NOT trigger on the bare word "workflow" or on workflow-related topics in
   general (CI workflows, workflow engines, process diagrams). Do NOT use for
   executing the actual work of any listed skill (requirements, tasks, testing,
-  review, debug, docs, legal, or feature summaries). Do NOT use for a migration
+  implementation, review, debug, docs, legal, or feature summaries). Do NOT use for a migration
   or a refactor; that workflow is f-refactor.
 ---
 
@@ -37,7 +37,7 @@ Does not perform domain work. Only displays the menu and supplies prompt templat
 1. **f-requirements** — Capture and normalize requirements into strict, checkable acceptance criteria.  
 2. **f-tasks** — Break requirements, ad-hoc work, or review findings into agent-sized tasks.  
 3. **f-testing** — Derive concrete test plans from Checks or verify existing coverage.  
-4. **Implementation** — Implement the task(s) and the tests from the plan. *(No skill: direct instruction to the coding agent.)*  
+4. **f-implement** — Implement one task on a dev branch. No commit and no push.  
 5. **f-code-review** — Review a diff against acceptance criteria and safety concerns; produce fix prompts.  
 6. **f-debug** — Structured one-pass debugging when something fails (reproduce → root cause → fix proposal).
 
@@ -75,28 +75,14 @@ Mode: generate | verify
 [Paste REQ/TASK document or free text with strict ACs here]
 ```
 
-### Implementation (no skill)
-
-This step is a direct instruction to the coding agent — there is no `f-` skill for it.
-
+### f-implement
 ```
-Implement the following task(s) exactly as specified. Stay inside the stated scope.
+Please use the f-implement skill on this task. Stay inside the task. Create the dev branch only; do not commit or push.
 
-Task document(s): [docs/tasks/TASK-<id>-<slug>.md or paste — exact ID: `TASK-001.md` or `TASK-001-<slug>.md`, not `TASK-0010`; confirm one filesystem match, index is only a hint]
-Acceptance criteria / Checks: [REQ-xxx or paste]
-Test plan (if available): [docs/tests/TEST-<source-id>-plan.md for this TASK-ID, and TEST-<REQ-ID>-plan.md when the task Source is that REQ-ID]
+Task: [exact ID, such as TASK-001]
+Mode: tdd | direct | ask
 
-Rules:
-- Touch only the files listed in the task, plus the status fields and directory indexes described below. Do not refactor, rename, or "improve" surrounding code.
-- If this task's source is an `f-refactor` step, stop and use the `f-refactor` skill's step-execution phase instead of this prompt.
-- Implement the tests from the test plan; do not add tests that are not derived from a Check.
-- Do not modify acceptance criteria or task documents except the status fields described below.
-- If a requirement is ambiguous or the task is not implementable as written, stop and report instead of guessing.
-
-When done: set Status to `ready-for-review`, update `Updated`, and update the row in docs/tasks/index.md.
-For every documentation directory created or updated under docs/, refresh index.md by following references/directory-index.md in the installed f-docs skill. Every installed f-* skill links the same file at references/directory-index.md. Use that directory's schema from that file (for docs/tasks/, the tasks schema) and check that the links resolve.
-If the task is `changes-requested`, move it to `in-progress` while you work.
-Set `blocked` only when you cannot proceed because a dependency or decision is missing, and record what unblocks the task. Do not set `done` — that happens only after review.
+If this task's source is an f-refactor step, stop and use the f-refactor step-execution phase instead. That phase may hand the code change to f-implement. Do not implement a migration or refactor task outside the plan.
 ```
 
 ### f-code-review
@@ -153,7 +139,8 @@ Prefer tables and structured bullets. Generate individuals first, then the overv
 - Language: English.
 - Keep output short and scannable.
 - Always mark the Optional section and the separate workflow clearly.
-- Never rename the numbered steps or reorder the core cycle. The only step without a skill handle is **Implementation** — do not invent an `f-implement` / `f-coding` handle for it.
+- Do not reorder the core cycle. Step 4 is `f-implement`.
+- A migration or refactor step is executed from the `f-refactor` step phase. `f-implement` may perform that code change and must not take the task by bypassing the plan.
 - Do not execute any of the listed skills.
 
 ## Before you finish

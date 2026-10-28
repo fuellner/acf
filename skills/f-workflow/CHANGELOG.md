@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-28
+- Step 4 is `f-implement`. The skill-less implementation prompt is retired.
+- A migration or refactor task is not implemented from this menu. The `f-refactor` step phase may hand the code change to `f-implement` and the task must not bypass the plan.
+
 ## 2026-10-27
 - Implementation prompt points at `docs/tasks/TASK-<id>-<slug>.md` and the exact-ID rule (`TASK-001` matches `TASK-001.md` or `TASK-001-<slug>.md`, not `TASK-0010`). The test-plan placeholder is `TEST-<source-id>-plan.md` for the task and for its Source REQ-ID. Index refresh uses the schema named for that directory.
 - `f-refactor` is a separate workflow. The menu only hands off to it and no longer treats it as an optional step of the feature cycle.

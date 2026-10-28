@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-28
+- `references/directory-index.md` names the `docs/implement/` schema (`Task | Mode | Status | File`). `f-docs` does not create that directory and does not edit implementation logs.
+- The deeper-docs template lists `docs/implement/` so the link is kept when that directory exists.
+
 ## 2026-10-27
 - Language rule names the `f-legal` exception: its instructions, templates, and `docs/legal/` stay German, and this skill does not edit them. `f-feature-summary` instructions stay English.
 - `docs/tests/` index schema is `Source | Mode | Revision | File`. A default `Document | Description` table in that directory is replaced by this schema.

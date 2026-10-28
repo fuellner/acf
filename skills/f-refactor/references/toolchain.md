@@ -247,6 +247,7 @@ Exit codes: `0` plan, build, install, or a clean tool run; `1` bad usage; `2` a 
 - **Audit exit 5.** Read the advisory list. Do not add an ignore. Remove the package or wait for a release, then `--write-lock` again.
 - **`docker build` does not accept `--secret`.** Set `DOCKER_BUILDKIT=1`, or use Podman. Do not switch the secret to a build arg.
 - **Container user cannot write `/out`.** The mount is the host path given to `--out`. On a rootless engine, the `--user` value must be allowed to write that directory.
+- **`--memory` or `--cpus` fails on rootless Podman with cgroup v1.** The engine rejects the limit because that cgroup manager cannot set it. Override the size with `run.sh --memory` and `--cpus` when a different limit is accepted. When the flags themselves are rejected, pass `--runtime docker`, or use a host with cgroup v2. Do not remove the flags from the script.
 - **Rector or PHPStan tries to write inside the application.** The mount is `:ro`. Cache belongs under `/tmp`. Do not remove `--read-only` or `:ro`.
 - **Host install says the PHP platform is too old.** The fallback needs PHP >= 8.4.3 on `PATH`. Use the container instead of changing the application's `config.platform.php`.
 - **The tool directory was refused.** It overlaps the application tree. Pick a path outside that repo.

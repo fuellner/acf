@@ -38,7 +38,7 @@ Templates live in this skill directory and are copied only when the individual t
 4. Only create convention files for languages that are actually detected.
 5. Only create individual decision records when the decision is unambiguous from code or existing docs. An index of existing decisions does not require inventing a new decision.
 6. After writing the individual documents, create or refresh `index.md` by following `references/directory-index.md` in every generated or maintained documentation directory under `docs/`, including `docs/conventions/`, `docs/decisions/`, and nested directories. Repair missing indexes in existing convention and decision directories even when no new individual document is needed.
-7. Do not create or modify `docs/legal/` — that directory belongs to f-legal.
+7. Do not create or modify `docs/legal/` — that directory belongs to f-legal. Do not create `docs/implement/` and do not edit implementation logs — `f-implement` owns them. If `docs/implement/` already exists, refresh only its `index.md` using the implement schema in `references/directory-index.md`.
 8. Only include sections in generated files when they can be meaningfully filled. Finalize README documentation links after generating directory indexes:
    - Reference documentation in a `docs/` subdirectory through that directory's `index.md`, e.g. `docs/decisions/index.md`. Do not link individual documents inside the subdirectory or the directory path itself from the README; its index is the table of contents.
    - Link standalone documents directly under `docs/`, such as `docs/architecture.md`, directly from the README.
@@ -72,5 +72,5 @@ All templates are located in `templates/` relative to this skill:
 - `AGENTS.md` exists. Newly generated files have no template markers or unfilled placeholders; authored content in pre-existing files is preserved.
 - Links created or updated in `AGENTS.md` and `README.md` resolve. Any unresolved pre-existing links or proposed policy changes are reported without deleting authored content.
 - README references to documentation in `docs/` subdirectories target the corresponding `index.md`; standalone files directly under `docs/` are linked directly. No individual subdirectory documents or bare directory paths remain as README documentation links.
-- No rule contradicts the detected stack, and no `docs/legal/` content was written.
+- No rule contradicts the detected stack, and no `docs/legal/` content or implementation log was written.
 - Every affected documentation directory and parent below `docs/` has an up-to-date `index.md` per `references/directory-index.md`; entries match existing contents and all generated links resolve. `docs/legal/` remains excluded.
