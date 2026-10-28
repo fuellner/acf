@@ -3,6 +3,10 @@
 ## 2026-10-28
 - Step execution no longer edits application code. It hands the step's task to `f-implement` and, on a later visit, writes the step record and the review handoff. Resume continues an in-progress or changes-requested step before the next todo step.
 - A task that `f-implement` has moved to `ready-for-review` or `blocked` is copied onto the step. The task is not moved backward to match a stale step.
+- `scripts/install-tools.sh` refuses a missing `composer.lock` in dry-run and in `--install` (exit 6) before `composer require`. Without a lock, require would resolve every dependency. It also refuses a global Composer repository that is not packagist.org, and it refuses `COMPOSER_CAFILE`, `SSL_CERT_FILE`, and `COMPOSER_AUTH`. `COMPOSER_HOME` is a loud warning because that home is included in the global repository check.
+- Feature flag is a strategy: default off, a named owner, rollout by turning the flag on, and removal as a later step of the same unit.
+- A wide PHP gap in CI is 5.6, then 7.4 (read the 7.0–7.3 migration guides), then 8.0, 8.1, 8.2, and on to the fetched target.
+- PHPCompatibility's SPDX id is `LGPL-3.0-or-later`. The toolchain example sets `testVersion` to a range from the current runtime to the target. An existing PHP_CodeSniffer `^4` or `>=4` pin is not downgraded. Commit `composer.lock` and review the lock diff before committing.
 
 ## 2026-10-27
 - `scripts/install-tools.sh` installs only an allowlist of official Packagist packages over HTTPS. It refuses mirrors, custom repositories, disabled TLS, abandoned package names, PHARs, and `curl | sh`. `composer audit --locked` runs after install.

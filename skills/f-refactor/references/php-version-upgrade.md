@@ -40,7 +40,7 @@ Do not re-enable removed insecure features to keep old behavior. In particular, 
 
 Prefer fixes that still run on the current production runtime, one family per PR, then cut production over to a version php.net lists. Do not deploy an unsupported intermediate to production. Intermediate runtimes are for CI and local verification.
 
-Fetch the official migration guide for each hop in this session and treat it as the list of breaks. A large gap uses these boundaries in CI (5.6, then 7.x, then 8.0, 8.1, 8.2, then the fetched target). Production cutover skips any boundary php.net does not list. The families below are the minimum to consider for old code, not a substitute for that guide:
+Fetch the official migration guide for each hop in this session and treat it as the list of breaks. A large gap uses this path in CI: 5.6, then 7.4, then 8.0, 8.1, 8.2, and each later minor through the fetched target. The 7.4 hop still reads the 7.0, 7.1, 7.2, and 7.3 migration guides, because those intermediate breaks are in the code even when CI does not stop on those versions. Production cutover skips any boundary php.net does not list. The families below are the minimum to consider for old code, not a substitute for that guide:
 
 - Through 5.x: magic quotes and `register_globals` are gone by 5.4. Do not bring them back. A `<?` short tag depends on `short_open_tag`.
 - Onto 7.0: `mysql_*` and `ereg` are removed. Replace `mysql_*` with mysqli or PDO, not with a new ORM. PHP 4 constructors are deprecated here.

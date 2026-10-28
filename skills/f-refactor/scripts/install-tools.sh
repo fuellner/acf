@@ -63,9 +63,17 @@ the php on PATH). Only ^MAJOR.MINOR constraints on the packagist.org allowlist
 are passed to Composer. Composer picks the latest release inside that constraint.
 
 Packages come only from https://repo.packagist.org over HTTPS. secure-http must
-stay true and disable-tls must stay false. Custom repositories and mirrors are
-refused. composer require updates composer.lock for the added packages only.
-composer audit --locked runs after an install.
+stay true and disable-tls must stay false. Project and global Composer
+repositories are checked. A mirror, a path repository, or a VCS repository is
+refused. composer.lock must already exist. Without it, composer require
+resolves every dependency, including production packages. Dry-run and
+--install both refuse a missing lock. composer require updates composer.lock
+for the added packages only. composer audit --locked runs after an install.
+Commit composer.lock and review the lock diff before committing.
+
+COMPOSER_HOME is a warning: global config from that directory is still checked.
+COMPOSER_CAFILE, SSL_CERT_FILE, and COMPOSER_AUTH are refused. They can
+redirect TLS trust or auth outside the repository list.
 
 Exit codes:
   0  Plan printed, or install finished and audit reported nothing. Includes "already present".
@@ -75,7 +83,8 @@ Exit codes:
   4  Nothing was added, and every selected tool was refused
      (this PHP cannot run it, or an existing pin must not be changed)
   5  require-dev was updated and composer audit reported advisories or failed
-  6  Refused: package, TLS, or repository is outside the packagist.org allowlist
+  6  Refused: package, TLS, repository (project or global), trust or auth
+     environment, or a missing composer.lock is outside the packagist.org rule
 
 Examples:
   install-tools.sh --project-dir /path/to/app --phpstan --phpunit
@@ -186,7 +195,7 @@ license_of() {
   case "$1" in
     rector/rector|phpstan/phpstan|vimeo/psalm|deptrac/deptrac) printf 'MIT' ;;
     squizlabs/php_codesniffer|phpunit/phpunit|phalcon/ide-stubs) printf 'BSD-3-Clause' ;;
-    phpcompatibility/php-compatibility) printf 'LGPL-3.0' ;;
+    phpcompatibility/php-compatibility) printf 'LGPL-3.0-or-later' ;;
     *) printf 'unknown' ;;
   esac
 }
@@ -286,8 +295,15 @@ PHP
 )"
 }
 
+assert_lockfile() {
+  if [[ -f "$project_dir/composer.lock" ]]; then
+    return 0
+  fi
+  die 6 "no composer.lock; a require would resolve every dependency; create the lock with explicit approval first"
+}
+
 assert_supply_chain() {
-  local secure tls repos_json repo_err file_err
+  local secure tls repos_json global_repos repo_err file_err
   if [[ -n "${COMPOSER:-}" ]]; then
     die 6 "Refusing install: COMPOSER is set. Unset it so Composer uses this project's composer.json."
   fi
@@ -296,6 +312,18 @@ assert_supply_chain() {
       die 6 "Refusing install: COMPOSER_DISABLE_TLS is set. Composer must use HTTPS."
       ;;
   esac
+  if [[ -n "${COMPOSER_HOME:-}" ]]; then
+    warn "COMPOSER_HOME is set. Global Composer config from that directory is included in the repository check. Unset it when you mean the default Composer home."
+  fi
+  if [[ -n "${COMPOSER_CAFILE:-}" ]]; then
+    die 6 "Refusing install: COMPOSER_CAFILE is set. A custom CA file can redirect HTTPS trust. Unset it."
+  fi
+  if [[ -n "${SSL_CERT_FILE:-}" ]]; then
+    die 6 "Refusing install: SSL_CERT_FILE is set. A custom CA file can redirect HTTPS trust. Unset it."
+  fi
+  if [[ -n "${COMPOSER_AUTH:-}" ]]; then
+    die 6 "Refusing install: COMPOSER_AUTH is set. Inline auth can point Composer at another host. Unset it."
+  fi
   secure=$(composer --no-interaction --no-plugins --working-dir "$project_dir" config secure-http 2>/dev/null) || die 6 "Could not read Composer secure-http."
   tls=$(composer --no-interaction --no-plugins --working-dir "$project_dir" config disable-tls 2>/dev/null) || die 6 "Could not read Composer disable-tls."
   if [[ "$secure" != "true" ]]; then
@@ -303,6 +331,10 @@ assert_supply_chain() {
   fi
   if [[ "$tls" != "false" ]]; then
     die 6 "Refusing install: Composer disable-tls is ${tls}. It must be false."
+  fi
+  global_repos=$(composer --no-interaction --no-plugins config --global --json repositories 2>/dev/null) || die 6 "Could not read global Composer repositories."
+  if ! repo_err=$(printf '%s' "$global_repos" | repo_json_is_packagist_only 2>&1); then
+    die 6 "Refusing global Composer repositories (${repo_err}). Only https://repo.packagist.org is accepted. No mirrors, path repos, or forks."
   fi
   repos_json=$(composer --no-interaction --no-plugins --working-dir "$project_dir" config --json repositories 2>/dev/null) || die 6 "Could not read Composer repositories."
   if ! repo_err=$(printf '%s' "$repos_json" | repo_json_is_packagist_only 2>&1); then
@@ -735,6 +767,7 @@ else
   printf 'require_php: not set\n'
 fi
 printf 'scope: require-dev only. No global install, no production deploy, no edits to require or config.platform.php.\n'
+assert_lockfile
 assert_supply_chain
 
 if ! ver_ge "$platform" 7.2.0; then
@@ -810,12 +843,12 @@ while IFS= read -r tool; do
   if [[ -n "$NOTE" ]]; then
     warn "$NOTE"
   fi
-  # PHPCompatibility 9 does not run on PHP_CodeSniffer 4. Do not downgrade an existing pin.
+  # PHPCompatibility 9 does not run on PHP_CodeSniffer ^4 or >=4. Do not downgrade that pin.
   if [[ "$tool" == "phpcompatibility" ]]; then
     if existing_phpcs=$(lookup_section "$dev_rows" "squizlabs/php_codesniffer"); then
       case "$existing_phpcs" in
         *'^4'*|*'~4'*|*'>=4'*|*' 4.'*|4.*)
-          printf 'skip: %s — require-dev already pins PHP_CodeSniffer at (%s). PHPCompatibility 9 needs ^2.3 or ^3, and this script will not change that pin.\n' "$pkg" "$existing_phpcs"
+          printf 'skip: %s — require-dev already pins PHP_CodeSniffer at (%s). PHPCompatibility 9 does not run on ^4 or >=4 (also ~4 or a bare 4.*). This script will not change that pin.\n' "$pkg" "$existing_phpcs"
           mark_refused "$role"
           continue
           ;;
