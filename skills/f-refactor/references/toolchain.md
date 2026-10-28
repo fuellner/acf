@@ -35,10 +35,11 @@ scripts/toolchain/
 
 The image is the primary way to run the tools. It is built on a PHP 8.4 CLI base so the tools have the runtime they need even when the application does not. `run.sh` starts the container with:
 
+- `--pids-limit 256`, `--memory 2g`, and `--cpus 2` (override with `--pids-limit`, `--memory`, and `--cpus`)
 - `--network none`
-- the application mounted read-only (`--volume <app>:/app:ro`)
+- the application mounted read-only (`--mount type=bind,src=<app>,dst=/app,readonly`) and the report directory at `dst=/out` (paths that contain `,` or `:` are refused)
 - one output directory mounted writable at `/out`
-- `--read-only` and tmpfs on `/tmp` and `/var/tmp`
+- `--read-only` and tmpfs on `/tmp` and `/var/tmp` (`noexec,nosuid,nodev`)
 - `--cap-drop ALL` and `--security-opt no-new-privileges`
 - `--rm` and a non-root user (uid 10001 in the image, or the caller's uid when that uid is not 0)
 - no secrets and no host Composer config
@@ -85,7 +86,7 @@ To move the pin:
 4. Repeat for `composer:2.8` if that pin moves. The copied binary is only the Composer installer.
 5. Replace the `ARG` defaults in the Dockerfile. `build.sh` reads those defaults. Rebuild with `--build`. The Dockerfile runs `composer audit --locked` and fails the build on advisories.
 
-`--php-image` and `--composer-image` override the defaults for one build, so an internal registry can mirror the same images (`registry.example/php@sha256:...`). A reference without `@sha256:` produces a warning. Do not point these arguments at an image this skill has not described. The only names these docs use are the Docker Official Image `php`, the Docker Official Image `composer`, and a registry mirror the user configured for those two.
+`--php-image` and `--composer-image` override the defaults for one build, so an internal registry can mirror the same images (`registry.example/php@sha256:...`). A base image without `@sha256:` is refused (exit 6). `--tag` and `run.sh --image` are refused when they start with `-` or fall outside a strict reference pattern, so a value cannot become an engine flag. Do not point these arguments at an image this skill has not described. The only names these docs use are the Docker Official Image `php`, the Docker Official Image `composer`, and a registry mirror the user configured for those two.
 
 The Dockerfile installs `ca-certificates` and `unzip` with the base image's package manager (`apt-get` on the Debian php image) and then switches to user `toolchain` (uid 10001). An Alpine base is not the default. The `apt-get` line will not work there.
 
@@ -104,7 +105,7 @@ scripts/toolchain/build.sh --composer-repo https://composer.example.test
 
 An internal repository may need auth at build time. Pass `--composer-auth-file` pointing at a regular file. `build.sh --build` mounts it as the BuildKit secret `composer_auth` (`--secret id=composer_auth,src=...`). The Dockerfile reads that file inside one `RUN` and deletes Composer home in the same `RUN`. The value is not a build arg, not an `ENV`, and not printed. `DOCKER_BUILDKIT=1` is required for `docker build --secret`. Podman accepts the same `--secret` flag. Do not `COPY` the file into the image.
 
-A lock generated against packagist.org still contains dist URLs on other hosts. `--composer-repo` pointing at an internal host refuses that lock (exit 6). Create a new lock against the internal source first.
+With packagist.org, package `dist` URLs in the lock are zipballs on `api.github.com` (and the same family of HTTPS hosts Composer records). Those URLs are how `composer install` downloads the tools. An internal source that cannot reach GitHub cannot use that lock. `--write-lock` against the internal URL rebuilds the lock so every dist host is the internal repository. `--composer-repo` pointing at an internal host refuses a lock whose dist hosts are elsewhere (exit 6). The committed lock in this skill stays the packagist lock. `--write-lock` copies the tool project to `$XDG_DATA_HOME/f-refactor-tools/lock-work` (or to `--toolchain-dir` outside this skill) and writes the lock there. It does not edit `scripts/toolchain/composer.json`.
 
 ## Lock
 
@@ -146,13 +147,25 @@ Dry-run prints the engine command, including `--network none` and the `:ro` moun
 | Deptrac | `deptrac analyse` | `<out>/deptrac.log` |
 | PHPUnit | `phpunit --filter <seam>` | `<out>/phpunit.log`. Only for a suite that runs on PHP 8.4. |
 
-`testVersion` is a range from the current production minor to the hop target, for example `5.6-8.3`. PHPCompatibility then reports a break on any version in the range, so the same tree stays compatible with the current runtime and the target. A single version would miss the other end of that window. The standard path is inside the image. The project is not given a Composer plugin to register it. If the application already has its own PHP_CodeSniffer 4, this image does not downgrade it: the image carries PHP_CodeSniffer `^3.13` only, and the application's pin is untouched. PHPCompatibility 9 does not run on PHP_CodeSniffer `^4` or `>=4`.
+`testVersion` is a range from the current production minor to the hop target, for example `5.6-7.4`. PHPCompatibility 9.3.5 (the release on the `^9.3` line, published in 2019) has sniffs through PHP 7.4 and no sniffs for PHP 8.x changes. A `testVersion` that includes 8.x does not detect 8.x breaks. For those, use a Rector PHP set for the hop, PHPStan or Psalm with the language level set to the target, and the test suite on the target runtime. PHPCompatibility 10.x is a pre-release. It is not installed by default and is not added without an explicit approval and a new tool lock. The standard path is inside the image. The project is not given a Composer plugin to register it. If the application already has its own PHP_CodeSniffer 4, this image does not downgrade it: the image carries PHP_CodeSniffer `^3.13` only, and the application's pin is untouched. PHPCompatibility 9 does not run on PHP_CodeSniffer `^4` or `>=4`.
 
 Stdout of a dry-run Rector is the diff to review. Applying it is a later reviewed change, not `--run`.
+
+## Host programs
+
+| Mode | Host programs | Not required on the host |
+|------|----------------|--------------------------|
+| `build.sh` dry-run and `--build` | `python3` to read the tool project. `--build` also needs `docker` or `podman` | PHP, Composer. Those run inside the image |
+| `build.sh --write-lock` | `python3`, PHP, and Composer | A container engine |
+| `run.sh` dry-run | A shell | PHP, Composer, and a container engine |
+| `run.sh --run` | `docker` or `podman` | PHP and Composer |
+| `install-host.sh` | `python3`. `--install`, `--write-lock`, and `--run` also need PHP >= 8.4.3 and Composer | A container engine |
 
 ## Host fallback
 
 Use this when no container engine is available. The tools still do not go into the application.
+
+This mode has no sandbox. The process can use the network, and the application tree is a normal writable directory. Rector is still forced to `--dry-run`, and `phpcbf` is still rewritten to a diff, but nothing mounts the tree read-only and nothing sets `--network none`. Prefer `run.sh` when an engine is available.
 
 ```bash
 scripts/toolchain/install-host.sh
@@ -180,7 +193,7 @@ The agent does not treat a green Rector run as a behavior proof, a PHPStan basel
 | Tool | Phase | What it decides | Example | How to read it |
 |------|-------|-----------------|---------|----------------|
 | Rector | `execute` (a migration hop or a codemod) | Mechanical diff for one rule set | `scripts/toolchain/run.sh --app <app> --out <out> -- rector process src` | The wrapper adds `--dry-run`. Review the diff under `<out>`. One set per PR. A clean run is not proof that behavior held. An unexpected edit stops the step. Do not apply the diff here. Phalcon C-extension classes are invisible without stubs. |
-| PHPCompatibility on PHP_CodeSniffer | `inventory`, `plan`, `execute` for a migration | Source that will not run on the current or the target PHP | `scripts/toolchain/run.sh --app <app> --out <out> -- phpcs --standard=/opt/toolchain/vendor/phpcompatibility/php-compatibility/PHPCompatibility --runtime-set testVersion 5.6-8.3 src` | Use a range from the current minor to the target. Errors are forced-fix candidates. Confirm each one against the migration guide fetched for that hop. Do not silence a sniff to go green. |
+| PHPCompatibility on PHP_CodeSniffer | `inventory`, `plan`, `execute` for a migration | Source that will not run on PHP versions through 7.4 | `scripts/toolchain/run.sh --app <app> --out <out> -- phpcs --standard=/opt/toolchain/vendor/phpcompatibility/php-compatibility/PHPCompatibility --runtime-set testVersion 5.6-7.4 src` | 9.3.5 covers up to PHP 7.4, not PHP 8. Use a range that ends at 7.4 when the current runtime is older. Errors are forced-fix candidates. Confirm each one against the migration guide fetched for that hop. Do not silence a sniff to go green. PHP 8 breaks come from Rector, PHPStan or Psalm, and the tests on the target runtime. |
 | PHPStan or Psalm | `execute` | New static errors against the committed baseline | `scripts/toolchain/run.sh --app <app> --out <out> -- phpstan analyse` or `psalm` | New errors fail the step. Do not clear baseline entries as a side effect. Set the language level to the target on a migration and to the current runtime on a refactor. |
 | Deptrac | `plan` and `execute` for a refactor boundary | Whether a new module boundary holds | `scripts/toolchain/run.sh --app <app> --out <out> -- deptrac analyse` | A new violation fails the step. Add a rule only for the boundary this step introduces. The package is `deptrac/deptrac`. |
 | PHPUnit, including golden masters | `safety-net` (the plan, via `f-testing`) and `execute` | Observed behavior at the seam | The application's PHPUnit on the runtime that claim is about. The image binary only when that runtime is PHP 8.4. | Tests must pass on the unchanged code before the edit. A migration runs the suite on the old runtime and the target and diffs normalized output. Do not edit the expected value. |

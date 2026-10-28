@@ -129,6 +129,9 @@ if [[ ! -d "$toolchain_dir" ]]; then
 fi
 toolchain_dir=$(CDPATH='' cd -- "$toolchain_dir" && pwd)
 assert_tools_outside_app "$tools_dir" "$app_dir"
+if [[ -n "$app_dir" && -n "$out_dir" ]]; then
+  assert_no_overlap "$app_dir" "$out_dir" "application tree" "output directory"
+fi
 
 source_json="$toolchain_dir/composer.json"
 source_lock="$toolchain_dir/composer.lock"
@@ -235,9 +238,14 @@ if [[ "$mode" == "run" || $# -gt 0 ]]; then
   bin="${host_cmd[0]}"
   [[ -x "$bin" ]] || die 2 "Tool binary not found: ${bin}. Pass --install first."
   mkdir -p -- "$out_dir"
-  app_dir=$(CDPATH='' cd -- "$app_dir" && pwd)
-  if ! (cd -- "$app_dir" && "${host_cmd[@]}") >"${out_dir}/$(basename -- "$1").log" 2>&1; then
-    status=$?
+  app_dir=$(physical_path "$app_dir") || die 2 "Could not resolve --app"
+  assert_no_overlap "$app_dir" "$out_dir" "application tree" "output directory"
+  log="${out_dir}/$(basename -- "$1").log"
+  set +e
+  (cd -- "$app_dir" && "${host_cmd[@]}") >"$log" 2>&1
+  status=$?
+  set -e
+  if (( status != 0 )); then
     printf 'result: tool exited %s\n' "$status" >&2
     exit "$status"
   fi

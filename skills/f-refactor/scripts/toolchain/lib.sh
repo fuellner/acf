@@ -7,6 +7,7 @@ if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
 fi
 
 packagist_url='https://repo.packagist.org'
+lib_dir=$(CDPATH='' cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 
 die() {
   local code="$1"
@@ -17,6 +18,92 @@ die() {
 
 warn() {
   printf 'warning: %s\n' "$*" >&2
+}
+
+have_python() {
+  command -v python3 >/dev/null 2>&1
+}
+
+# Run check.py. Returns 1 when python3 is not on PATH so the caller can use PHP.
+run_check_py() {
+  if ! have_python; then
+    return 1
+  fi
+  python3 "$lib_dir/check.py" "$@"
+}
+
+assert_image_ref() {
+  local ref="$1" kind="${2:-tag}"
+  case "$ref" in
+    -*)
+      die 6 "Refusing image reference starting with '-': ${ref}"
+      ;;
+    *$'\n'*|*' '*|*,*)
+      die 6 "Refusing image reference with whitespace, a comma, or a newline."
+      ;;
+  esac
+  if [[ ! "$ref" =~ ^[A-Za-z0-9][A-Za-z0-9._/:@-]{0,255}$ ]]; then
+    die 6 "Refusing image reference ${ref}."
+  fi
+  if [[ "$ref" == *"@"* && ! "$ref" =~ @sha256:[a-f0-9]{64}$ ]]; then
+    die 6 "Refusing image reference ${ref}. A digest must be @sha256: and 64 hex digits."
+  fi
+  if [[ "$kind" == "base" && ! "$ref" =~ @sha256:[a-f0-9]{64}$ ]]; then
+    die 6 "Refusing base image ${ref}. Base images must be pinned with @sha256:."
+  fi
+}
+
+assert_mount_path() {
+  local label="$1" path="$2"
+  case "$path" in
+    *$'\n'*|*,*|*:*)
+      die 6 "Refusing ${label} path. A mount path cannot contain a comma, a colon, or a newline."
+      ;;
+  esac
+}
+
+physical_path() {
+  local target="$1" cursor parent rest prefix
+  if [[ -d "$target" ]]; then
+    (CDPATH='' cd -P -- "$target" && pwd -P)
+    return
+  fi
+  cursor=$target
+  rest=""
+  while [[ ! -d "$cursor" ]]; do
+    parent=$(dirname -- "$cursor")
+    if [[ "$parent" == "$cursor" ]]; then
+      printf 'path was not found\n' >&2
+      return 1
+    fi
+    rest="/$(basename -- "$cursor")${rest}"
+    cursor=$parent
+  done
+  prefix=$(CDPATH='' cd -P -- "$cursor" && pwd -P) || return 1
+  printf '%s%s' "$prefix" "$rest"
+}
+
+assert_no_overlap() {
+  local left right label_left="$3" label_right="$4"
+  if ! left=$(physical_path "$1" 2>&1); then
+    die 2 "Could not resolve ${label_left}: ${left}"
+  fi
+  if ! right=$(physical_path "$2" 2>&1); then
+    die 2 "Could not resolve ${label_right}: ${right}"
+  fi
+  left=${left%/}
+  right=${right%/}
+  if [[ "$left" == "$right" || "$left" == "$right"/* || "$right" == "$left"/* ]]; then
+    die 6 "Refusing overlap between ${label_left} (${left}) and ${label_right} (${right})."
+  fi
+}
+
+assert_tools_outside_app() {
+  local tools="$1" app="${2:-}"
+  if [[ -z "$app" ]]; then
+    return 0
+  fi
+  assert_no_overlap "$tools" "$app" "tool directory" "application tree"
 }
 
 normalize_repo_url() {
@@ -78,6 +165,12 @@ refuse_missing_lock() {
 # Prints the normalized URL, or exits 6 when composer.json does not describe that one source.
 assert_project_source() {
   local expected="$1" file="$2" err
+  if have_python; then
+    if ! err=$(run_check_py source "$expected" "$file" 2>&1); then
+      die 6 "Refusing tool project repositories (${err}). Exactly one https Composer source is accepted. When that source is not packagist.org, packagist.org must be disabled."
+    fi
+    return 0
+  fi
   if ! err=$(php -r "$(cat <<'PHP'
 $expected = $argv[1];
 $raw = file_get_contents($argv[2]);
@@ -183,6 +276,12 @@ PHP
 
 assert_allowlist() {
   local file="$1" err
+  if have_python; then
+    if ! err=$(run_check_py allowlist "$file" 2>&1); then
+      die 6 "Refusing tool composer.json (${err})."
+    fi
+    return 0
+  fi
   if ! err=$(php -r "$(cat <<'PHP'
 $raw = file_get_contents($argv[1]);
 $data = json_decode($raw, true);
@@ -251,6 +350,12 @@ PHP
 
 assert_lock_urls() {
   local lock="$1" expected="$2" err
+  if have_python; then
+    if ! err=$(run_check_py lock "$expected" "$lock" 2>&1); then
+      die 6 "Refusing tool composer.lock (${err}). Create it with --write-lock against the one configured source."
+    fi
+    return 0
+  fi
   if ! err=$(php -r "$(cat <<'PHP'
 $expected = $argv[1];
 $lock = json_decode(file_get_contents($argv[2]), true);
@@ -307,7 +412,14 @@ PHP
 
 assert_global_repos() {
   local expected="$1" json err
+  command -v composer >/dev/null 2>&1 || die 2 "composer is not on PATH. The host Composer check runs only for --write-lock and the host install."
   json=$(composer --no-interaction --no-plugins config --global --json repositories 2>/dev/null) || die 6 "Could not read global Composer repositories."
+  if have_python; then
+    if ! err=$(printf '%s' "$json" | run_check_py global "$expected" 2>&1); then
+      die 6 "Refusing global Composer repositories (${err}). Only packagist.org, or the one configured internal source, is accepted."
+    fi
+    return 0
+  fi
   if ! err=$(F_REFACTOR_EXPECTED_REPO="$expected" printf '%s' "$json" | F_REFACTOR_EXPECTED_REPO="$expected" php -r "$(cat <<'PHP'
 $expected = getenv("F_REFACTOR_EXPECTED_REPO");
 $raw = stream_get_contents(STDIN);
@@ -381,46 +493,6 @@ PHP
   fi
 }
 
-assert_tools_outside_app() {
-  local tools="$1" app="${2:-}" err
-  if [[ -z "$app" ]]; then
-    return 0
-  fi
-  if ! err=$(php -r "$(cat <<'PHP'
-$tools = $argv[1];
-$app = $argv[2];
-$appReal = realpath($app);
-if ($appReal === false) {
-    fwrite(STDERR, "application directory was not found\n");
-    exit(2);
-}
-$parent = $tools;
-while (!is_dir($parent)) {
-    $next = dirname($parent);
-    if ($next === $parent) {
-        break;
-    }
-    $parent = $next;
-}
-$prefix = realpath($parent);
-$toolsReal = $tools;
-if ($prefix !== false) {
-    $suffix = substr($tools, strlen($parent));
-    $toolsReal = $prefix . $suffix;
-}
-$toolsReal = rtrim($toolsReal, "/");
-$appReal = rtrim($appReal, "/");
-if ($toolsReal === $appReal || strpos($toolsReal, $appReal . "/") === 0 || strpos($appReal, $toolsReal . "/") === 0) {
-    fwrite(STDERR, "tool directory and application tree overlap\n");
-    exit(6);
-}
-exit(0);
-PHP
-)" "$tools" "$app" 2>&1); then
-    die 6 "Refusing tool directory (${err}). It must sit outside the application tree."
-  fi
-}
-
 prepare_tool_args() {
   local base
   TOOL_CMD=()
@@ -481,8 +553,22 @@ dockerfile_arg() {
   printf '%s' "${line#ARG "${name}"=}"
 }
 
+lock_content_hash() {
+  local lock="$1"
+  if have_python; then
+    run_check_py hash "$lock"
+    return
+  fi
+  # shellcheck disable=SC2016
+  php -r '$d=json_decode(file_get_contents($argv[1]), true); echo is_array($d) ? (string) ($d["content-hash"] ?? "") : "";' "$lock"
+}
+
 rewrite_project_source() {
   local file="$1" expected="$2"
+  if have_python; then
+    run_check_py rewrite "$file" "$expected" || die 6 "Could not record the single Composer source in the tool composer.json."
+    return 0
+  fi
   php -r "$(cat <<'PHP'
 $file = $argv[1];
 $expected = $argv[2];

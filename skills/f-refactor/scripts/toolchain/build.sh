@@ -8,6 +8,10 @@ script_dir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd)
 source "$script_dir/lib.sh"
 
 mode="dry-run"
+want_lock=0
+explicit_dry=0
+explicit_build=0
+toolchain_dir_set=0
 toolchain_dir="$script_dir"
 repo_url="$packagist_url"
 php_image=""
@@ -30,10 +34,14 @@ targets of this script.
 
 Options:
   --help, -h                 Show this help
-  --dry-run                  Print the plan only (default)
-  --build                    Build the image
-  --write-lock               Write the tool project's composer.lock, then audit it
-  --toolchain-dir DIR        Tool project (default: this directory)
+  --dry-run                  Print the plan only (default). Combined with --write-lock,
+                             prints where the lock would be written and changes nothing
+  --build                    Build the image. Needs python3 and docker or podman.
+                             PHP and Composer run inside the image, not on the host
+  --write-lock               Write the tool lock outside this skill checkout, then audit it.
+                             Needs host PHP, Composer, and python3. Never edits scripts/toolchain
+  --toolchain-dir DIR        Tool project for --write-lock. Must be outside this skill.
+                             Default: $XDG_DATA_HOME/f-refactor-tools/lock-work
   --composer-repo URL        The one Composer source. Default https://repo.packagist.org.
                              Any other https URL disables packagist.org
   --php-image REF            Base image. Default is the digest pin in the Dockerfile
@@ -56,17 +64,19 @@ EOF
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --help|-h) usage; exit 0 ;;
-    --dry-run) mode="dry-run"; shift ;;
-    --build) mode="build"; shift ;;
-    --write-lock) mode="write-lock"; shift ;;
+    --dry-run) explicit_dry=1; shift ;;
+    --build) explicit_build=1; shift ;;
+    --write-lock) want_lock=1; shift ;;
     --toolchain-dir)
       [[ $# -ge 2 ]] || die 1 "--toolchain-dir needs a directory"
       toolchain_dir="$2"
+      toolchain_dir_set=1
       shift 2
       ;;
     --toolchain-dir=*)
       toolchain_dir="${1#*=}"
       [[ -n "$toolchain_dir" ]] || die 1 "--toolchain-dir needs a directory"
+      toolchain_dir_set=1
       shift
       ;;
     --composer-repo)
@@ -114,20 +124,40 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+if [[ "$explicit_build" -eq 1 && "$want_lock" -eq 1 ]]; then
+  die 1 "Pass only one of --build or --write-lock."
+fi
+if [[ "$explicit_dry" -eq 1 || ( "$explicit_build" -eq 0 && "$want_lock" -eq 0 ) ]]; then
+  mode="dry-run"
+elif [[ "$want_lock" -eq 1 ]]; then
+  mode="write-lock"
+else
+  mode="build"
+fi
+
 repo_url=$(assert_https_repo_url "$repo_url")
-assert_host_env
+if [[ "$mode" == "write-lock" ]]; then
+  assert_host_env
+fi
 if [[ -n "$auth_file" ]]; then
   [[ -f "$auth_file" && ! -L "$auth_file" ]] || die 1 "--composer-auth-file must be a regular file"
 fi
-if [[ ! -d "$toolchain_dir" ]]; then
+if [[ -d "$toolchain_dir" ]]; then
+  toolchain_dir=$(CDPATH='' cd -- "$toolchain_dir" && pwd)
+elif [[ "$want_lock" -eq 0 ]]; then
   die 2 "Tool project directory not found: $toolchain_dir"
 fi
-toolchain_dir=$(CDPATH='' cd -- "$toolchain_dir" && pwd)
-json="$toolchain_dir/composer.json"
-lock="$toolchain_dir/composer.lock"
 dockerfile="$script_dir/Dockerfile"
-[[ -f "$json" ]] || die 2 "No composer.json in the tool project: $json"
 [[ -f "$dockerfile" ]] || die 2 "Dockerfile not found: $dockerfile"
+if [[ "$want_lock" -eq 0 ]]; then
+  json="$toolchain_dir/composer.json"
+  lock="$toolchain_dir/composer.lock"
+  [[ -f "$json" ]] || die 2 "No composer.json in the tool project: $json"
+else
+  json="$script_dir/composer.json"
+  lock="$script_dir/composer.lock"
+  [[ -f "$json" ]] || die 2 "No composer.json in the tool project: $json"
+fi
 
 if [[ -z "$php_image" ]]; then
   php_image=$(dockerfile_arg PHP_IMAGE "$dockerfile")
@@ -135,14 +165,9 @@ fi
 if [[ -z "$composer_image" ]]; then
   composer_image=$(dockerfile_arg COMPOSER_IMAGE "$dockerfile")
 fi
-case "$php_image" in
-  *@sha256:*) ;;
-  *) warn "PHP base image is not pinned by digest: ${php_image}" ;;
-esac
-case "$composer_image" in
-  *@sha256:*) ;;
-  *) warn "Composer image is not pinned by digest: ${composer_image}" ;;
-esac
+assert_image_ref "$php_image" base
+assert_image_ref "$composer_image" base
+assert_image_ref "$image_tag" tag
 
 if [[ -z "$runtime" ]]; then
   if command -v docker >/dev/null 2>&1; then
@@ -158,10 +183,42 @@ case "$runtime" in
   *) die 1 "--runtime must be docker or podman" ;;
 esac
 
-assert_global_repos "$repo_url"
-assert_allowlist "$json"
-if [[ "$mode" != "write-lock" ]]; then
+script_phys=$(CDPATH='' cd -P -- "$script_dir" && pwd -P)
+if [[ "$want_lock" -eq 1 && "$toolchain_dir_set" -eq 1 ]]; then
+  if [[ -d "$toolchain_dir" ]]; then
+    toolchain_phys=$(CDPATH='' cd -P -- "$toolchain_dir" && pwd -P)
+  else
+    toolchain_phys=$(physical_path "$toolchain_dir") || die 2 "Could not resolve --toolchain-dir."
+  fi
+  if [[ "$toolchain_phys" == "$script_phys" || "$toolchain_phys" == "$script_phys"/* ]]; then
+    die 6 "Refusing to rewrite the skill checkout at ${toolchain_phys}. Omit --toolchain-dir to use the data directory, or pass a directory outside this skill."
+  fi
+fi
+if [[ "$want_lock" -eq 1 && "$toolchain_dir_set" -eq 0 ]]; then
+  data_home="${XDG_DATA_HOME:-$HOME/.local/share}"
+  toolchain_dir="${data_home}/f-refactor-tools/lock-work"
+fi
+if [[ "$mode" == "dry-run" && "$want_lock" -eq 1 ]]; then
+  printf 'mode: dry-run\n'
+  printf 'lock_dir: %s\n' "$toolchain_dir"
+  printf 'source: %s\n' "$repo_url"
+  printf 'skill_checkout: unchanged\n'
+  printf 'result: dry-run. --write-lock would copy the tool project to that directory and run composer update there. scripts/toolchain is not modified.\n'
+  exit 0
+fi
+if [[ "$mode" == "write-lock" ]]; then
+  if [[ -d "$toolchain_dir" ]]; then
+    toolchain_phys=$(CDPATH='' cd -P -- "$toolchain_dir" && pwd -P)
+  else
+    toolchain_phys=$(physical_path "$toolchain_dir") || die 2 "Could not resolve --toolchain-dir."
+  fi
+  if [[ "$toolchain_phys" == "$script_phys" || "$toolchain_phys" == "$script_phys"/* ]]; then
+    die 6 "Refusing to rewrite the skill checkout at ${toolchain_phys}. Omit --toolchain-dir to use the data directory, or pass a directory outside this skill."
+  fi
+  assert_global_repos "$repo_url"
+else
   [[ -f "$lock" ]] || refuse_missing_lock
+  assert_allowlist "$json"
   assert_project_source "$repo_url" "$json"
   assert_lock_urls "$lock" "$repo_url"
 fi
@@ -181,8 +238,7 @@ printf 'composer_image: %s\n' "$composer_image"
 printf 'tag: %s\n' "$image_tag"
 printf 'runtime: %s\n' "$runtime"
 if [[ -f "$lock" ]]; then
-  # shellcheck disable=SC2016
-  hash=$(php -r '$d=json_decode(file_get_contents($argv[1]), true); echo is_array($d) ? (string) ($d["content-hash"] ?? "") : "";' "$lock")
+  hash=$(lock_content_hash "$lock")
   if [[ -n "$hash" ]]; then
     printf 'suggested-tag: %s\n' "$hash"
   fi
@@ -208,6 +264,19 @@ if [[ "$mode" == "write-lock" ]]; then
   if ! command -v composer >/dev/null 2>&1; then
     die 2 "composer is not on PATH. --write-lock uses the host Composer and does not download it."
   fi
+  mkdir -p -- "$toolchain_dir"
+  toolchain_phys=$(CDPATH='' cd -P -- "$toolchain_dir" && pwd -P)
+  if [[ "$toolchain_phys" == "$script_phys" || "$toolchain_phys" == "$script_phys"/* ]]; then
+    die 6 "Refusing to rewrite the skill checkout at ${toolchain_phys}."
+  fi
+  if [[ ! -f "$toolchain_dir/composer.json" ]]; then
+    cp -- "$script_dir/composer.json" "$toolchain_dir/composer.json"
+  fi
+  if [[ ! -f "$toolchain_dir/composer.lock" && -f "$script_dir/composer.lock" ]]; then
+    cp -- "$script_dir/composer.lock" "$toolchain_dir/composer.lock"
+  fi
+  json="$toolchain_dir/composer.json"
+  lock="$toolchain_dir/composer.lock"
   if ! is_packagist_url "$repo_url"; then
     rewrite_project_source "$json" "$repo_url"
     printf 'recorded source in %s with packagist.org disabled\n' "$json"

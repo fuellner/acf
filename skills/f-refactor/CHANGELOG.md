@@ -1,6 +1,8 @@
 # Changelog
 
 ## 2026-10-28
+- A failing tool no longer looks successful: `run.sh` and `install-host.sh` keep the command's status, and container-engine exits 125–127 become exit 3. The output directory may not overlap the application tree. Image references cannot start with `-`, and base images must be `@sha256:` digests. Mounts use `--mount` and reject paths that contain `,` or `:`.
+- `build.sh` dry-run and `--build` do not need host PHP or Composer. `--write-lock` writes a copy outside the skill checkout. PHPCompatibility 9.3.5 is documented as covering PHP through 7.4 only.
 - Tools are no longer installed with `composer require --dev` in the application. `scripts/toolchain/` builds a container image (Docker or Podman) or installs the same lock into a directory outside the app. One Composer source: packagist.org, or one internal HTTPS repository with packagist.org disabled. The tool lock is required. `--write-lock` is the explicit step that creates it. `run.sh` uses `--network none`, a read-only application mount, and writes reports to a separate directory. Rector and phpcbf stay on diff output.
 - `scripts/install-tools.sh` was removed. It refused a missing application `composer.lock` before `composer require`. That lock check now applies to the tool project.
 - Feature flag is a strategy: default off, a named owner, rollout by turning the flag on, and removal as a later step of the same unit.

@@ -26,7 +26,10 @@ RUN apt-get update \
 COPY --from=composer_bin /usr/bin/composer /usr/local/bin/composer
 
 WORKDIR /opt/toolchain
-COPY --chown=toolchain:toolchain composer.json composer.lock lib.sh image-install.sh entry.sh /opt/toolchain/
+COPY composer.json composer.lock lib.sh image-install.sh entry.sh /opt/toolchain/
+RUN chown root:root lib.sh image-install.sh entry.sh \
+    && chmod 0444 lib.sh image-install.sh entry.sh \
+    && chown toolchain:toolchain /opt/toolchain composer.json composer.lock
 
 USER toolchain
 ENV COMPOSER_HOME=/tmp/composer \
@@ -37,8 +40,7 @@ ENV COMPOSER_HOME=/tmp/composer \
     TMPDIR=/tmp
 
 RUN --mount=type=secret,id=composer_auth,required=false \
-    bash /opt/toolchain/image-install.sh \
-    && rm -rf /tmp/composer
+    bash /opt/toolchain/image-install.sh
 
 WORKDIR /app
 ENTRYPOINT ["bash", "/opt/toolchain/entry.sh"]
