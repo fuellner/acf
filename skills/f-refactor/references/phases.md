@@ -38,6 +38,8 @@ On a later visit, link the test plan. The fast path may defer inner seams; the s
 
 Load `strategies.md` for a refactor, `php-version-upgrade.md` for a migration, and `database.md` when a step will touch schema. Fill the plan: scope, non-goals, done criteria, ordered steps, team, parallel-work rule, and a rollback class on each step (revert, flag, or schema). Each step is one releasable PR of this type only. Split a step that is too big to review here, not during execute.
 
+A feature flag switches the old and new path at runtime and defaults off. Name its owner in the plan, and include a later step of this same unit that removes the flag. Do not add a flag without both. Rollout turns the flag on. Removal is not part of rollout.
+
 Leave Status `draft` until the user accepts. Acceptance sets Status `active`. A draft plan does not advance the phase.
 
 **Exit:** the user has accepted the plan. Set Phase to `execute`.
@@ -76,6 +78,8 @@ Please use the f-code-review skill. This change is an f-refactor unit. Type: mig
 ## Rollout
 
 Write `rollout.md`. Name the operator, who is notified, the canary, and the signals copied from the steps. List which guardrails this rollout hits. Do not deploy, and do not touch production. If the operator reports that a signal fired, record it and emit the debug prompt. Do not patch forward.
+
+When the plan uses a feature flag, the rollout record names the flag, its owner, that it defaults off, and the step that removes it. The operator turns the flag on. The agent does not change the flag in production. Removing the flag stays a later step of this unit.
 
 ```
 Please use the f-debug skill. The failure is inside this f-refactor unit and step. Stay inside that type. Do not propose a redesign or a version bump the type forbids. Use only logs and errors the user pasted.

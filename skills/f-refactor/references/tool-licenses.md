@@ -22,7 +22,7 @@ Optional paid add-ons exist, including PHPStan Pro and commercial Rector upgrade
 | [PHPUnit](https://github.com/sebastianbergmann/phpunit) | BSD-3-Clause | [LICENSE](https://github.com/sebastianbergmann/phpunit/blob/main/LICENSE) | Allowed. Keep the notice. Do not use the authors' names to endorse a product. |
 | [Phalcon (cphalcon)](https://github.com/phalcon/cphalcon) | BSD-3-Clause | [LICENSE.txt](https://github.com/phalcon/cphalcon/blob/master/LICENSE.txt) | Allowed. If the extension is shipped in the product image, keep the license notice with that distribution. |
 | [phalcon/ide-stubs](https://github.com/phalcon/ide-stubs) | BSD-3-Clause | [LICENSE.txt](https://github.com/phalcon/ide-stubs/blob/master/LICENSE.txt) | Allowed. Keep the notice. Do not use the authors' names to endorse a product. The GitHub license API returns `NOASSERTION`; the file text is the 3-clause BSD license. |
-| [PHPCompatibility](https://github.com/PHPCompatibility/PHPCompatibility) | LGPL-3.0 | [LICENSE](https://github.com/PHPCompatibility/PHPCompatibility/blob/develop/LICENSE) | Allowed. Dev-time use that does not ship the library has no distribution duty. |
+| [PHPCompatibility](https://github.com/PHPCompatibility/PHPCompatibility) | LGPL-3.0-or-later | [LICENSE](https://github.com/PHPCompatibility/PHPCompatibility/blob/develop/LICENSE) | Allowed. Dev-time use that does not ship the library has no distribution duty. `composer.json` on the develop branch declares `LGPL-3.0-or-later` (checked 2026-10-28). The GitHub license API still returns the deprecated id `LGPL-3.0`. |
 
 Deptrac is the repository GitHub serves for `qossmic/deptrac` (`opensoftwareconsulting/deptrac`). That repository is archived. The maintained Composer package is `deptrac/deptrac` (MIT, checked 2026-10-27). Prefer the boundary tool the target repo already runs when it has one.
 
@@ -35,7 +35,7 @@ Deptrac is the repository GitHub serves for `qossmic/deptrac` (`opensoftwarecons
 | `vimeo/psalm` | MIT |
 | `deptrac/deptrac` | MIT |
 | `squizlabs/php_codesniffer` | BSD-3-Clause |
-| `phpcompatibility/php-compatibility` | LGPL-3.0 |
+| `phpcompatibility/php-compatibility` | LGPL-3.0-or-later |
 | `phpunit/phpunit` | BSD-3-Clause |
 | `phalcon/ide-stubs` | BSD-3-Clause |
 
@@ -52,4 +52,4 @@ Deptrac is the repository GitHub serves for `qossmic/deptrac` (`opensoftwarecons
 - `phpunit/phpunit` — Packagist package linked from the PHPUnit README. Repository `github.com/sebastianbergmann/phpunit`.
 - `phalcon/ide-stubs` — `composer require --dev phalcon/ide-stubs` in that repository's README.
 
-The script refuses a custom Composer repository, a mirror, `secure-http: false`, and `disable-tls: true`. It does not download PHARs and does not add a package that is not in this list. After install it runs `composer audit --locked`. The license note above is not legal advice.
+The script refuses a custom Composer repository, including one set globally, a mirror, `secure-http: false`, and `disable-tls: true`. It refuses a missing `composer.lock`. It does not download PHARs and does not add a package that is not in this list. After install it runs `composer audit --locked`. The license note above is not legal advice.
