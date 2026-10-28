@@ -44,7 +44,7 @@ Leave Status `draft` until the user accepts. Acceptance sets Status `active`. A 
 
 ## Step execution
 
-Refuse a `draft` plan. Refuse when safety-net exit is not met. The lowest-numbered `todo` step, or the step the user names. Exactly one.
+Refuse a `draft` plan. Refuse when safety-net exit is not met. The step the user names, otherwise the lowest-numbered `in-progress` step, otherwise the lowest-numbered `changes-requested` step, otherwise the lowest-numbered `todo` step. Exactly one.
 
 If that step has no TASK id, emit this prompt and stop. Do not allocate TASK ids.
 
@@ -52,26 +52,40 @@ If that step has no TASK id, emit this prompt and stop. Do not allocate TASK ids
 Please use the f-tasks skill on this refactor plan. One task per todo step. Keep the type and the step order. Do not add bugfix tasks.
 ```
 
-When the task exists:
+When the task is `todo` or `changes-requested`, or it is `in-progress` and `docs/implement/<TASK-ID>-log.md` does not exist:
 
-- Load `characterization-tests.md` before editing behavior-bearing code. Add tests only from the linked test plan, and see them pass before the transformation.
-- Load `database.md` when the step touches schema or data. Do not run a migration or backfill without approval.
-- Load `php-version-upgrade.md` for a migration step and `php.md` when naming tools. Load `strategies.md` for a refactor step.
-- Migration: forced fixes only. A migration step is not `ready-for-review` until parity for the runtimes it claims matches the inventory (local and CI checked by the agent; staging and production from an approval or the operator).
+Do not edit application code in this phase. Set the step to `in-progress`. `f-implement` sets the task status. Fill Task, Mode, and Type, then emit this prompt and stop. This visit does not meet the exit below.
+
+```
+Please use the f-implement skill for this step's task. This invocation is the f-refactor step phase.
+
+Task: TASK-ID
+Mode: direct, unless the task already states tdd or direct
+Type: migration or refactor, as on the plan
+
+Constraints:
+- Stay inside this step and this type. Do not start another step and do not bypass the plan.
+- Tests come only from the linked test plan. Characterization tests must pass before the transformation.
+- Do not run a database migration or backfill without an approval already recorded for this step.
+- Migration: forced fixes only. Parity for the runtimes this step claims must match the inventory before ready-for-review. The agent checks local and CI. Staging and production come only from an approval or the operator.
 - Refactor: no version bump.
-- Record bugs on the step and on the plan. Do not fix them. Send other-type work to a new `draft` unit.
-- Deleting code and dependency changes need approval.
-- Keep the build green. Do not edit assertions or golden files to hide a behavior change. A golden-file change needs a reason on the step.
-- Write the step record, including the revert path and the production signals that mean rollback. The agent does not perform the rollback in production.
-- Set the step and the linked task to `in-progress`, then `ready-for-review`. Update `docs/tasks/index.md`. Never set `done`.
+- Record bugs as follow-ups. Do not fix them. Send other-type work back as a follow-up, not as a code change.
+- Deleting code and changing dependencies need an explicit approval.
+- Keep the project's checks green. Do not edit assertions or golden files to hide a behavior change. A golden-file change needs a written reason in the implementation log.
+- Do not commit, push, or set done. Do not edit docs/refactor/.
+```
 
-Emit the review prompt:
+When the task is `in-progress` and the log exists, point at the worktree in the newest handoff and stop. Do not start a second implementation.
+
+When the task is `blocked`, set the step to `blocked`, record what unblocks it, and stop. Do not emit the review prompt.
+
+When the task is `ready-for-review`, write the step record from the log and from the plan's rollback class. Include the commands, the results, the revert path, and the production signals. Link the log. Do not paste a diff or a secret. Do not invent a production threshold. Copy recorded bugs onto the step and the plan. Other-type follow-ups become a new `draft` unit, not a fix in this one. Set the step to `ready-for-review`. The agent does not perform the rollback in production. Then emit:
 
 ```
 Please use the f-code-review skill. This change is an f-refactor unit. Type: migration or refactor, as on the plan. Apply the behavior-preservation check. A golden-master change needs the reason on the step record.
 ```
 
-**Exit:** one step is `ready-for-review` or `blocked`, and the review prompt was emitted. Stay on Phase `execute` until every step is `done` or `skipped`, then set Phase to `rollout`.
+**Exit:** one step is `ready-for-review` or `blocked`, and the review prompt was emitted when the step is `ready-for-review`. The visit that only emits the `f-implement` prompt does not meet this exit. Stay on Phase `execute` until every step is `done` or `skipped`, then set Phase to `rollout`.
 
 ## Rollout
 

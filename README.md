@@ -9,6 +9,7 @@ Meine Sammlung agentischer Coding-Skills (OpenCode / Claude-kompatibel).
 | `f-requirements` | Freitext/Tickets → Requirement-Dokumente mit prüfbaren Acceptance Criteria |
 | `f-tasks` | Requirements/Review-Findings → agentengerechte Tasks mit Abhängigkeiten |
 | `f-testing` | Checks → Testplan oder Coverage-Report |
+| `f-implement` | Task umsetzen (`tdd` oder `direct`) auf einem Dev-Branch, ohne Commit und ohne Push |
 | `f-code-review` | Diff gegen ACs prüfen (Security, Performance, Side Effects) + Fix-Prompt |
 | `f-debug` | Strukturierte Fehlersuche (Repro → Root Cause → Fix-Vorschlag) |
 | `f-docs` | AGENTS.md, README, Architektur, Conventions aus dem Repo erzeugen |
@@ -17,7 +18,7 @@ Meine Sammlung agentischer Coding-Skills (OpenCode / Claude-kompatibel).
 | `f-refactor` | Eigener Ablauf: verhaltensgleiche PHP-Migration (vorrangig) oder Struktur-Refactor, Phasenmenü, Status unter `docs/refactor/` |
 | `f-workflow` | Menü für den Feature-Ablauf; übergibt Migration und Refactor an `f-refactor` |
 
-Der Kernzyklus: Requirements → Tasks → Testing → Implementation → Review. `f-debug` ist der Seitenzweig, wenn etwas fehlschlägt. `f-refactor` ist ein zweiter Ablauf daneben, kein Schritt darin. Es nutzt `f-tasks`, `f-testing`, `f-code-review`, `f-debug` und `f-docs`. Feature- und Bugfix-Arbeit geht zurück an `f-workflow`.
+Der Kernzyklus: Requirements → Tasks → Testing → Implement → Review. `f-debug` ist der Seitenzweig, wenn etwas fehlschlägt. `f-refactor` ist ein zweiter Ablauf daneben, kein Schritt darin. Es nutzt `f-tasks`, `f-testing`, `f-implement`, `f-code-review`, `f-debug` und `f-docs`. Die Codeänderung eines Schritts übergibt die Step-Phase an `f-implement`. Feature- und Bugfix-Arbeit geht zurück an `f-workflow`.
 
 ## Installation
 
@@ -48,7 +49,7 @@ skills/<name>/
 ```
 
 Erzeugte Dokumente landen im Zielrepo unter `docs/` (`requirements/`, `tasks/`, `tests/`,
-`reviews/`, `debug/`, `legal/`, `features/`, `refactor/`, `conventions/`, `decisions/`).
+`implement/`, `reviews/`, `debug/`, `legal/`, `features/`, `refactor/`, `conventions/`, `decisions/`).
 `f-debug` schreibt immer nach `docs/debug/`; ein Review, das die Analyse ausgelöst hat, verlinkt den Bericht.
 
 ## Dokumentation

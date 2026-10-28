@@ -1,6 +1,7 @@
 # TASK-{{ID}}: {{TITLE}}
 
 **Source**: {{SOURCE}}  
+**Ticket**: {{TICKET}}  
 **Priority**: {{PRIORITY}}  
 **Complexity**: {{COMPLEXITY}}  
 **Model recommendation**: {{MODEL (tier + reasoning level)}}  

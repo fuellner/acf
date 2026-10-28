@@ -24,4 +24,4 @@ Zwei Skills würden Index, Status, Fortsetzen über Sitzungen hinweg und die Rev
 - `f-code-review` prüft bei diesen Einheiten Verhaltensgleichheit. Bei `migration` ist eine nicht erzwungene Änderung ein Befund, bei `refactor` ein Versionswechsel.
 - `f-tasks` macht aus geplanten Schritten Tasks, ohne Schritte zusammenzuziehen oder den Typ zu wechseln.
 - Versionen, die php.net weder als aktiv unterstützt noch als Security-only führt, gehen nicht in Produktion. Ein Security-only-Stand ist nur ein zeitweiser Produktionsschritt, wenn der User das Restrisiko akzeptiert.
-- Die Ausführung eines Schritts darf Anwendungscode ändern. Der allgemeine Implementation-Schritt bleibt ohne eigenen Skill und nimmt keine Refactor- oder Migrationsaufgabe an.
+- Ein Schritt wird über die Step-Phase von `f-refactor` ausgeführt. `f-implement` darf die Codeänderung dieses Schritts übernehmen, nimmt aber keine Refactor- oder Migrationsaufgabe an, die den Plan umgeht. Stand 2026-10-28; Begründung in [0006-implement-ohne-commit.md](0006-implement-ohne-commit.md).

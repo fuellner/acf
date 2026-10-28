@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-28
+- Step execution no longer edits application code. It hands the step's task to `f-implement` and, on a later visit, writes the step record and the review handoff. Resume continues an in-progress or changes-requested step before the next todo step.
+- A task that `f-implement` has moved to `ready-for-review` or `blocked` is copied onto the step. The task is not moved backward to match a stale step.
+
 ## 2026-10-27
 - `scripts/install-tools.sh` installs only an allowlist of official Packagist packages over HTTPS. It refuses mirrors, custom repositories, disabled TLS, abandoned package names, PHARs, and `curl | sh`. `composer audit --locked` runs after install.
 - `scripts/install-tools.sh` optionally adds selected tools as Composer dev dependencies. Dry-run unless `--install`. It skips packages already in `composer.json`, refuses a platform PHP that cannot run the tool, and does not touch `require` or production. The agent asks before running it.

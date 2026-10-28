@@ -57,8 +57,9 @@ If a source is referenced but content is missing, ask once for it. Do not invent
    - Identify existing prerequisites outside the new task set and read their status. Only `done` satisfies an existing prerequisite; an open, missing, or unknown external dependency must be reported as waiting, not treated as satisfied.
 6. Read `references/ordering.md` and apply it before writing whenever there is more than one task, any dependency, or a possible parallel split. It defines topological order, priority among eligible tasks, withheld external prerequisites, parallel groups, and the serial handoff for shared index updates. A single independent task needs no parallel-group report.
 7. For creation, write each task to `docs/tasks/TASK-<id>-<short-slug>.md` using `templates/task.md` with initial **Status** `todo`. For an update, edit the resolved file in place and update **Updated** when its content changes. Remove every unfilled `{{...}}` placeholder. Omit optional sections that have no content, including `Files not to touch` and `Notes`.
+   The **Ticket** line is optional. Keep it only when the source already contains exactly one ticket key: an uppercase project part of at least two characters, a hyphen, and a number. Do not treat a `TASK-`, `REQ-`, `REF-`, `TEST-`, or `AC-` id as that key. Copy the key. Do not call a tracker and do not invent a key. When there is no key, delete the line. An existing task without the line stays valid.
    If the source is a requirement, set **Source** to the REQ-ID on creation and add any missing TASK-ID link under Traceability → Related tasks in the requirement document without duplicating existing links.
-   If the source is a refactor plan, create one task per step whose status is `todo`. Do not merge steps, do not split a step, and do not add tasks for recorded bugs or for the other type. If a step is too large for one session, stop and send it back to `f-refactor` instead of writing a partial task. Set **Source** to the step id and type (`REF-001-S01`, `migration` or `refactor`). Dependencies follow the step order. In **Verification** and **Notes**, require the `f-refactor` step-execution phase: preserve behavior, and stay inside the type. Write the TASK id into that step's Task cell and update the plan's **Updated** field. Do not change the step's status.
+   If the source is a refactor plan, create one task per step whose status is `todo`. Do not merge steps, do not split a step, and do not add tasks for recorded bugs or for the other type. If a step is too large for one session, stop and send it back to `f-refactor` instead of writing a partial task. Set **Source** to the step id and type (`REF-001-S01`, `migration` or `refactor`). Dependencies follow the step order. In **Verification** and **Notes**, require the `f-refactor` step-execution phase. That phase may hand the code change to `f-implement`. The task preserves behavior and stays inside the type. `f-implement` must not take the task outside that phase. Write the TASK id into that step's Task cell and update the plan's **Updated** field. Do not change the step's status.
 8. Update `docs/tasks/index.md` (create from `templates/index.md` if missing), following `references/directory-index.md`. Also maintain the requirement directory's index when adding a traceability link there; do not change requirement status. When a refactor plan's Task cell changes, maintain that unit's index and `docs/refactor/index.md`; do not change the unit's status.
 9. Report the created or updated tasks, their priorities, dependency order, and which tasks can run in parallel.
    Name waiting external prerequisites, shared-resource conflicts, and who will serialize shared metadata updates before parallel work starts.
@@ -69,7 +70,7 @@ Updates to existing task documents are allowed only when the user explicitly req
 ## Status
 
 A task is only `done` after a positive review and when it is merge-ready (or already merged).
-The implementing agent must not set `done`.
+The implementing agent is `f-implement`. It must not set `done`.
 
 | Status | Who sets | Meaning |
 |--------|----------|---------|
@@ -155,7 +156,7 @@ Follow `references/directory-index.md` whenever creating or updating documentati
 - Every task states a verifiable completion criterion, the files to touch, and its dependencies.
 - The dependency graph is acyclic. Where step 6 applies, the reported order follows `references/ordering.md`. Open external prerequisites and waiting dependents are explicit.
 - Any parallel grouping follows `references/ordering.md`: prerequisite readiness, file and resource conflicts, conditional later groups, and a serial handoff for shared metadata. No `parallel-with` was stored in the documents.
-- No unfilled `{{...}}` placeholder remains. Empty optional sections are removed.
+- No unfilled `{{...}}` placeholder remains. Empty optional sections are removed. The **Ticket** line is absent, or it holds one key copied from the source. No tracker was called and no key was invented.
 - Requirement sources in `draft` were not broken down without an explicit confirmation. The report repeats that warning when tasks were still written.
 - Every new task used an unused ID. Updates kept the existing ID, path, Created date, Status (unless explicitly changed), and unrelated content and links. The index has a row per task.
 - A refactor plan used as input has one task per `todo` step, and each of those steps links that task. No step was merged, split, or given a bugfix task.

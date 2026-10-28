@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-28
+- Optional **Ticket** line on the task template. It is copied only when the source already contains one ticket key (uppercase project part, hyphen, number). Workflow IDs are not tickets. No tracker is called and no key is invented. Tasks without the line stay valid.
+- A refactor or migration task still belongs to the `f-refactor` step phase. That phase may hand the code change to `f-implement`. The task tells `f-implement` not to take the work outside that phase.
+- The status model names `f-implement` as the implementing agent.
+
 ## 2026-10-27
 - The task template tells the implementing agent to use the schema named for that directory in `references/directory-index.md`, so a `docs/tests/` index keeps `Source | Mode | Revision | File` instead of the tasks columns.
 - A refactor or migration plan is a task source: one task per `todo` step, type and order preserved, task id written back to the plan. Recorded bugs are not turned into tasks. A step that is too large is sent back to `f-refactor` instead of being split here. Execution of those tasks is the `f-refactor` step-execution phase.

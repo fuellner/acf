@@ -26,7 +26,7 @@ Follow the conventions in `docs/conventions/`. The rules below always apply:
 - Never perform drive-by changes or refactorings. Only modify what is necessary for the current task.
 - Never introduce new concepts, patterns, or abstractions unless they are strictly necessary to fulfill the requirement.
 - Match the existing style, naming, and structure of the surrounding skill. Do not introduce a new style for a single change.
-- Keep skill instructions English. Exception: `f-legal` instructions, its templates, and generated `docs/legal/` are German. Human-facing documents in the target repository (README, architecture, decisions) are German. `f-feature-summary` instructions stay English; its templates and generated `docs/features/` are German. `f-refactor` instructions, its templates, and generated `docs/refactor/` are English.
+- Keep skill instructions English. Exception: `f-legal` instructions, its templates, and generated `docs/legal/` are German. Human-facing documents in the target repository (README, architecture, decisions) are German. `f-feature-summary` instructions stay English; its templates and generated `docs/features/` are German. `f-refactor` instructions, its templates, and generated `docs/refactor/` are English. `f-implement` instructions, its templates, and generated `docs/implement/` are English.
 - Do not add comments or sections that merely restate what is already obvious. Only document reasons and constraints that are non-obvious.
 
 ## Boundaries
@@ -36,6 +36,7 @@ Follow the conventions in `docs/conventions/`. The rules below always apply:
 - Never commit `.env` files or any secrets.
 - `docs/legal/` is owned exclusively by `f-legal`. `f-docs` must never create, fill, or update it.
 - `docs/refactor/` in a target repository belongs to `f-refactor`, a separate workflow from `f-workflow`. Other skills write there only the task links and status updates those skills already define.
+- `docs/implement/` in a target repository belongs to `f-implement`. Other skills do not create that directory or edit its logs.
 - `skills/<name>/templates/` is the source of truth. Running a skill must not modify the templates in this repository; generated documents belong in the target repository.
 - Do not create a template named `AGENTS.md` — agent harnesses auto-load that filename as active instructions.
 

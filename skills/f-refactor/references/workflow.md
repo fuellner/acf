@@ -44,7 +44,7 @@ Inventory creates the directory, the plan stub, the map, the questions log, the 
 | `prioritize` | Priority, cross-repo dependencies, which units wait | `plan.md` |
 | `safety-net` | Seams and golden-master rules. `f-testing` writes the test plan | `safety-net.md` |
 | `plan` | Scope, non-goals, steps, team, rollback class, done criteria. Stays `draft` until you accept it | `plan.md` |
-| `execute` | Exactly one step, then a review | `steps/Snn-<slug>.md` |
+| `execute` | Exactly one step. `f-implement` makes the code change; this phase writes the step record, then a review | `steps/Snn-<slug>.md` |
 | `rollout` | Canary, approvals, signals. The operator deploys | `rollout.md` |
 | `close-out` | Evidence against the done criteria, then a closing review | `close-out.md` |
 
@@ -89,7 +89,7 @@ A new session does not use chat history.
 1. Read `docs/refactor/index.md` and pick the unit (ask if several are open).
 2. Read that unit's `plan.md`, the newest `handoff.md` entry, and open questions.
 3. Read `codebase-map.md` before scanning. Do not reread a module the map marks as mapped, and do not read the repository end to end.
-4. If the index and the plan header disagree, repair the index from the plan. If a step and its task disagree, the step row wins, except a `done` without an APPROVED review goes back to `ready-for-review`.
+4. If the index and the plan header disagree, repair the index from the plan. If a step and its task disagree: a `done` without an APPROVED review or an explicit user confirmation goes back to `ready-for-review`. If the task is `ready-for-review` or `blocked` and the step has not caught up, copy the task status onto the step. Otherwise the step row wins. Do not move the task backward to match a stale step.
 5. Continue the current phase. On the way out, append a handoff: phase, branch, working tree, next action, blockers.
 
 ## Handoffs
@@ -99,6 +99,7 @@ A new session does not use chat history.
 | When | Skill | What it owns |
 |------|-------|----------------|
 | A `todo` step has no task | `f-tasks` | One task per step, same type and order. No bugfix tasks |
+| A step has a task and is not yet ready for review | `f-implement` | The code change for that step only. Own branch, no commit. Does not edit `docs/refactor/` |
 | Seams need tests | `f-testing` | The characterization or golden-master test plan |
 | A step is ready, or the unit should close | `f-code-review` | Behavior-preservation check. Sets `done` or `changes-requested` |
 | A step or a rollout signal breaks | `f-debug` | Root cause and a fix proposal inside the same type |
@@ -135,6 +136,8 @@ flowchart TD
   plan -->|you accept| execute
   execute --> ftasks[f-tasks]
   ftasks --> execute
+  execute --> fimplement[f-implement]
+  fimplement --> execute
   execute --> review[f-code-review]
   review -->|changes-requested| execute
   review -->|step approved| execute
