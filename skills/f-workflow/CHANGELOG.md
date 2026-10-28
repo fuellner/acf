@@ -2,6 +2,9 @@
 
 ## 2026-10-27
 - Implementation prompt points at `docs/tasks/TASK-<id>-<slug>.md` and the exact-ID rule (`TASK-001` matches `TASK-001.md` or `TASK-001-<slug>.md`, not `TASK-0010`). The test-plan placeholder is `TEST-<source-id>-plan.md` for the task and for its Source REQ-ID. Index refresh uses the schema named for that directory.
+- `f-refactor` is a separate workflow. The menu only hands off to it and no longer treats it as an optional step of the feature cycle.
+- The Implementation prompt still sends an `f-refactor` task to that skill. The task, testing, and review prompts name the refactor handoff.
+- Description's do-not list includes migrations and refactors, matching the Optional menu.
 - Description's do-not list includes feature summaries, matching the Optional menu.
 
 ## 2026-10-26

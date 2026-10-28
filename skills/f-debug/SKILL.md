@@ -59,6 +59,7 @@ Follow these phases in order. Complete each before moving to the next. Stop and 
   - This skill = analysis + proposal.
   - Implementing agent = applies the fix and runs verification.
   - f-code-review = later review of the resulting change.
+- When the failure is inside an `f-refactor` unit, the proposed fix stays inside that unit's Type. A migration break is not a reason to redesign or to bump a version. Do not read production logs yourself. Do not copy secrets or customer data into the report.
 
 ## Output
 

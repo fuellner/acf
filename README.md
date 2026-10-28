@@ -14,9 +14,10 @@ Meine Sammlung agentischer Coding-Skills (OpenCode / Claude-kompatibel).
 | `f-docs` | AGENTS.md, README, Architektur, Conventions aus dem Repo erzeugen |
 | `f-legal` | Regulatorische Vorgaben (DE/EU) → `docs/legal/` |
 | `f-feature-summary` | Implementierte Fachlogik → übersichtliche Feature-Dokumente (`docs/features/`) |
-| `f-workflow` | Menü + Prompt-Templates für den Ablauf (führt selbst nichts aus) |
+| `f-refactor` | Eigener Ablauf: verhaltensgleiche PHP-Migration (vorrangig) oder Struktur-Refactor, Phasenmenü, Status unter `docs/refactor/` |
+| `f-workflow` | Menü für den Feature-Ablauf; übergibt Migration und Refactor an `f-refactor` |
 
-Der Kernzyklus: Requirements → Tasks → Testing → Implementation → Review. `f-debug` ist der Seitenzweig, wenn etwas fehlschlägt.
+Der Kernzyklus: Requirements → Tasks → Testing → Implementation → Review. `f-debug` ist der Seitenzweig, wenn etwas fehlschlägt. `f-refactor` ist ein zweiter Ablauf daneben, kein Schritt darin. Es nutzt `f-tasks`, `f-testing`, `f-code-review`, `f-debug` und `f-docs`. Feature- und Bugfix-Arbeit geht zurück an `f-workflow`.
 
 ## Installation
 
@@ -47,7 +48,7 @@ skills/<name>/
 ```
 
 Erzeugte Dokumente landen im Zielrepo unter `docs/` (`requirements/`, `tasks/`, `tests/`,
-`reviews/`, `debug/`, `legal/`, `features/`, `conventions/`, `decisions/`).
+`reviews/`, `debug/`, `legal/`, `features/`, `refactor/`, `conventions/`, `decisions/`).
 `f-debug` schreibt immer nach `docs/debug/`; ein Review, das die Analyse ausgelöst hat, verlinkt den Bericht.
 
 ## Dokumentation
@@ -56,3 +57,5 @@ Erzeugte Dokumente landen im Zielrepo unter `docs/` (`requirements/`, `tasks/`, 
 - [docs/architecture.md](docs/architecture.md) — Aufbau und Datenfluss
 - [docs/decisions/index.md](docs/decisions/index.md) — Inhaltsverzeichnis der Entscheidungen
 - [docs/conventions/index.md](docs/conventions/index.md) — Inhaltsverzeichnis der Konventionen für die Skill-Dateien
+- [f-refactor Ablauf](skills/f-refactor/references/workflow.md) — Phasen, Artefakte, Status, Übergaben
+- [f-refactor Werkzeuge](skills/f-refactor/references/toolchain.md) — isolierte PHP-Werkzeuge, nicht im Anwendungsprojekt

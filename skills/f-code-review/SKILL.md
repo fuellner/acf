@@ -81,6 +81,10 @@ For additional checklist detail see `references/safety-checks.md`.
 - Unintended state mutations or race conditions
 - Dead code or speculative features introduced by the change
 
+**Behavior preservation**
+
+When the task source, the linked plan, or the user identifies the change as an `f-refactor` unit, apply `references/safety-checks.md` under "Behavior preservation". A non-forced change on a migration, or a version bump on a refactor, is FAIL for that criterion and **OVER-BUILT** when the step did not name it.
+
 ## Output Rules
 
 - Be precise. Every finding must include file:line (or closest range), the problem, evidence, and a concrete fix suggestion.
@@ -146,6 +150,8 @@ Resolve a referenced TASK-ID before changing anything:
 
 Never set `blocked` or `obsolete`. Only the user or the implementing agent sets `blocked`. This skill may recommend `blocked` in the report and must not apply that recommendation. Never change task or requirement documents outside this review. Directory indexes may list those existing documents without modifying them. If a referenced document does not exist, skip its updates and mention it once in the report.
 
+**Refactor units.** When the task **Source** identifies a step `REF-<id>-S<nn>` and exactly one plan resolves (index row, then `REF-<id>-<slug>/plan.md`; `REF-001` does not match `REF-0010`), set that step's status to the same value as the task (`done` or `changes-requested`). Update the step record's **Status** and **Updated** when the record exists. A review of one step does not set the unit to `done`. When the user asked to close the unit, set the unit **Status** to `done` in the plan header and in `docs/refactor/index.md` only if every step row is `done` or `skipped` and this review checked each done criterion; otherwise leave the unit status and name the gap. Update **Updated** when the header changes. Do not edit older handoff or decision entries, and do not create a refactor unit.
+
 ## Documentation
 
 Write the full review report to `docs/reviews/<unit>-review.md` when:
@@ -158,7 +164,7 @@ Keep both files minimal. Do not create them for clean APPROVED reviews unless th
 
 Debug reports are not review output. They live in `docs/debug/`. When `docs/debug/<unit>-debug.md` exists for the reviewed unit, add a `Debug:` bullet under `## Residual Risk` that links to it with a relative path (`../debug/<unit>-debug.md` from `docs/reviews/`), unless that link is already present. Do not copy the debug report into `docs/reviews/`.
 
-Follow `references/directory-index.md` whenever writing a report, fix note, or task/requirement update under `docs/`. On CHANGES REQUIRED, preserve requirement **Status** values already stored in the requirement index. Do not create `docs/reviews/` or its index for an unsaved review.
+Follow `references/directory-index.md` whenever writing a report, fix note, or task, requirement, or refactor-plan update under `docs/`. On CHANGES REQUIRED, preserve requirement **Status** values already stored in the requirement index. Do not create `docs/reviews/` or its index for an unsaved review.
 
 ## File Naming
 
@@ -188,6 +194,7 @@ Follow `references/directory-index.md` whenever writing a report, fix note, or t
 - Task paths were resolved uniquely by exact ID. After a requirement status change, its document and index agree and its Updated field is current.
 - Requirement completion names evidence (this review or an existing review report) for every criterion; criteria without review evidence leave the status unchanged. `[test: unverified]` coverage alone does not block completion.
 - A debug report for this unit is linked from the review when one exists, and was not copied into `docs/reviews/`.
+- A linked `f-refactor` step was set to the same status as the task. Unit `done` was set only when the user asked to close the unit, every step was `done` or `skipped`, and the done criteria were reviewed.
 - Every affected documentation directory and parent below `docs/` has an up-to-date `index.md` per `references/directory-index.md`; entries match existing contents and all generated links resolve. No review directory was created for an unsaved review.
 
 ## Severity

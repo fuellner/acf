@@ -1,9 +1,9 @@
 ---
 name: f-workflow
 description: >
-  Presents the available agentic-coding skills as an ordered menu following the
-  recommended sequence. Clearly separates the core implementation cycle from
-  optional / outside skills (f-docs, f-legal, f-feature-summary). When a menu item is selected,
+  Presents the feature-cycle skills as an ordered menu. Separates that cycle from
+  optional skills (f-docs, f-legal, f-feature-summary) and from the separate
+  f-refactor workflow, which appears only as a handoff. When a menu item is selected,
   outputs the skill handle plus a ready-to-use prompt template.
   Use only when the user explicitly asks for the skill menu or menu navigation:
   "skill menu", "skill workflow", "workflow menu", "welche skills", "zeige Menü",
@@ -11,7 +11,8 @@ description: >
   Do NOT trigger on the bare word "workflow" or on workflow-related topics in
   general (CI workflows, workflow engines, process diagrams). Do NOT use for
   executing the actual work of any listed skill (requirements, tasks, testing,
-  review, debug, docs, legal, or feature summaries).
+  review, debug, docs, legal, or feature summaries). Do NOT use for a migration
+  or a refactor; that workflow is f-refactor.
 ---
 
 # Workflow Menu
@@ -21,7 +22,7 @@ Does not perform domain work. Only displays the menu and supplies prompt templat
 
 ## Behavior
 
-1. Display the menu exactly as structured below (Core first, then Optional).
+1. Display the menu exactly as structured below (Core first, then Optional, then the separate workflow).
 2. If the user has already named a skill or number, skip the menu and jump to the corresponding entry.
 3. For the selected entry output:
    - Skill handle (e.g. `f-requirements`)
@@ -46,6 +47,10 @@ Does not perform domain work. Only displays the menu and supplies prompt templat
 - **f-legal** — Extract developer-relevant requirements from German/EU legal sources into `docs/legal/`.
 - **f-feature-summary** — Create or update scannable feature summaries (individual units + overall overview) for product owners.
 
+### Separate workflow
+
+- **f-refactor** — Behavior-preserving migration or refactor, with its own phase menu and status under `docs/refactor/`. This menu only hands off. It does not run a phase.
+
 ## Prompt Templates
 
 ### f-requirements
@@ -59,12 +64,12 @@ Please use the f-requirements skill to turn the following into a structured requ
 ```
 Please use the f-tasks skill to break the following into agent-sized tasks. Include complexity, priority, dependencies, and parallel groups where relevant.
 
-[Paste requirement document(s), ad-hoc description, or code-review findings here]
+[Paste requirement document(s), ad-hoc description, code-review findings, or a refactor/migration plan here]
 ```
 
 ### f-testing
 ```
-Please use the f-testing skill to generate a test plan from the Check statements of the following acceptance criteria (or verify existing coverage).
+Please use the f-testing skill to generate a test plan from the Check statements of the following acceptance criteria (or verify existing coverage). For an f-refactor step, lock the named current behavior and mark those entries *(characterization)*.
 
 Mode: generate | verify
 [Paste REQ/TASK document or free text with strict ACs here]
@@ -83,6 +88,7 @@ Test plan (if available): [docs/tests/TEST-<source-id>-plan.md for this TASK-ID,
 
 Rules:
 - Touch only the files listed in the task, plus the status fields and directory indexes described below. Do not refactor, rename, or "improve" surrounding code.
+- If this task's source is an `f-refactor` step, stop and use the `f-refactor` skill's step-execution phase instead of this prompt.
 - Implement the tests from the test plan; do not add tests that are not derived from a Check.
 - Do not modify acceptance criteria or task documents except the status fields described below.
 - If a requirement is ambiguous or the task is not implementable as written, stop and report instead of guessing.
@@ -95,7 +101,7 @@ Set `blocked` only when you cannot proceed because a dependency or decision is m
 
 ### f-code-review
 ```
-Please use the f-code-review skill to review the following change against the linked acceptance criteria. Check for security, performance, and side effects. Deliver precise findings plus a ready-to-use fix prompt.
+Please use the f-code-review skill to review the following change against the linked acceptance criteria. Check for security, performance, and side effects. If the change belongs to an f-refactor unit, apply the behavior-preservation check for its type (migration: no change the upgrade does not force; refactor: no version bump). Deliver precise findings plus a ready-to-use fix prompt.
 
 Diff / commit / branch: [paste or describe]
 Acceptance criteria / REQ: [paste or reference]
@@ -107,6 +113,14 @@ Please use the f-debug skill to debug the following issue. Follow the structured
 
 Issue / error / failing test: [describe]
 Relevant context (TASK/REQ, logs, diff): [paste]
+```
+
+### f-refactor
+```
+Please use the f-refactor skill. It is a separate workflow with its own phase menu. Do not run it from the feature cycle.
+
+[New unit: app or module, and whether this is a migration or a refactor]
+[Resume: REF-id, or "resume"]
 ```
 
 ### f-docs
@@ -138,12 +152,12 @@ Prefer tables and structured bullets. Generate individuals first, then the overv
 
 - Language: English.
 - Keep output short and scannable.
-- Always mark the Optional section clearly.
+- Always mark the Optional section and the separate workflow clearly.
 - Never rename the numbered steps or reorder the core cycle. The only step without a skill handle is **Implementation** — do not invent an `f-implement` / `f-coding` handle for it.
 - Do not execute any of the listed skills.
 
 ## Before you finish
 
-- The menu is shown exactly as structured (Core first, Optional clearly marked), unless behavior step 2 skipped it.
+- The menu is shown exactly as structured (Core first, then Optional, then the separate workflow), unless behavior step 2 skipped it.
 - At most one entry was expanded with handle, role, and prompt template.
 - No skill was invoked and no domain work was started.

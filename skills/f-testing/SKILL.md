@@ -9,8 +9,9 @@ description: >
   check against acceptance criteria, or test skeletons for an implementing agent.
   Triggers on: "create tests from requirements", "generate tests for TASK",
   "check test coverage against ACs", "test plan from REQ", "do we cover the checks",
-  "write test skeletons".
-  Do NOT use for implementing production code, running tests, code review, or general documentation.
+  "write test skeletons", "characterization tests", "lock current behavior".
+  Do NOT use for implementing production code, running tests, code review,
+  executing a migration or refactor, or general documentation.
 ---
 
 # Testing
@@ -27,6 +28,7 @@ Accept any of the following (provided by the user; do not hard-code tool or MCP 
 - Task document(s) from `docs/tasks/` or pasted
 - Free-text description that already contains strict ACs with Checks
 - Existing test code or file paths (for verify mode)
+- A refactor plan or step that names behavior to lock (characterization)
 - Explicit request to update an existing test plan
 
 If a source is referenced but content is missing, ask once. Do not invent acceptance criteria or Checks.
@@ -52,6 +54,8 @@ This is static inspection, not test execution; the report does not establish tha
    - Map Given/When/Then to setup / action / assertion.
    - Carry the criterion's `Must not` constraint into the entry's `**Must not**` line; omit the line when the criterion has none.
    - Mark any test that goes beyond the original Checks with `*(supplemented)*`.
+   - When the source is an `f-refactor` step, plan, or safety-net that asks to lock current behavior, treat each named behavior as the Check. The entry asserts the observed result, including quirks, and is marked `*(characterization)*`. Do not add entries for desired behavior the code does not have, and do not cover modules the step does not name.
+   - When the source asks for a golden master, name the fields that are normalized before compare (timestamps, ids, session tokens, random values, plus any field the safety-net lists). State that a golden-file change needs a written reason. Do not plan a blind snapshot refresh. Do not use production or customer data.
    - Note the expected test type (unit / integration / e2e) only when obvious from context.
 4. For **verify**:
    - Locate the relevant existing tests (user-provided or obvious paths).
@@ -116,6 +120,7 @@ Follow `references/directory-index.md` whenever creating or updating documentati
 ## Before you finish
 
 - Every Check has exactly one test entry (generate) or one explicit status (verify).
+- Characterization entries are marked `*(characterization)*` and assert observed behavior, including quirks.
 - Every test name references its AC or Check.
 - Anything added beyond the Checks is marked `*(supplemented)*`.
 - The file follows the naming rule and states source + mode + revision.

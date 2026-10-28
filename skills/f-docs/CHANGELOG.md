@@ -3,6 +3,8 @@
 ## 2026-10-27
 - Language rule names the `f-legal` exception: its instructions, templates, and `docs/legal/` stay German, and this skill does not edit them. `f-feature-summary` instructions stay English.
 - `docs/tests/` index schema is `Source | Mode | Revision | File`. A default `Document | Description` table in that directory is replaced by this schema.
+- Named the `docs/refactor/` index schema (`ID | Title | Type | Priority | Phase | Effort | Status | File`) in `references/directory-index.md`. The File column is the child-directory entry, so that index does not also list the unit directories. Unit and `steps/` directories stay on `Document | Description`. The index is the cross-unit progress view.
+- Deeper-docs template lists `docs/refactor/` so the link is kept when that directory exists.
 - Changelog corrections: the stale `template_version` reference and the misplaced legal index template attribution (that template lives in `f-legal`) were fixed.
 - The copy step now reflects that only `agents.md.tmpl` carries a `TEMPLATE (f-docs)` block.
 - `agents.md.tmpl`: the two overlapping drive-by/refactor bullets were merged into one.
