@@ -54,9 +54,17 @@ If that step has no TASK id, emit this prompt and stop. Do not allocate TASK ids
 Please use the f-tasks skill on this refactor plan. One task per todo step. Keep the type and the step order. Do not add bugfix tasks.
 ```
 
-When the task is `todo` or `changes-requested`, or it is `in-progress` and `docs/implement/<TASK-ID>-log.md` does not exist:
+Do not edit application code in this phase. `f-implement` sets the task status. This phase sets the step status.
 
-Do not edit application code in this phase. Set the step to `in-progress`. `f-implement` sets the task status. Fill Task, Mode, and Type, then emit this prompt and stop. This visit does not meet the exit below.
+When the task is `todo` or `changes-requested`, or it is `in-progress` and `docs/implement/<TASK-ID>-log.md` does not exist: set the step to `in-progress`, fill the handoff prompt, and stop. This visit does not meet the exit.
+
+When the task is `in-progress` and the log exists: emit the resume prompt and stop. Do not start a second branch. The resume prompt uses the same references, gate commands, and constraints as the handoff. Its first line is `Please use the f-implement skill. Resume TASK-ID. This invocation is the f-refactor step phase.`
+
+When the task is `blocked`: set the step to `blocked`, record what unblocks it, and stop. Do not emit a review prompt.
+
+When the task is `ready-for-review`: write the step record under `docs/refactor/` from the implementation log and from the plan's rollback class. Include the commands, the results, the revert path, and the production signals. Link the log. Do not paste a diff or a secret. Do not invent a production threshold. Copy recorded bugs onto the step and the plan. Other-type follow-ups become a new `draft` unit, not a fix in this one. Set the step to `ready-for-review`. The agent does not perform the rollback in production. Then emit the review prompt.
+
+Fill Task, Mode, Type, and the gate commands before emitting. Copy each toolchain command this step must pass from the plan and the inventory. Do not invent a command. If none is named, write `none named`.
 
 ```
 Please use the f-implement skill for this step's task. This invocation is the f-refactor step phase.
@@ -64,6 +72,16 @@ Please use the f-implement skill for this step's task. This invocation is the f-
 Task: TASK-ID
 Mode: direct, unless the task already states tdd or direct
 Type: migration or refactor, as on the plan
+
+Read these from the f-refactor skill before editing:
+- references/characterization-tests.md
+- references/toolchain.md. The toolchain is a container, or the same tools outside the application. Run a tool with scripts/toolchain/run.sh. Do not add tools to the application's Composer files. Leave Rector and phpcbf diffs in the report directory. Do not apply that diff.
+- Migration: also references/php-version-upgrade.md and references/php.md
+- Refactor: also references/strategies.md
+- Schema or data: also references/database.md
+
+Gate commands for this step, from the plan and the inventory:
+- command
 
 Constraints:
 - Stay inside this step and this type. Do not start another step and do not bypass the plan.
@@ -73,21 +91,15 @@ Constraints:
 - Refactor: no version bump.
 - Record bugs as follow-ups. Do not fix them. Send other-type work back as a follow-up, not as a code change.
 - Deleting code and changing dependencies need an explicit approval.
-- Keep the project's checks green. Do not edit assertions or golden files to hide a behavior change. A golden-file change needs a written reason in the implementation log.
+- Keep the gate commands green. Do not edit assertions or golden files to hide a behavior change. A golden-file change needs a written reason in the implementation log.
 - Do not commit, push, or set done. Do not edit docs/refactor/.
 ```
-
-When the task is `in-progress` and the log exists, point at the worktree in the newest handoff and stop. Do not start a second implementation.
-
-When the task is `blocked`, set the step to `blocked`, record what unblocks it, and stop. Do not emit the review prompt.
-
-When the task is `ready-for-review`, write the step record from the log and from the plan's rollback class. Include the commands, the results, the revert path, and the production signals. Link the log. Do not paste a diff or a secret. Do not invent a production threshold. Copy recorded bugs onto the step and the plan. Other-type follow-ups become a new `draft` unit, not a fix in this one. Set the step to `ready-for-review`. The agent does not perform the rollback in production. Then emit:
 
 ```
 Please use the f-code-review skill. This change is an f-refactor unit. Type: migration or refactor, as on the plan. Apply the behavior-preservation check. A golden-master change needs the reason on the step record.
 ```
 
-**Exit:** one step is `ready-for-review` or `blocked`, and the review prompt was emitted when the step is `ready-for-review`. The visit that only emits the `f-implement` prompt does not meet this exit. Stay on Phase `execute` until every step is `done` or `skipped`, then set Phase to `rollout`.
+**Exit:** one step is `ready-for-review` or `blocked`, and the review prompt was emitted when the step is `ready-for-review`. A visit that only emits an `f-implement` prompt does not meet this exit. Stay on Phase `execute` until every step is `done` or `skipped`, then set Phase to `rollout`.
 
 ## Rollout
 

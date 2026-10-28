@@ -1,21 +1,19 @@
 ---
 name: f-implement
 description: >
-  Implements one agent-sized task from the task index on a new dev branch.
-  Mode is tdd (one failing test, then the minimum code, then refactor, per
-  acceptance criterion) or direct (implement the task, then hand off for
-  verification). Creates the branch only: no commit, no push, and no change
-  to the git identity. Independent tasks may run at once in separate git
-  worktrees when work can be delegated; otherwise those worktrees run one
-  after another. A migration or refactor step is reached only from the
-  f-refactor step phase, never by bypassing the plan.
-  Use when the user asks to implement a task, start TDD, build a TASK-ID
-  for review, or execute the code change of an f-refactor step from that phase.
-  Triggers on: "implement TASK", "implement this task", "tdd this task",
-  "direct mode", "build the task", "execute the step".
-  Do NOT use for writing requirements, splitting tasks, authoring a test plan,
-  code review, debugging, or taking a migration or refactor task outside
-  the f-refactor plan.
+  Implements one task from the task index on a new dev branch, without
+  committing or pushing. Mode is tdd (red-green-refactor, one acceptance
+  criterion at a time) or direct (implement, then hand off for verification).
+  Checks the git identity and does not change it. A human reviews and commits
+  the diff. Independent tasks can run in separate git worktrees, which are not
+  removed; otherwise those worktrees run one after another.
+  A migration or refactor step is reached only from the f-refactor step phase.
+  Use when the user asks to implement a task, start TDD, or implement on a
+  dev branch.
+  Triggers on: "implement TASK-001", "implement this task", "start TDD",
+  "red-green-refactor", "implement on a dev branch", "tdd this task".
+  Do NOT use for requirements, task breakdown, test plans, code review,
+  debugging, or a migration or refactor task outside the f-refactor plan.
 ---
 
 # Implement
@@ -38,7 +36,7 @@ If the ID, the file, or the mode is unclear, ask once and wait. Do not guess.
 
 1. Resolve the task. Load `references/selection.md`. The default is one task.
 2. Refuse a task whose **Source** is an `f-refactor` step unless this invocation is that step phase handing the step over. Do not bypass the plan. If the unit plan is in the repo and is not `active`, stop and send the user back to `f-refactor`.
-3. Resolve the mode. Load `references/modes.md`. If the task does not state `tdd` or `direct` and the user did not, ask once and wait. A step-phase handoff that names the mode is an answer. If the task and the handoff name different modes, ask once.
+3. Resolve the mode. Load `references/modes.md`. Precedence is task, then the user, then the handoff default. If two of those name different modes, ask once. If none names a mode, ask once.
 4. Load `references/git.md`. Check the git identity. Create the dev branch, or one worktree and one branch per task when more than one task was approved. Do not commit, push, stage, or change the identity.
 5. Set the task **Status** to `in-progress`, update **Updated**, and update that row in `docs/tasks/index.md`. A `changes-requested` task moves to `in-progress` the same way. Read the latest index in this worktree first and preserve other rows.
 6. Write `docs/implement/<TASK-ID>-log.md` from `templates/implementation-log.md` before editing application code. Remove every unfilled `{{...}}` placeholder. On resume, load `references/resume.md` and continue the existing log, branch, and worktree.
@@ -64,7 +62,7 @@ Please use the f-code-review skill to review the uncommitted changes on branch <
 **Refactor or migration step.** Do not emit those two prompts. Emit this instead, then stop:
 
 ```
-Please use the f-refactor skill. Resume <REF-id> at step execution for <step id>. The task is <status>. The implementation log is docs/implement/<TASK-ID>-log.md. Write the step record there and hand off to f-code-review when the task is ready-for-review.
+Please use the f-refactor skill. Resume <REF-id> at step execution for <step id>. The task is <status>. The implementation log is docs/implement/<TASK-ID>-log.md. Write the step record under docs/refactor/ from that log, then hand off to f-code-review.
 ```
 
 ## Guardrails
@@ -96,6 +94,7 @@ End every invocation with:
 - The task ID, mode, status, and log path
 - For each worktree this run changed: path, branch, diff summary, suggested commit message
 - For every other worktree `git worktree list` shows: path and branch, and that this run left it unchanged
+- When more than one worktree was used: each task branch holds its own index rows. The main worktree index was not updated. A later merge should keep every task's row from both sides
 - Follow-up suggestions, if any
 - The handoff prompt for the path above
 

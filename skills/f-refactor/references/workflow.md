@@ -99,7 +99,7 @@ A new session does not use chat history.
 | When | Skill | What it owns |
 |------|-------|----------------|
 | A `todo` step has no task | `f-tasks` | One task per step, same type and order. No bugfix tasks |
-| A step has a task and is not yet ready for review | `f-implement` | The code change for that step only. Own branch, no commit. Does not edit `docs/refactor/` |
+| A step has a task and is not yet ready for review | `f-implement` | The code change for that step only. Own branch, no commit. Reads the step-phase references and gate commands. Does not edit `docs/refactor/` |
 | Seams need tests | `f-testing` | The characterization or golden-master test plan |
 | A step is ready, or the unit should close | `f-code-review` | Behavior-preservation check. Sets `done` or `changes-requested` |
 | A step or a rollout signal breaks | `f-debug` | Root cause and a fix proposal inside the same type |
@@ -116,11 +116,13 @@ No production or customer data in tests, golden files, or docs. A hardcoded secr
 
 ## Tool install
 
-`scripts/install-tools.sh` is optional. It adds missing tools as Composer dev dependencies of the target project. Dry-run is the default. `--install` applies the printed `composer require --dev` command. The agent asks before it runs the script.
+Tools are not installed into the application. Rector 2, PHPStan 2, and Psalm 6 need PHP 8.4, and an application Composer repository may not offer packagist.org. Either fact rules out `composer require --dev` in the application project.
 
-Packages already in `composer.json` are skipped. `require`, `config.platform.php`, and production are not modified. There is no global install. Each selected tool's SPDX id is printed, with the path to `tool-licenses.md`.
+The primary path is a container image built from `scripts/toolchain/`. `build.sh` is a dry-run until `--build`. `run.sh` mounts the application read-only, disables the network, and writes reports to a separate directory. It is a dry-run until `--run`. Rector stays on `--dry-run`. `phpcbf` becomes a diff. Applying that diff is a reviewed change, not this script.
 
-The composer platform PHP is `config.platform.php` when that pin exists, otherwise the `php` on `PATH`. The script picks a constraint that declares support for that PHP. On a platform that cannot run a tool (PHP 5.3 is the usual case), it skips the tool. A newer PHP still installs tools through this script from packagist.org. The version table and the supply-chain rules (allowlist, HTTPS, no mirrors, `composer audit`) are in `toolchain.md`.
+Without a container engine, `install-host.sh` installs the same lock into `${XDG_DATA_HOME:-$HOME/.local/share}/f-refactor-tools/<name>`, outside the application repo. The host PHP for those binaries must be >= 8.4.3. The application's own runtime is unchanged.
+
+The tool project has one Composer source. The default is `https://repo.packagist.org`. An internal HTTPS repository is allowed only when that tool project disables packagist.org. The tool `composer.lock` is required. Creating it is `--write-lock`. Details, the allowlist, and the exit codes are in `toolchain.md`. Licenses, including the base image, are in `tool-licenses.md`. The agent asks before any of these commands, including a dry-run.
 
 ## Flow
 

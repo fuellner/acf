@@ -9,7 +9,7 @@
 
 Der Ablauf hat ein eigenes Phasenmenü: Bestand aufnehmen, priorisieren, Sicherheitsnetz, Plan, einen Schritt ausführen, Ausrollen, abschließen. Status, Phase und grober Aufwand stehen in `docs/refactor/`. Eine spätere Sitzung setzt dort auf, nicht im Chat.
 
-`f-refactor` schreibt diese Dokumente und das Fachwissen in seinen Referenzen. Aufgaben kommen von `f-tasks`, Charakterisierungstests von `f-testing`, die verhaltensgleiche Prüfung von `f-code-review`, eine Bruchanalyse von `f-debug`, Architekturentscheidungen von `f-docs`. Die Codeänderung eines Schritts führt `f-implement` aus, auf Zuruf dieser Step-Phase ([0006](0006-implement-ohne-commit.md)). Dieselben Verfahren werden nicht ein zweites Mal beschrieben.
+`f-refactor` schreibt diese Dokumente und das Fachwissen in seinen Referenzen. Aufgaben kommen von `f-tasks`, Charakterisierungstests von `f-testing`, die verhaltensgleiche Prüfung von `f-code-review`, eine Bruchanalyse von `f-debug`, Architekturentscheidungen von `f-docs`. Die Codeänderung eines Schritts führt `f-implement` aus, auf Zuruf dieser Step-Phase ([0007](0007-implement-ohne-commit.md)). Dieselben Verfahren werden nicht ein zweites Mal beschrieben.
 
 `f-workflow` übergibt nur. Feature- und Bugfix-Arbeit geht aus `f-refactor` zurück an `f-workflow`.
 

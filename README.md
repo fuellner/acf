@@ -59,4 +59,4 @@ Erzeugte Dokumente landen im Zielrepo unter `docs/` (`requirements/`, `tasks/`, 
 - [docs/decisions/index.md](docs/decisions/index.md) — Inhaltsverzeichnis der Entscheidungen
 - [docs/conventions/index.md](docs/conventions/index.md) — Inhaltsverzeichnis der Konventionen für die Skill-Dateien
 - [f-refactor Ablauf](skills/f-refactor/references/workflow.md) — Phasen, Artefakte, Status, Übergaben
-- [f-refactor Werkzeuge](skills/f-refactor/references/toolchain.md) — welche Prüfung welches Werkzeug liefert
+- [f-refactor Werkzeuge](skills/f-refactor/references/toolchain.md) — isolierte PHP-Werkzeuge, nicht im Anwendungsprojekt

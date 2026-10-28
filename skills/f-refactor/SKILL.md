@@ -31,7 +31,7 @@ Production access is off-limits: no production shell, database, logs, or deploy.
 
 Stop and get a human approval before running a database migration or backfill, accessing staging, changing dependency versions, deleting code, or any deploy or rollout. The operator performs those actions. Record the approval in the handoff.
 
-Ask before running `scripts/install-tools.sh`, including a dry-run. It only adds `require-dev` packages, and only when the user passes `--install`. Do not run it to fill a gap on your own.
+Ask before running `scripts/toolchain/build.sh`, `scripts/toolchain/run.sh`, or `scripts/toolchain/install-host.sh`, including a dry-run. They install and run tools outside the application. They do not change the application's Composer files. Do not run them to fill a gap on your own.
 
 ## Confidential data
 
@@ -140,7 +140,7 @@ Do not invent other values.
 - `references/large-legacy-codebases.md` — context limits, map, hotspots, dead code. Load before scanning a large or legacy repo.
 - `references/strategies.md` — refactor strategies. Load for a refactor plan or step.
 - `references/php.md` — PHP tools and framework caveats. Load when naming tools.
-- `references/toolchain.md` — which tool runs in which phase, example commands, and how to read a failure. Load together with `php.md`. A failing check is not overridden.
+- `references/toolchain.md` — isolated tool image and host fallback, example commands, and how to read a failure. Load together with `php.md`. A failing check is not overridden. Do not add these tools to the application.
 - `references/tool-licenses.md` — SPDX id, license link, and commercial-use note for every tool this skill names. Load together with `php.md`, and again before adding a tool.
 - `references/database.md` — expand/contract. Load when a step touches schema or data.
 - `references/characterization-tests.md` — oracles and golden masters. Load for the safety net and before editing behavior-bearing code.
@@ -148,14 +148,16 @@ Do not invent other values.
 
 ## Scripts
 
-- `scripts/install-tools.sh` — optional per-project dev dependencies. Dry-run unless `--install`. Ask the user before running it. Version picks and the refusal rules are in `references/toolchain.md`.
+- `scripts/toolchain/build.sh` — build the tool image. Dry-run unless `--build`. `--write-lock` is the explicit lock step. Ask first.
+- `scripts/toolchain/run.sh` — run one tool against a read-only application tree. Dry-run unless `--run`. Ask first.
+- `scripts/toolchain/install-host.sh` — same tools in a directory outside the application. Dry-run unless `--install`. Ask first. Rules are in `references/toolchain.md`.
 
 ## Before you finish
 
 - One phase ran, or the menu was shown because the user asked where to start or which phase is next.
 - Type is the same in the plan header and the index. The other type was not mixed in.
 - No production access. No database migration, staging access, dependency change, deletion, or deploy without a recorded human approval.
-- `scripts/install-tools.sh` was not run unless the user asked for that run. Nothing was installed from outside its packagist.org allowlist: no PHAR, `curl | sh`, mirror, fork, custom Composer repository, or unofficial image.
+- The toolchain scripts were not run unless the user asked for that run. The application's `composer.json`, `composer.lock`, and `vendor/` were not changed. The tool project used one Composer source: `https://repo.packagist.org`, or the one HTTPS repository the user configured with `packagist.org` disabled. Nothing was installed from a PHAR, `curl | sh`, a second repository, or an image other than the pinned official `php` and `composer` images or a registry mirror the user named. Rector and phpcbf diffs were left in the output directory.
 - Nothing written contains customer data or a secret value.
 - A new session can continue from the index, the plan, the newest handoff, and open questions.
 - Every artifact matches its template. Index Phase, Effort, and Status match the plan header.

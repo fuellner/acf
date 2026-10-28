@@ -2,7 +2,7 @@
 
 ## Überblick
 
-Das Repository enthält agentische Coding-Skills für OpenCode / Claude-kompatible Harnesses. Es gibt keinen ausführbaren Code: Jeder Skill ist eine Markdown-Anweisung, die ein Agent lädt und die ihn durch einen definierten Arbeitsschritt führt. Ergebnisse sind strukturierte Dokumente im Zielrepo unter `docs/`.
+Das Repository enthält agentische Coding-Skills für OpenCode / Claude-kompatible Harnesses. Jeder Skill ist eine Markdown-Anweisung, die ein Agent lädt und die ihn durch einen definierten Arbeitsschritt führt. Ergebnisse sind strukturierte Dokumente im Zielrepo unter `docs/`. `f-refactor` enthält zusätzlich Shell-Skripte für eine vom Anwendungscode getrennte Werkzeugkette.
 
 ## Komponenten
 
@@ -57,7 +57,7 @@ flowchart LR
 
 - OpenCode oder ein Claude-kompatibler Agent als Laufzeitumgebung.
 - Installation über Symlinks von `skills/f-*` in `~/.config/opencode/skills/` oder projektlokal nach `.opencode/skills/` bzw. `.agents/skills/`.
-- Sonst keine externen Dienste, Datenbanken oder Bibliotheken. Bei einer PHP-Migration liest `f-refactor` die unterstützten Versionen von php.net; Patchstände stehen nicht im Skill.
+- Die Skills selbst starten keinen Anwendungsserver. `f-refactor` kann zusätzlich eine vom Zielcode getrennte PHP-Werkzeugkette bauen (Container oder ein Verzeichnis außerhalb der Anwendung, genau eine Composer-Quelle). Das steht in [0006](decisions/0006-werkzeugkette-container-eine-composer-quelle.md). Bei einer PHP-Migration liest `f-refactor` die unterstützten Versionen von php.net; Patchstände stehen nicht im Skill.
 
 ## Grenzen
 

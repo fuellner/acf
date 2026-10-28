@@ -1,6 +1,6 @@
 # PHP tools and frameworks
 
-Load when a plan or step will name PHP tools. Detect the stack from `composer.json`, the framework bootstrap, and CI. Tools below are examples. Use what the repo already runs. Do not add a tool unless the user accepts the dependency.
+Load when a plan or step will name PHP tools. Detect the stack from `composer.json`, the framework bootstrap, and CI. Tools below are examples. Use what the repo already runs. Do not add a tool to the application's Composer files. An analysis tool the application cannot run comes from the isolated toolchain in `toolchain.md`, after the user accepts that run.
 
 ## Tools
 
@@ -8,7 +8,7 @@ Read `tool-licenses.md` before naming a tool. A tool that is not listed there is
 
 - **Rector**: mechanical changes. Pick the set that matches the step (a PHP level set for a migration hop, a single rule for a codemod). One set per PR. Read the diff. Rector output is not a behavior proof. Phalcon classes that live in the C extension are invisible without stubs (`phalcon/ide-stubs` or the stubs the repo already has).
 - **PHPStan or Psalm**: keep the committed baseline. A step must not add new errors. Do not clear baseline entries as a side effect. If both tools are present, use the one CI runs. Set the language level to the runtime this unit is allowed to use: the target on a migration, the current runtime on a refactor.
-- **PHPCompatibility**: a CodeSniffer standard aimed at a target PHP version. Migration plans use it as a finder. It does not replace the test suite.
+- **PHPCompatibility**: a CodeSniffer standard. The 9.3 line stops at PHP 7.4. PHP 8 breaks are found by Rector, PHPStan or Psalm, and the tests. It does not replace the test suite. Details are in `toolchain.md`.
 - **Deptrac** (or the boundary tool already in the repo): add a rule when a refactor step introduces a module boundary. Do not map the whole estate in one step.
 - **PHPUnit**: characterization and the existing suite. Prefer the repo's current major. Upgrading PHPUnit is a migration step when the runtime forces it, not a refactor side effect.
 

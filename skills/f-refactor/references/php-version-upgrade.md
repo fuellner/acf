@@ -68,7 +68,7 @@ The fast path does not skip a fix the target cannot boot without.
 Detect what the repo already runs. Do not add a tool the user has not accepted. Examples, not a required stack:
 
 - Rector: the installed PHP level set for this hop, one rule set per PR. A Rector diff is not proof that behavior held.
-- PHPCompatibility (PHP_CodeSniffer) aimed at the target version.
+- PHPCompatibility 9.3.5 (`phpcompatibility/php-compatibility:^9.3`) aimed at a range that ends at PHP 7.4. That release has no sniffs for PHP 8.x. It does not clear an 8.x hop. Rector's PHP set for the hop, PHPStan or Psalm at the target language level, and the suite on the target runtime cover those breaks. PHPCompatibility 10.x is a pre-release and is not the default; adding it needs explicit approval and a new tool lock.
 - PHPStan or Psalm with the language level set to the target, existing baseline kept. Do not mass-fix baseline entries.
 - `composer why-not php <target>` using the verified target.
 - `composer audit` or the repo's equivalent.

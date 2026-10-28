@@ -4,15 +4,13 @@ Load this after the task is resolved and before editing code. The mode is `tdd` 
 
 ## Where the mode comes from
 
-Use the first one that is present:
+Precedence is the task, then the user, then the handoff default.
 
-1. A step-phase handoff that names `tdd` or `direct`
-2. The task: a `**Mode**:` line, or one sentence that states the mode
-3. The user message
+1. The task, when a `**Mode**:` line or one sentence states `tdd` or `direct`
+2. The user message, when it states `tdd` or `direct`
+3. The step-phase handoff, when it names a mode. A handoff that says `direct` unless the task already states a mode is this default
 
-If none of these name a mode, ask once and wait. If two of them name different modes, ask once. Do not pick one.
-
-A step-phase handoff that says `direct` unless the task already states a mode follows that sentence: the task wins when it states a mode, and the handoff's `direct` is the mode otherwise.
+If two of these name different modes, ask once and wait. Do not pick one. If none names a mode, ask once and wait.
 
 ## tdd
 
@@ -38,4 +36,4 @@ The project's existing checks still run. After the gate passes, the feature-cycl
 
 ## Step-phase constraints
 
-When the step phase handed the task over, the constraints in that handoff are in force. Do not add work the handoff forbids. Typical constraints, when the handoff states them: stay inside the step and its type; tests only from the linked test plan; characterization tests pass before the transformation; no version bump on a refactor; forced fixes only on a migration; record bugs and do not fix them; no dependency change and no deletion without an approval already given; do not edit an assertion or a golden file to hide a behavior change.
+When the step phase handed the task over, read every reference that handoff names before editing, and run every gate command it lists. The constraints in that handoff are in force. Do not add work the handoff forbids. Typical constraints, when the handoff states them: stay inside the step and its type; tests only from the linked test plan; characterization tests pass before the transformation; no version bump on a refactor; forced fixes only on a migration; record bugs and do not fix them; no dependency change and no deletion without an approval already given; do not edit an assertion or a golden file to hide a behavior change.

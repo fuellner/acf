@@ -8,7 +8,9 @@ Read the task's **Verification** section and the project's existing manifests. R
 
 Do not install a package to produce a green run. Do not add a check runner, a linter config, or a test framework the task did not ask for.
 
-A command named in **Verification** is part of the gate. A command the step-phase handoff requires, including a parity check, is part of the gate.
+A command named in **Verification** is part of the gate.
+
+Every command the step-phase handoff lists under its gate, including toolchain commands copied from the plan or inventory and any parity check, is part of the gate. Run each one in this worktree and record the command and the result. A handoff command that was not run is a failed gate, not a skip. `none named` adds no command.
 
 ## Evidence
 

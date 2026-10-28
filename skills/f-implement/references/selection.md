@@ -56,5 +56,6 @@ When the user approves an independent set:
 - When it cannot, implement one worktree after another.
 - Do not check out one branch in two worktrees.
 - Do not remove a worktree, delete its directory, or merge the branches.
+- Each worktree updates indexes only on its own branch. The main worktree's index is not updated. When those branches are later merged, expect conflicts in `docs/tasks/index.md` and `docs/implement/index.md`. Keep both rows.
 
 One agent edits one worktree. Each worktree updates its own copy of the task file, the implementation log, and the indexes. Do not merge those copies. The report lists the intended status of each task.

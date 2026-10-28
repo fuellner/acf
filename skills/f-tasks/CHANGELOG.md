@@ -1,7 +1,7 @@
 # Changelog
 
 ## 2026-10-28
-- Optional **Ticket** line on the task template. It is copied only when the source already contains one ticket key (uppercase project part, hyphen, number). Workflow IDs are not tickets. No tracker is called and no key is invented. Tasks without the line stay valid.
+- Optional **Ticket** line on the task template. It is copied only when the source already contains one ticket key (2–10 characters, starting with an uppercase letter, then a hyphen and a number). Workflow IDs and common non-ticket prefixes are not tickets. No tracker is called and no key is invented. Tasks without the line stay valid.
 - A refactor or migration task still belongs to the `f-refactor` step phase. That phase may hand the code change to `f-implement`. The task tells `f-implement` not to take the work outside that phase.
 - The status model names `f-implement` as the implementing agent.
 
