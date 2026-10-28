@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-10-27
+- `scripts/install-tools.sh` installs only an allowlist of official Packagist packages over HTTPS. It refuses mirrors, custom repositories, disabled TLS, abandoned package names, PHARs, and `curl | sh`. `composer audit --locked` runs after install.
 - `scripts/install-tools.sh` optionally adds selected tools as Composer dev dependencies. Dry-run unless `--install`. It skips packages already in `composer.json`, refuses a platform PHP that cannot run the tool, and does not touch `require` or production. The agent asks before running it.
 - `references/workflow.md` is the human-readable map of phases, artifacts, status, and handoffs. `references/toolchain.md` is the tool gate: detect what `composer.json` already has, ask before installing, and do not override a failing check.
 - `references/tool-licenses.md` lists every external tool this skill names, with the SPDX id and license link re-checked against the GitHub API.

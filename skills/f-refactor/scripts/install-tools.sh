@@ -5,6 +5,9 @@
 # Dry-run unless --install. Never installs globally, never edits require,
 # never edits config.platform.php, and never deploys.
 #
+# Supply chain: Composer from https://repo.packagist.org only. The package
+# allowlist is in spec_is_allowed. No PHARs, curl, wget, mirrors, or images.
+#
 # Ask the user before running this, including a dry-run.
 # Licenses: ../references/tool-licenses.md
 # Usage and version picks: ../references/toolchain.md
@@ -54,17 +57,25 @@ tool can run (PHP 5.3 is the usual case), the tool is skipped. Use a separate
 modern PHP toolchain and point it at the legacy tree. Do not pass
 --ignore-platform-reqs and do not raise config.platform.php to force an install.
 
-The constraint is the newest major this script knows that declares support for
-the composer platform PHP (config.platform.php when set, otherwise the php on
-PATH). Composer picks the latest release inside that constraint at install time.
+The constraint is the newest supported major this script knows that declares
+support for the composer platform PHP (config.platform.php when set, otherwise
+the php on PATH). Only ^MAJOR.MINOR constraints on the packagist.org allowlist
+are passed to Composer. Composer picks the latest release inside that constraint.
+
+Packages come only from https://repo.packagist.org over HTTPS. secure-http must
+stay true and disable-tls must stay false. Custom repositories and mirrors are
+refused. composer require updates composer.lock for the added packages only.
+composer audit --locked runs after an install.
 
 Exit codes:
-  0  Plan printed, or install finished. Includes "already present".
+  0  Plan printed, or install finished and audit reported nothing. Includes "already present".
   1  Bad usage (no tools, unknown tool, missing flag value)
-  2  php, composer, or composer.json missing, or composer older than 2.2
+  2  php, composer, or composer.json missing, or composer older than 2.4
   3  composer require failed
   4  Nothing was added, and every selected tool was refused
      (this PHP cannot run it, or an existing pin must not be changed)
+  5  require-dev was updated and composer audit reported advisories or failed
+  6  Refused: package, TLS, or repository is outside the packagist.org allowlist
 
 Examples:
   install-tools.sh --project-dir /path/to/app --phpstan --phpunit
@@ -178,6 +189,200 @@ license_of() {
     phpcompatibility/php-compatibility) printf 'LGPL-3.0' ;;
     *) printf 'unknown' ;;
   esac
+}
+
+# Official packagist.org names, checked 2026-10-27 against each project's README
+# and the Packagist repository URL. phpcsstandards/php_codesniffer is abandoned
+# and points at squizlabs/php_codesniffer. qossmic/deptrac is abandoned and points
+# at deptrac/deptrac. Neither abandoned name is allowed.
+spec_is_allowed() {
+  local spec="$1" name constraint
+  name="${spec%%:*}"
+  constraint="${spec#*:}"
+  case "$name" in
+    phpcsstandards/php_codesniffer)
+      die 6 "Refusing phpcsstandards/php_codesniffer. Packagist marks it abandoned. The official package is squizlabs/php_codesniffer."
+      ;;
+    qossmic/deptrac)
+      die 6 "Refusing qossmic/deptrac. Packagist marks it abandoned. The official package is deptrac/deptrac."
+      ;;
+    rector/rector|phpstan/phpstan|vimeo/psalm|deptrac/deptrac|squizlabs/php_codesniffer|phpcompatibility/php-compatibility|phpunit/phpunit|phalcon/ide-stubs)
+      ;;
+    *)
+      die 6 "Refusing package ${name}. It is not on the packagist.org allowlist."
+      ;;
+  esac
+  if [[ ! "$constraint" =~ ^\^[0-9]+\.[0-9]+$ ]]; then
+    die 6 "Refusing ${spec}. Only a supported major constraint (^MAJOR.MINOR) is accepted."
+  fi
+  case "$spec" in
+    *://*|*'git@'*|*'dev-'*|*'@'*|*\**)
+      die 6 "Refusing ${spec}. URLs, forks, dev branches, and wildcards are not accepted."
+      ;;
+  esac
+}
+
+# Reads repository JSON on stdin. Exit 0 only for "no extra repository" or
+# exactly https://repo.packagist.org. Anything else can substitute a package.
+repo_json_is_packagist_only() {
+  php -r "$(cat <<'PHP'
+$raw = stream_get_contents(STDIN);
+$data = json_decode($raw, true);
+if (!is_array($data)) {
+    fwrite(STDERR, "repository config is not a JSON object or list\n");
+    exit(1);
+}
+$entries = array();
+$index = 0;
+$list = true;
+foreach ($data as $key => $value) {
+    if ($key !== $index) {
+        $list = false;
+        break;
+    }
+    $index++;
+}
+if ($list) {
+    $entries = $data;
+} else {
+    foreach ($data as $key => $value) {
+        if (($key === "packagist.org" || $key === "packagist") && $value === false) {
+            fwrite(STDERR, "packagist.org is disabled\n");
+            exit(1);
+        }
+        if (!is_array($value)) {
+            fwrite(STDERR, "unexpected repository entry\n");
+            exit(1);
+        }
+        if (array_key_exists("packagist.org", $value) && $value["packagist.org"] === false) {
+            fwrite(STDERR, "packagist.org is disabled\n");
+            exit(1);
+        }
+        $entries[] = $value;
+    }
+}
+foreach ($entries as $entry) {
+    if (!is_array($entry)) {
+        fwrite(STDERR, "repository entry is not an object\n");
+        exit(1);
+    }
+    if (isset($entry["packagist.org"]) && $entry["packagist.org"] === false) {
+        fwrite(STDERR, "packagist.org is disabled\n");
+        exit(1);
+    }
+    if (!isset($entry["type"], $entry["url"]) || $entry["type"] !== "composer" || $entry["url"] !== "https://repo.packagist.org") {
+        fwrite(STDERR, "repository is not https://repo.packagist.org\n");
+        exit(1);
+    }
+    foreach ($entry as $key => $value) {
+        if ($key !== "type" && $key !== "url") {
+            fwrite(STDERR, "repository entry has extra options\n");
+            exit(1);
+        }
+    }
+}
+exit(0);
+PHP
+)"
+}
+
+assert_supply_chain() {
+  local secure tls repos_json repo_err file_err
+  if [[ -n "${COMPOSER:-}" ]]; then
+    die 6 "Refusing install: COMPOSER is set. Unset it so Composer uses this project's composer.json."
+  fi
+  case "${COMPOSER_DISABLE_TLS:-}" in
+    1|true|TRUE|yes|YES)
+      die 6 "Refusing install: COMPOSER_DISABLE_TLS is set. Composer must use HTTPS."
+      ;;
+  esac
+  secure=$(composer --no-interaction --no-plugins --working-dir "$project_dir" config secure-http 2>/dev/null) || die 6 "Could not read Composer secure-http."
+  tls=$(composer --no-interaction --no-plugins --working-dir "$project_dir" config disable-tls 2>/dev/null) || die 6 "Could not read Composer disable-tls."
+  if [[ "$secure" != "true" ]]; then
+    die 6 "Refusing install: Composer secure-http is ${secure}. It must be true. This script will not disable TLS."
+  fi
+  if [[ "$tls" != "false" ]]; then
+    die 6 "Refusing install: Composer disable-tls is ${tls}. It must be false."
+  fi
+  repos_json=$(composer --no-interaction --no-plugins --working-dir "$project_dir" config --json repositories 2>/dev/null) || die 6 "Could not read Composer repositories."
+  if ! repo_err=$(printf '%s' "$repos_json" | repo_json_is_packagist_only 2>&1); then
+    die 6 "Refusing Composer repositories (${repo_err}). Only https://repo.packagist.org is accepted. No mirrors, path repos, or forks."
+  fi
+  if ! file_err=$(php -r "$(cat <<'PHP'
+$data = json_decode(file_get_contents($argv[1]), true);
+if (!is_array($data)) {
+    fwrite(STDERR, "composer.json is not a JSON object\n");
+    exit(1);
+}
+$config = array();
+if (isset($data["config"]) && is_array($data["config"])) {
+    $config = $data["config"];
+}
+if (array_key_exists("secure-http", $config) && $config["secure-http"] !== true) {
+    fwrite(STDERR, "composer.json config.secure-http is not true\n");
+    exit(1);
+}
+if (array_key_exists("disable-tls", $config) && $config["disable-tls"] !== false) {
+    fwrite(STDERR, "composer.json config.disable-tls is not false\n");
+    exit(1);
+}
+if (!array_key_exists("repositories", $data)) {
+    exit(0);
+}
+$repos = $data["repositories"];
+if (!is_array($repos)) {
+    fwrite(STDERR, "composer.json repositories is not an object or list\n");
+    exit(1);
+}
+$entries = array();
+$index = 0;
+$list = true;
+foreach ($repos as $key => $value) {
+    if ($key !== $index) {
+        $list = false;
+        break;
+    }
+    $index++;
+}
+if ($list) {
+    $entries = $repos;
+} else {
+    foreach ($repos as $key => $value) {
+        if (($key === "packagist.org" || $key === "packagist") && $value === false) {
+            fwrite(STDERR, "composer.json disables packagist.org\n");
+            exit(1);
+        }
+        if (!is_array($value)) {
+            fwrite(STDERR, "composer.json has an unexpected repository entry\n");
+            exit(1);
+        }
+        $entries[] = $value;
+    }
+}
+foreach ($entries as $entry) {
+    if (!is_array($entry)) {
+        fwrite(STDERR, "composer.json repository entry is not an object\n");
+        exit(1);
+    }
+    if (isset($entry["packagist.org"]) && $entry["packagist.org"] === false) {
+        fwrite(STDERR, "composer.json disables packagist.org\n");
+        exit(1);
+    }
+    if (isset($entry["packagist"]) && $entry["packagist"] === false) {
+        fwrite(STDERR, "composer.json disables packagist\n");
+        exit(1);
+    }
+    if (!isset($entry["type"], $entry["url"]) || $entry["type"] !== "composer" || $entry["url"] !== "https://repo.packagist.org") {
+        fwrite(STDERR, "composer.json repository is not https://repo.packagist.org\n");
+        exit(1);
+    }
+}
+exit(0);
+PHP
+)" "$composer_json" 2>&1); then
+    die 6 "Refusing composer.json (${file_err})."
+  fi
+  printf 'supply-chain: packagist.org only, HTTPS required, allowlisted packages only.\n'
 }
 
 # Keep this in step with the installer table in references/toolchain.md.
@@ -374,7 +579,7 @@ if ! command -v php >/dev/null 2>&1; then
   die 2 "php is not on PATH. Install a PHP CLI before adding dev tools. For a PHP 5.3 application, run this script on a newer PHP and keep behavior tests on 5.3."
 fi
 if ! command -v composer >/dev/null 2>&1; then
-  die 2 "composer is not on PATH. Install Composer 2.2 or newer. This script does not download or upgrade Composer."
+  die 2 "composer is not on PATH. Install Composer 2.4 or newer from https://getcomposer.org. This script does not download Composer."
 fi
 
 runtime_line=$(php -r 'echo PHP_VERSION;' 2>/dev/null) || die 2 "php -r failed"
@@ -387,8 +592,8 @@ if [[ "$composer_line" =~ ([0-9]+\.[0-9]+\.[0-9]+) ]]; then
 else
   die 2 "Could not parse composer version from: $composer_line"
 fi
-if ! ver_ge "$composer_ver" 2.2.0; then
-  die 2 "Composer ${composer_ver} is older than 2.2. Install Composer 2.2 or newer. This script will not upgrade Composer for you."
+if ! ver_ge "$composer_ver" 2.4.0; then
+  die 2 "Composer ${composer_ver} is older than 2.4. composer audit is required. This script will not upgrade Composer for you."
 fi
 
 if [[ ! -d "$project_dir" ]]; then
@@ -530,13 +735,13 @@ else
   printf 'require_php: not set\n'
 fi
 printf 'scope: require-dev only. No global install, no production deploy, no edits to require or config.platform.php.\n'
+assert_supply_chain
 
 if ! ver_ge "$platform" 7.2.0; then
   warn "Composer platform PHP is ${platform}. Rector, PHPStan, Psalm, Deptrac, and current PHPUnit do not run there."
   warn "Do not use --ignore-platform-reqs and do not raise config.platform.php to force the install. That pin is the application runtime."
-  warn "Run those tools from a separate modern PHP toolchain whose composer.json is not pinned to ${platform}, and point them at this source tree."
-  warn "Example: a php:8.3-cli container with this repository mounted, and this script invoked with --project-dir set to a toolchain project."
-  warn "Tests that claim behavior on PHP ${platform} still have to run on PHP ${platform}. A PHPUnit result from the modern toolchain is not that proof."
+  warn "Run those tools from a separate Composer project on a newer PHP and point them at this tree. This script does not download a PHAR, run curl or wget, or pull an image."
+  warn "Tests that claim behavior on PHP ${platform} still have to run on PHP ${platform}. A PHPUnit result from the newer PHP is not that proof."
   if ver_ge "$platform" 5.4.0; then
     warn "PHP_CodeSniffer 3 and PHPCompatibility 9 can still be installed on this platform."
   else
@@ -617,6 +822,7 @@ while IFS= read -r tool; do
       esac
     fi
   fi
+  spec_is_allowed "$CONSTRAINT"
   printf 'add: %s\n' "$CONSTRAINT"
   spec_lines="${spec_lines}${CONSTRAINT}"$'\n'
   added=$((added + 1))
@@ -641,6 +847,7 @@ fi
 cmd=(composer --no-interaction --no-plugins --working-dir "$project_dir" require --dev --no-scripts)
 while IFS= read -r spec; do
   [[ -z "$spec" ]] && continue
+  spec_is_allowed "$spec"
   cmd+=("$spec")
 done <<EOF
 $spec_lines
@@ -648,10 +855,12 @@ EOF
 
 case " ${cmd[*]} " in
   *" require --dev "*) ;;
-  *) die 3 "Refusing to run composer without require --dev." ;;
+  *) die 6 "Refusing to run composer without require --dev." ;;
 esac
 case " ${cmd[*]} " in
-  *" global "*|*" --ignore-platform-reqs "*|*" update "*) die 3 "Refusing a composer command that is not a dev-dependency install." ;;
+  *" global "*|*" --ignore-platform-reqs "*|*" update "*|*" --repository "*|*" --repository-url "*|*"http://"*|*"curl "*|*"wget "*|*" .phar"*)
+    die 6 "Refusing a composer command that is not an allowlisted dev-dependency install from packagist.org."
+    ;;
 esac
 
 printf 'command:'
@@ -665,7 +874,7 @@ done
 printf '\n'
 
 if [[ "$mode" == "dry-run" ]]; then
-  printf 'result: dry-run. composer.json was not changed. Pass --install to apply.\n'
+  printf 'result: dry-run. composer.json was not changed. Pass --install to apply. composer audit --locked runs after a successful install.\n'
   exit 0
 fi
 
@@ -673,7 +882,15 @@ export COMPOSER_NO_INTERACTION=1
 if ! "${cmd[@]}"; then
   die 3 "composer require failed. Check git status in ${project_dir} before retrying. Non-dev requirements were not an intended target."
 fi
-printf 'result: require-dev updated. Composer scripts and plugins were not run.\n'
+if [[ ! -f "$project_dir/composer.lock" ]]; then
+  die 6 "composer.lock is missing after require. Refusing to leave composer.json and the lock out of sync."
+fi
+printf 'result: require-dev updated. composer.lock was updated for those packages only. Composer scripts and plugins were not run.\n'
+printf 'audit: composer audit --locked\n'
+if ! composer --no-interaction --no-plugins --working-dir "$project_dir" audit --locked --no-ansi; then
+  die 5 "composer audit reported advisories or could not check the lock file. require-dev was updated. Review the audit output before using the tools. This script does not ignore advisories."
+fi
+printf 'audit: no advisories reported for the lock file.\n'
 if [[ "$refused" -gt 0 ]]; then
   warn "Some selected tools were skipped. See the skip lines above."
 fi

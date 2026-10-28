@@ -155,7 +155,7 @@ Do not invent other values.
 - One phase ran, or the menu was shown because the user asked where to start or which phase is next.
 - Type is the same in the plan header and the index. The other type was not mixed in.
 - No production access. No database migration, staging access, dependency change, deletion, or deploy without a recorded human approval.
-- `scripts/install-tools.sh` was not run unless the user asked for that run.
+- `scripts/install-tools.sh` was not run unless the user asked for that run. Nothing was installed from outside its packagist.org allowlist: no PHAR, `curl | sh`, mirror, fork, custom Composer repository, or unofficial image.
 - Nothing written contains customer data or a secret value.
 - A new session can continue from the index, the plan, the newest handoff, and open questions.
 - Every artifact matches its template. Index Phase, Effort, and Status match the plan header.

@@ -38,3 +38,18 @@ Deptrac is the repository GitHub serves for `qossmic/deptrac` (`opensoftwarecons
 | `phpcompatibility/php-compatibility` | LGPL-3.0 |
 | `phpunit/phpunit` | BSD-3-Clause |
 | `phalcon/ide-stubs` | BSD-3-Clause |
+
+## Supply chain
+
+`scripts/install-tools.sh` installs only the packages in the table above, and only from `https://repo.packagist.org` over HTTPS. Names were checked on 2026-10-27 against each project's README and the Packagist `repository` field.
+
+- `rector/rector` — `composer require rector/rector --dev` in the Rector README. Repository `github.com/rectorphp/rector`.
+- `phpstan/phpstan` — Packagist package linked from the PHPStan README. Repository `github.com/phpstan/phpstan`.
+- `vimeo/psalm` — Packagist package linked from the Psalm README. Repository `github.com/vimeo/psalm`.
+- `deptrac/deptrac` — `composer require --dev deptrac/deptrac` in the Deptrac README. `qossmic/deptrac` is abandoned on Packagist and is not installed.
+- `squizlabs/php_codesniffer` — the name in the PHP_CodeSniffer README (`PHPCSStandards/PHP_CodeSniffer`). `phpcsstandards/php_codesniffer` is abandoned on Packagist and points back at this name. It is not installed.
+- `phpcompatibility/php-compatibility` — Packagist package linked from the PHPCompatibility README.
+- `phpunit/phpunit` — Packagist package linked from the PHPUnit README. Repository `github.com/sebastianbergmann/phpunit`.
+- `phalcon/ide-stubs` — `composer require --dev phalcon/ide-stubs` in that repository's README.
+
+The script refuses a custom Composer repository, a mirror, `secure-http: false`, and `disable-tls: true`. It does not download PHARs and does not add a package that is not in this list. After install it runs `composer audit --locked`. The license note above is not legal advice.

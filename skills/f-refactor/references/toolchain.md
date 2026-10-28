@@ -54,11 +54,49 @@ What it will do:
 - Skip a package that is already in `require`. It does not move or upgrade non-dev dependencies.
 - Choose the constraint from the table below using the composer platform PHP: `config.platform.php` when set, otherwise the `php` on `PATH`.
 - Print each selected package's SPDX id and the path to `tool-licenses.md`.
-- Require PHP CLI and Composer 2.2 or newer. It does not download or upgrade Composer.
+- Require PHP CLI and Composer 2.4 or newer (`composer audit` shipped in 2.4). It does not download or upgrade Composer.
 
 `--all` selects Rector, PHPStan, Deptrac, PHP_CodeSniffer, PHPCompatibility, and PHPUnit. Psalm is the alternative to PHPStan and is not in `--all`. `--phalcon-stubs` needs the extension major (`3`, `4`, or `5`) because the PHP version does not imply it. PHPCompatibility also selects PHP_CodeSniffer 3 when that package is not already a dev dependency. PHPCompatibility 9 does not run on PHP_CodeSniffer 4, and an existing `^4` pin is not downgraded.
 
-When the platform PHP is too old for a tool, the tool is skipped. The script tells you to run that tool from a separate modern PHP toolchain whose own `composer.json` is not pinned to the legacy version, and to point the tool at this source tree. A `php:8.3-cli` container with the repository mounted is enough. Tests that claim behavior on the old runtime still run on that runtime. The script does not install PHPUnit 4, 5, or 6, and it does not install PHP_CodeSniffer 2.
+When the platform PHP is too old for a tool, the tool is skipped. Run this same script in a separate Composer project on a newer PHP, and point the tools at the legacy tree. Tests that claim behavior on the old runtime still run on that runtime. The script does not install PHPUnit 4, 5, or 6, and it does not install PHP_CodeSniffer 2.
+
+## Supply chain
+
+Installation from this skill is Composer against `https://repo.packagist.org` only. The script refuses anything else before it changes the project.
+
+Official package names, checked on 2026-10-27 against each project's README and the Packagist repository URL:
+
+| Tool | Packagist name | Not accepted |
+|------|----------------|--------------|
+| Rector | `rector/rector` | Any other Rector package or fork |
+| PHPStan | `phpstan/phpstan` | |
+| Psalm | `vimeo/psalm` | |
+| Deptrac | `deptrac/deptrac` | `qossmic/deptrac` (Packagist marks it abandoned) |
+| PHP_CodeSniffer | `squizlabs/php_codesniffer` | `phpcsstandards/php_codesniffer` (Packagist marks it abandoned and points back at `squizlabs/php_codesniffer`). The GitHub repository is `PHPCSStandards/PHP_CodeSniffer`; the Composer name did not change. |
+| PHPCompatibility | `phpcompatibility/php-compatibility` | |
+| PHPUnit | `phpunit/phpunit` | |
+| Phalcon stubs | `phalcon/ide-stubs` | |
+
+The script hardcodes that list. A constraint must be `^MAJOR.MINOR` for one of those names. `*`, `dev-`, a git URL, a path, and a fork are refused.
+
+Composer must already be installed. This script does not run `curl | sh`, `wget`, or a PHAR download, and it does not add a repository.
+
+- `secure-http` must be `true`. `disable-tls` must be `false`. `COMPOSER_DISABLE_TLS` must be unset.
+- The effective repository list must be only `https://repo.packagist.org`. A mirror, a path repository, a VCS repository, or `packagist.org: false` is refused. The script does not add one.
+- `composer require --dev` updates `composer.lock` for the added packages and their dependencies. It does not run a bare `composer update`, so other locked packages stay at the versions already in the lock.
+- After a successful require, the script runs `composer audit --locked`. Advisories fail the run (exit 5). The script does not pass `--no-dev` and does not hide abandoned packages. Findings that were already in the lock are still reported.
+
+Exit `6` means the package, the TLS settings, or the repository list was outside this rule. `composer.json` is left unchanged in that case.
+
+### Newer PHP, still the same installer
+
+A PHP that is too old to run a tool needs a newer PHP binary. The tools are still installed by this script, from packagist.org, in a Composer project that is not pinned to the legacy version.
+
+The only container image these docs name is the Docker Official Image `php`, built from [docker-library/php](https://github.com/docker-library/php) and published as `php` (not a third-party name). Do not use a fork or a community PHP image. Before using a tag, inspect its provenance as documented by Docker: `docker buildx imagetools inspect php:<tag> --format '{{json .Provenance}}'` ([Build attestations](https://docs.docker.com/build/metadata/attestations/)). Confirm the repository is the official `php` image. Then run this script inside that environment.
+
+### PHARs are not an install path
+
+Upstream READMEs also show PHAR downloads (`https://phars.phpcodesniffer.com`, `https://phar.phpunit.de`, and similar). This skill does not run those commands and does not treat a PHAR as a substitute for the allowlist. If an operator installs a PHAR outside this skill, the only acceptable file is one from that project's own release, checked the way that project documents. For PHP_CodeSniffer that is the PHAR from `phars.phpcodesniffer.com` or the `PHPCSStandards/PHP_CodeSniffer` GitHub release, signed with the release key fingerprint `D91D86963AF3A29B6520462297B02DD8E5071466`, and for 3.10.3 or newer `gh attestation verify phpcs.phar -o PHPCSStandards`. Do not take the file from a mirror, a fork, or an unsigned copy.
 
 | Platform PHP | Package |
 |--------------|---------|
@@ -87,4 +125,4 @@ When the platform PHP is too old for a tool, the tool is skipped. The script tel
 
 Anything older is skipped. PHP 5.3 gets no packages from this script.
 
-Exit codes: `0` plan or install finished, including "already present"; `1` bad usage; `2` missing PHP, Composer, or `composer.json`, or Composer older than 2.2; `3` `composer require` failed; `4` nothing was added and every selected tool was refused. Keep this table in step with `choose_constraint` in the script.
+Exit codes: `0` plan or install finished, including "already present" and a clean audit; `1` bad usage; `2` missing PHP, Composer, or `composer.json`, or Composer older than 2.4; `3` `composer require` failed; `4` nothing was added and every selected tool was refused; `5` `composer audit` reported advisories; `6` the package, TLS setting, or repository is outside the packagist.org allowlist. Keep this table in step with `choose_constraint` in the script.

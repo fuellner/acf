@@ -119,7 +119,7 @@ No production or customer data in tests, golden files, or docs. A hardcoded secr
 
 Packages already in `composer.json` are skipped. `require`, `config.platform.php`, and production are not modified. There is no global install. Each selected tool's SPDX id is printed, with the path to `tool-licenses.md`.
 
-The composer platform PHP is `config.platform.php` when that pin exists, otherwise the `php` on `PATH`. The script picks a constraint that declares support for that PHP. On a platform that cannot run a tool (PHP 5.3 is the usual case), it skips the tool and tells you to run that tool from a separate modern PHP toolchain against this tree. It does not pass `--ignore-platform-reqs`. The version table is in `toolchain.md`.
+The composer platform PHP is `config.platform.php` when that pin exists, otherwise the `php` on `PATH`. The script picks a constraint that declares support for that PHP. On a platform that cannot run a tool (PHP 5.3 is the usual case), it skips the tool. A newer PHP still installs tools through this script from packagist.org. The version table and the supply-chain rules (allowlist, HTTPS, no mirrors, `composer audit`) are in `toolchain.md`.
 
 ## Flow
 
