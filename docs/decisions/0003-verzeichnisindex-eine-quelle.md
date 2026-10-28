@@ -7,7 +7,7 @@
 
 Die Regeln für `index.md` unter `docs/` stehen einmal in `skills/f-docs/references/directory-index.md`. Jeder andere `f-*`-Skill enthält `references/directory-index.md` als relativen Symlink auf diese Quelle. `SKILL.md` enthält nur einen kurzen Verweis und die skill-eigenen Einschränkungen.
 
-Fehlt ein Schema, heißen die beiden Spalten `Document | Description`. In deutschsprachigen, menschenlesbaren Indizes heißen dieselben Spalten `Dokument | Beschreibung`. Requirements, Tasks und die f-legal-Vorlage behalten ihr jeweiliges Schema; es ist in derselben Referenz benannt.
+Fehlt ein Schema, heißen die beiden Spalten `Document | Description`. In deutschsprachigen, menschenlesbaren Indizes heißen dieselben Spalten `Dokument | Beschreibung`. Requirements, Tasks, Tests, Features und die f-legal-Vorlage behalten ihr jeweiliges Schema; es ist in derselben Referenz benannt. Das Tests-Schema ist `Source | Mode | Revision | File`.
 
 ## Kontext
 
@@ -24,4 +24,5 @@ Texte, die ins Zielrepository kopiert werden (Task-Vorlage, Implementation-Promp
 - Index-Regeln werden nur in `skills/f-docs/references/directory-index.md` geändert.
 - Weitere Skills bekommen denselben relativen Symlink, keinen eigenen Regeltext.
 - `f-legal` bleibt deutsch und verweist auf die englische Referenz. Die rechtlichen Spalten stehen in seiner Index-Vorlage und sind in der Referenz benannt.
+- `docs/tests/` führt `Source | Mode | Revision | File`, damit ein Review die Datei über die Source-ID findet. Leitet ein Task von einem Requirement ab, ist diese ID die REQ-ID.
 - Wer ein Skill-Verzeichnis ohne diesen Symlink und ohne das Geschwisterverzeichnis `f-docs` kopiert, verliert die Index-Regel. Die Installation bleibt das Verlinken der `skills/f-*`-Verzeichnisse.

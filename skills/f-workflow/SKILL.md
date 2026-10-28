@@ -82,9 +82,9 @@ This step is a direct instruction to the coding agent — there is no `f-` skill
 ```
 Implement the following task(s) exactly as specified. Stay inside the stated scope.
 
-Task document(s): [docs/tasks/TASK-xxx.md or paste]
+Task document(s): [docs/tasks/TASK-<id>-<slug>.md or paste — exact ID: `TASK-001.md` or `TASK-001-<slug>.md`, not `TASK-0010`; confirm one filesystem match, index is only a hint]
 Acceptance criteria / Checks: [REQ-xxx or paste]
-Test plan (if available): [docs/tests/TEST-xxx-plan.md]
+Test plan (if available): [docs/tests/TEST-<source-id>-plan.md for this TASK-ID, and TEST-<REQ-ID>-plan.md when the task Source is that REQ-ID]
 
 Rules:
 - Touch only the files listed in the task, plus the status fields and directory indexes described below. Do not refactor, rename, or "improve" surrounding code.
@@ -94,7 +94,7 @@ Rules:
 - If a requirement is ambiguous or the task is not implementable as written, stop and report instead of guessing.
 
 When done: set Status to `ready-for-review`, update `Updated`, and update the row in docs/tasks/index.md.
-For every documentation directory created or updated under docs/, refresh index.md by following references/directory-index.md in the installed f-docs skill. Every installed f-* skill links the same file at references/directory-index.md. Use the tasks schema from that file and check that the links resolve.
+For every documentation directory created or updated under docs/, refresh index.md by following references/directory-index.md in the installed f-docs skill. Every installed f-* skill links the same file at references/directory-index.md. Use that directory's schema from that file (for docs/tasks/, the tasks schema) and check that the links resolve.
 If the task is `changes-requested`, move it to `in-progress` while you work.
 Set `blocked` only when you cannot proceed because a dependency or decision is missing, and record what unblocks the task. Do not set `done` — that happens only after review.
 ```
