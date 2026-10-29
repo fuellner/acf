@@ -44,7 +44,7 @@ Does not perform domain work. Only displays the menu and supplies prompt templat
 ### Optional / Outside Core
 
 - **f-docs** — Generate or refresh project documentation (AGENTS.md, README, architecture, conventions).  
-- **f-legal** — Extract developer-relevant requirements from German/EU legal sources into `docs/legal/`.
+- **f-legal** — Research German official law as of a cutoff date into `docs/legal/` (one file per subject; a whole area starts with an overview).
 - **f-feature-summary** — Create or update scannable feature summaries (individual units + overall overview) for product owners.
 
 ### Separate workflow
@@ -118,10 +118,11 @@ Please use the f-docs skill to analyze the repository and create or update the p
 
 ### f-legal
 ```
-Please use the f-legal skill to process the following legal source(s) and extract developer-relevant requirements into docs/legal/.
+Please use the f-legal skill to research the following German legal subject as of a cutoff date and write it to docs/legal/. Read the official texts. Do not fill amounts from memory.
 
-Source(s): [paste law text, regulation, or link description]
-Focus area (optional): [e.g. calculation rules, data retention, …]
+Subject: [statute, provision, or benefit, for example Pflegegeld]
+Stichtag: [date, or a year]
+Whole area (optional): [for example all benefit types of one statute]
 ```
 
 ### f-feature-summary

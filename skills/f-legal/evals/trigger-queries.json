@@ -1,0 +1,146 @@
+[
+  {
+    "id": "t01",
+    "split": "train",
+    "should_trigger": true,
+    "query": "Pflegegeld zum 1. März 2021 zusammenfassen, bitte mit allen Änderungen seitdem."
+  },
+  {
+    "id": "t02",
+    "split": "train",
+    "should_trigger": true,
+    "query": "Was galt 2019 beim Elterngeld? Ich brauche den Rechtsstand, nicht deine Meinung."
+  },
+  {
+    "id": "t03",
+    "split": "train",
+    "should_trigger": true,
+    "query": "Alle Leistungsarten der Pflegeversicherung, Stichtag 2020. Eine Datei pro Art."
+  },
+  {
+    "id": "t04",
+    "split": "train",
+    "should_trigger": true,
+    "query": "Rechtslage zu § 37 SGB XI am 1.1.2022, aus dem Gesetz, nicht aus irgendeinem Kommentar."
+  },
+  {
+    "id": "t05",
+    "split": "train",
+    "should_trigger": true,
+    "query": "Mein Chef will wissen, welches Pflegegeld 2018 gezahlt wurde und was sich danach geändert hat."
+  },
+  {
+    "id": "t06",
+    "split": "train",
+    "should_trigger": true,
+    "query": "Bitte die Pflegeberatungs-Verordnung zum Stichtag 2017 recherchieren."
+  },
+  {
+    "id": "t07",
+    "split": "train",
+    "should_trigger": true,
+    "query": "Ab wann gilt die neue Höhe beim Pflegegeld? Ich brauche das Inkrafttreten aus dem Gesetz."
+  },
+  {
+    "id": "t08",
+    "split": "validation",
+    "should_trigger": true,
+    "query": "Historische Fassung des Bundeselterngeld- und Elternzeitgesetzes zum Jahresanfang 2016, plus den Änderungsverlauf."
+  },
+  {
+    "id": "t09",
+    "split": "validation",
+    "should_trigger": true,
+    "query": "Ich brauche für die Doku den amtlichen Stand der Verhinderungspflege am 30.06.2021."
+  },
+  {
+    "id": "t10",
+    "split": "validation",
+    "should_trigger": true,
+    "query": "Kannst du das SGB XI auf die Leistungsarten herunterbrechen? Stichtag ist nur das Jahr 2022."
+  },
+  {
+    "id": "t11",
+    "split": "validation",
+    "should_trigger": true,
+    "query": "Was steht im Bundesgesetzblatt zur Erhöhung des Pflegegeldes, und ab wann wirkt das?"
+  },
+  {
+    "id": "t12",
+    "split": "validation",
+    "should_trigger": true,
+    "query": "Wir dokumentieren gerade die App. Nebenbei: welche Höhe hatte das Pflegegeld am 1.7.2017, und was hat sich danach geändert? Den Code bitte nicht anfassen."
+  },
+  {
+    "id": "n01",
+    "split": "train",
+    "should_trigger": false,
+    "query": "Ist Klausel 4 in meinem Arbeitsvertrag unwirksam? Die Klausel lautet: Überstunden sind mit dem Gehalt abgegolten."
+  },
+  {
+    "id": "n02",
+    "split": "train",
+    "should_trigger": false,
+    "query": "Soll ich gegen den Bescheid der Pflegekasse Widerspruch einlegen? Hier ist der Bescheid als Text."
+  },
+  {
+    "id": "n03",
+    "split": "train",
+    "should_trigger": false,
+    "query": "Schau dir src/pflegegeld.ts an und sag, ob die Berechnung im Code stimmt."
+  },
+  {
+    "id": "n04",
+    "split": "train",
+    "should_trigger": false,
+    "query": "Schreib Requirements für den Pflegegeld-Rechner, mit Acceptance Criteria."
+  },
+  {
+    "id": "n05",
+    "split": "train",
+    "should_trigger": false,
+    "query": "Erklär die DSGVO-Auskunft. Ich will den Unionsakt, keinen deutschen Gesetzestext."
+  },
+  {
+    "id": "n06",
+    "split": "train",
+    "should_trigger": false,
+    "query": "Fass das implementierte Pflegegeld-Modul für den Product Owner zusammen. Ohne Recht, nur was der Code tut."
+  },
+  {
+    "id": "n07",
+    "split": "train",
+    "should_trigger": false,
+    "query": "Prüf die Funktion berechnePflegegeld in berechne.ts gegen die aktuelle Rechtslage und patch den Bug."
+  },
+  {
+    "id": "n08",
+    "split": "validation",
+    "should_trigger": false,
+    "query": "Rechne 316 Euro anteilig für 10 Tage. Das ist nur Dreisatz, ohne Gesetz."
+  },
+  {
+    "id": "n09",
+    "split": "validation",
+    "should_trigger": false,
+    "query": "Review den Pull Request, der die Pflegegeld-Tabelle im Code ändert."
+  },
+  {
+    "id": "n10",
+    "split": "validation",
+    "should_trigger": false,
+    "query": "Implementier die neue Staffel in der Funktion berechnePflegegeld."
+  },
+  {
+    "id": "n11",
+    "split": "validation",
+    "should_trigger": false,
+    "query": "Was heißt Pflegeversicherung auf Englisch? Nur die Übersetzung, kein Gesetz."
+  },
+  {
+    "id": "n12",
+    "split": "validation",
+    "should_trigger": false,
+    "query": "Such mir ein Zitat aus einem Aufsatz zu § 37 SGB XI. Keine amtliche Quelle."
+  }
+]

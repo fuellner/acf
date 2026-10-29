@@ -1,9 +1,9 @@
-# Regulatorische Hinweise
+# Rechtsstände
 
-Übersicht der Dokumente in diesem Verzeichnis. Inhalt wird ausschließlich über den f-legal-Skill gepflegt.
+Übersicht der Dokumente in diesem Verzeichnis. Inhalt wird ausschließlich über f-legal gepflegt.
 
-| Bereich | Dokument | Rechtsgrundlage | Gültig ab | Zuletzt geprüft |
-|---------|----------|-----------------|-----------|-----------------|
+| Bereich | Dokument | Stichtag | Rechtsstand | Zuletzt geprüft |
+|---------|----------|----------|-------------|-----------------|
 {{ROWS}}
 
 ## Unterverzeichnisse

@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-10-28
+- `docs/legal/` index columns are `Bereich | Dokument | Stichtag | Rechtsstand | Zuletzt geprüft`. A table that still has `Rechtsgrundlage` and `Gültig ab` is rebuilt from the files. Authored prose stays.
 - `references/directory-index.md` names the `docs/implement/` schema (`Task | Mode | Status | File`). `f-docs` does not create that directory and does not edit implementation logs.
 - The deeper-docs template lists `docs/implement/` so the link is kept when that directory exists.
 
