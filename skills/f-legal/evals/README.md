@@ -10,4 +10,4 @@ Die Dateien unter `files/` sind Fixtures, keine amtlichen Texte und keine Werte 
 
 Beim Benoten einen Beleg zitieren, aus der Ausgabe oder aus der Fixture. Ein Abschnittstitel ohne den sachlichen Inhalt ist kein Bestehen.
 
-Schreibt ein Fall Dateien, muss `python3 scripts/check.py` aus `skills/f-legal/` auf diesen Dateien mit Status 0 enden. Das ist die Strukturprüfung für Kopf, Überschriften, Normstellen außerhalb der Quellenliste, Leerzeilen vor Tabellen und Quellen-IDs. Ein Status ungleich 0 ist ein Fehlschlag, auch wenn die übrigen Assertions dem Text nach passen.
+Schreibt ein Fall Dateien, muss `python3 skills/f-legal/scripts/check.py` auf diesen Dateien mit Status 0 enden. Das ist die Strukturprüfung für Kopf, Überschriften, Normstellen außerhalb der Quellenliste, Leerzeilen vor Tabellen und Quellen-IDs. Ein Status ungleich 0 ist ein Fehlschlag, auch wenn die übrigen Assertions dem Text nach passen.

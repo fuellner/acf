@@ -8,7 +8,7 @@ Collection of agent-agnostic coding skills for OpenCode / Claude-compatible harn
 
 ## Stack
 
-- Markdown only — no runtime, build, or test toolchain
+- Markdown only — no runtime, build, or test toolchain. Exception: `skills/f-legal/scripts/check.py` (Python 3 standard library only). Self-test: `python3 skills/f-legal/scripts/check.py --self-test`
 - Skill format: `SKILL.md` with YAML frontmatter (`name`, `description`)
 - Installed by symlinking `skills/f-*` into an agent skill directory
 
@@ -16,7 +16,7 @@ Collection of agent-agnostic coding skills for OpenCode / Claude-compatible harn
 
 - Install: `mkdir -p ~/.config/opencode/skills && ln -s ~/dev/acf/skills/f-* ~/.config/opencode/skills/`
 - Verify installation: `ls -l ~/.config/opencode/skills`
-- Test / Lint / Typecheck: none — there is no toolchain. Validate a change by reading the affected `SKILL.md` and running the skill against a test repository.
+- Test / Lint / Typecheck: none — there is no toolchain, except the f-legal checker above. Validate a skill change by reading the affected `SKILL.md` and running the skill against a test repository.
 
 ## Conventions
 

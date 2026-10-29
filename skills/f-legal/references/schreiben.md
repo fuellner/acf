@@ -108,8 +108,4 @@ Nach dem Schreiben `references/directory-index.md` und `templates/index.md`. Die
 
 ## Prüfung
 
-Nach dem Schreiben, aus dem Verzeichnis dieses Skills:
-
-`python3 scripts/check.py --markdown` und die geschriebenen Dateien.
-
-Status 0 ist die Voraussetzung für den Selbstcheck in `SKILL.md`. Die Ausgabe ist die mechanische Prüftabelle. Sie ersetzt nicht das Lesen der Beträge.
+`python3 <Skill-Verzeichnis>/scripts/check.py --markdown <Pfad der Datei>`. `<Skill-Verzeichnis>` ist das Verzeichnis der `SKILL.md`. Fehlt `python3`, gilt der Hinweis dort. Die Ausgabe ist die mechanische Prüftabelle, einschließlich des Abgleichs von Werte im Zeitverlauf mit Rechtslage und Chronik. Sie ersetzt nicht das Lesen der Beträge.

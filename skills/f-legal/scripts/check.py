@@ -134,6 +134,49 @@ def blank_lines_before_tables(body: str) -> list[str]:
     return problems
 
 
+def tables(section: str) -> list[list[list[str]]]:
+    groups: list[list[list[str]]] = []
+    current: list[list[str]] = []
+    for line in section.splitlines():
+        if not line.strip().startswith("|"):
+            if current:
+                groups.append(current)
+                current = []
+            continue
+        cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
+        if set("".join(cells)) <= set("-: "):
+            continue
+        current.append(cells)
+    if current:
+        groups.append(current)
+    return groups
+
+
+def norm_value(cell: str) -> str:
+    text = re.sub(r"\s+", " ", cell.strip().lower())
+    text = re.sub(r"^höchstens die\s+", "", text)
+    text = re.sub(r"^höchstens\s+", "", text)
+    text = re.sub(r"\s+je\b.*$", "", text)
+    return text.strip(" .")
+
+
+def is_amount(cell: str) -> bool:
+    text = norm_value(cell)
+    return bool(text) and text not in {"keine", "keiner", "—", "-", "–"} and bool(re.search(r"\d", text))
+
+
+def column_amounts(section: str, column: str) -> list[str]:
+    found = []
+    for table in tables(section):
+        if not table or column not in table[0]:
+            continue
+        index = table[0].index(column)
+        for row in table[1:]:
+            if len(row) > index and is_amount(row[index]):
+                found.append(norm_value(row[index]))
+    return found
+
+
 def source_ids(section: str) -> list[str]:
     found = []
     for row in table_rows(section):
@@ -315,6 +358,35 @@ def check_file(path: Path) -> list[tuple[str, str, str]]:
                 "Quelle",
             ]
             add("werte-im-zeitverlauf", header_ok, "")
+            if header_ok:
+                snapshot = column_amounts(
+                    next((content for name, content in split_h2(body) if name.startswith("Rechtslage")), ""),
+                    "Wert",
+                )
+                later = column_amounts(chronicle, "Nachher")
+                series_at = []
+                series_after = []
+                for row in series_rows[1:]:
+                    if len(row) < 3 or not is_amount(row[2]):
+                        continue
+                    if row[1] == stichtag:
+                        series_at.append(norm_value(row[2]))
+                    else:
+                        series_after.append(norm_value(row[2]))
+                missing_at = sorted({item for item in series_at if item not in snapshot})
+                missing_later = sorted({item for item in series_after if item not in later})
+                missing_snapshot = sorted({item for item in snapshot if item not in series_at})
+                missing_change = sorted({item for item in later if item not in series_at + series_after})
+                problems = []
+                if missing_at:
+                    problems.append("Zeitverlauf ohne Rechtslage: " + ", ".join(missing_at))
+                if missing_later:
+                    problems.append("Zeitverlauf ohne Chronik: " + ", ".join(missing_later))
+                if missing_snapshot:
+                    problems.append("Rechtslage fehlt im Zeitverlauf: " + ", ".join(missing_snapshot))
+                if missing_change:
+                    problems.append("Chronik fehlt im Zeitverlauf: " + ", ".join(missing_change))
+                add("werte-abgleich", not problems, "; ".join(problems))
 
     if overview:
         subjects = ""
@@ -324,6 +396,16 @@ def check_file(path: Path) -> list[tuple[str, str, str]]:
         data = table_rows(subjects)[1:]
         unlink = [row[0] for row in data if not any("](" in cell and ".md" in cell for cell in row)]
         add("uebersicht-dateien", not unlink, ", ".join(unlink))
+        missing_targets = []
+        for row in data:
+            for cell in row:
+                for match in re.finditer(r"\]\(([^)]+)\)", cell):
+                    href = match.group(1).strip()
+                    if href.startswith(("http://", "https://", "mailto:")):
+                        continue
+                    if not (path.parent / href).resolve().is_file():
+                        missing_targets.append(href)
+        add("uebersicht-zieldatei", not missing_targets, ", ".join(missing_targets))
 
     return checks
 
@@ -484,11 +566,128 @@ In den geöffneten Quellen tritt nach diesem Datum keine Änderung in Kraft. [Q1
         good_rows = check_file(root / "good.md")
         bad_rows = check_file(root / "bad.md")
         dash_rows = check_file(root / "dash.md")
+    calc = """---
+titel: Beispiel
+bereich: eval
+gegenstand: beispiel
+rechtsraum: DE
+stichtag: 2020-01-01
+stand_recherche: 2026-10-29
+rechtsstand: 2021-04-01
+berechnung: ja
+rechtsgrundlagen:
+  - Beispielgesetz § 1
+aenderungen_geprueft_bis: 2026-10-29
+---
+
+# Beispiel
+
+> Zusammenfassung amtlicher Quellen, keine Rechtsberatung. Maßgeblich ist der Wortlaut der Quellen.
+
+## Kurzüberblick
+
+- Der Betrag ist 10 Euro. [Q1]
+
+## Rechtslage zum Stichtag 01.01.2020
+
+### Höhe
+
+| Parameter | Wert | Bedingung | Quelle |
+|---|---|---|---|
+| Betrag | 10 Euro | je Monat | [Q1] |
+
+## Änderungen ab Stichtag
+
+### 2021-04-01 – Betrag
+
+- Der Betrag wird 12 Euro. [Q1]
+
+Gilt bis: unbefristet
+
+| Wert | Vorher | Nachher | Quelle |
+|---|---|---|---|
+| Betrag | 10 Euro | 12 Euro | [Q1] |
+
+## Werte im Zeitverlauf
+
+| Parameter | Ab | Wert | Bedingung | Quelle |
+|---|---|---|---|---|
+| Betrag | 2020-01-01 | 10 Euro | je Monat | [Q1] |
+| Betrag | 2021-04-01 | 12 Euro | je Monat | [Q1] |
+
+## Beispielrechnung
+
+- Ergebnis 10 Euro. [Q1]
+
+## Quellen
+
+| ID | Titel | Herausgeber | Fundstelle / URL | Fassung / Stand | Abgerufen |
+|---|---|---|---|---|---|
+| Q1 | Beispielgesetz | Stelle | § 1, https://example.invalid/g | 2019-01-01 | 2026-10-29 |
+"""
+    calc_bad = calc.replace("| Betrag | 2020-01-01 | 10 Euro |", "| Betrag | 2020-01-01 | 99 Euro |")
+    overview = """---
+titel: Bereich
+bereich: eval
+rechtsraum: DE
+stichtag: 2020-01-01
+stand_recherche: 2026-10-29
+---
+
+# Bereich
+
+> Zusammenfassung amtlicher Quellen, keine Rechtsberatung. Maßgeblich ist der Wortlaut der Quellen.
+
+## Kurzüberblick
+
+- Ein Gegenstand. [Q1]
+
+## Gegenstände
+
+| Gegenstand | Worum es geht | Verhältnis zu den anderen | Datei |
+|---|---|---|---|
+| Beispiel | Betrag | allein | [Beispiel](good.md) |
+
+## Quellen
+
+| ID | Titel | Herausgeber | Fundstelle / URL | Fassung / Stand | Abgerufen |
+|---|---|---|---|---|---|
+| Q1 | Beispielgesetz | Stelle | § 1, https://example.invalid/g | 2019-01-01 | 2026-10-29 |
+"""
+    overview_bad = overview.replace("(good.md)", "(missing.md)")
+    with tempfile.TemporaryDirectory() as folder:
+        root = Path(folder)
+        (root / "calc.md").write_text(calc, encoding="utf-8")
+        (root / "calc-bad.md").write_text(calc_bad, encoding="utf-8")
+        (root / "good.md").write_text(good, encoding="utf-8")
+        (root / "uebersicht.md").write_text(overview, encoding="utf-8")
+        missing = root / "missing"
+        missing.mkdir()
+        (missing / "uebersicht.md").write_text(overview_bad, encoding="utf-8")
+        calc_rows = check_file(root / "calc.md")
+        calc_bad_rows = check_file(root / "calc-bad.md")
+        overview_rows = check_file(root / "uebersicht.md")
+        overview_bad_rows = check_file(missing / "uebersicht.md")
     good_fail = [name for name, result, _ in good_rows if result == "fail"]
+    calc_fail = [name for name, result, _ in calc_rows if result == "fail"]
+    overview_fail = [name for name, result, _ in overview_rows if result == "fail"]
     para_ok = any(name == "normstelle" and result == "fail" for name, result, _ in bad_rows)
     dash_ok = any(name.startswith("chronik:") and result == "fail" for name, result, _ in dash_rows)
-    if good_fail or not para_ok or not dash_ok:
-        print("self-test failed", good_fail, para_ok, dash_ok, dash_rows)
+    mismatch_ok = any(name == "werte-abgleich" and result == "fail" for name, result, _ in calc_bad_rows)
+    link_ok = any(name == "uebersicht-zieldatei" and result == "fail" for name, result, _ in overview_bad_rows)
+    if good_fail or calc_fail or overview_fail or not para_ok or not dash_ok or not mismatch_ok or not link_ok:
+        print(
+            "self-test failed",
+            good_fail,
+            calc_fail,
+            overview_fail,
+            para_ok,
+            dash_ok,
+            mismatch_ok,
+            link_ok,
+            calc_bad_rows,
+            overview_bad_rows,
+        )
         return 1
     print("self-test ok")
     return 0

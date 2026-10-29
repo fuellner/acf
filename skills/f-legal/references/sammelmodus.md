@@ -8,7 +8,7 @@ Lies diese Datei, wenn der Auftrag einen ganzen Bereich meint, zum Beispiel alle
 2. Slugs festlegen. Zuerst `templates/uebersicht.md` nach `docs/legal/<bereich>/uebersicht.md` schreiben: welche Gegenstände belegt sind, je ein Satz, wie sie sich zueinander verhalten, Link auf die geplante Datei. Keine Betragstabellen aus den Gegenstandsdateien. Dieselben Quellenregeln. `stichtag` ist derselbe wie bei den Gegenständen.
 3. Jeden belegten Gegenstand mit derselben Vorlage und denselben Regeln schreiben. Dieselbe Recherche, derselbe Stichtag, dieselbe Form. „Zusammenspiel mit anderen Leistungen“ verlinkt die benachbarte Datei relativ.
 4. Wenn die Laufzeit die Gegenstände an getrennte Agenten geben kann, einen Gegenstand je Agent. Sonst nacheinander. Der Auftrag ist jedes Mal derselbe und enthält den vollständigen Wortlaut, nicht eine Zusammenfassung.
-5. `python3 scripts/check.py --markdown` auf alle geschriebenen Dateien. Fehler in den Dateien beheben und die Prüfung wiederholen.
+5. `python3 <Skill-Verzeichnis>/scripts/check.py --markdown <Pfad der Datei>` für die Übersicht und jede Gegenstandsdatei, nicht für `index.md`. Den aufgelösten Skriptpfad jedem Auftrag mitgeben. Kann ein Agent ihn nicht ausführen, führt ihn die führende Recherche selbst aus. Fehler korrigieren und wiederholen.
 6. Danach alle Dateien selbst lesen und abgleichen. Den Abgleich nicht weggeben.
 7. `index.md` einmal nachziehen, erst wenn die Dateien stehen. Nur diese führende Recherche schreibt den Index.
 
@@ -22,13 +22,13 @@ Der Auftrag nennt Gegenstand, Stichtag und Ausgabepfad und enthält danach, voll
 - den Wortlaut von `references/schreiben.md`
 - den Wortlaut von `templates/document.md`
 
-Keine kürzere Fassung an ihrer Stelle. Dazu nur diese Sätze: Werte nur aus geöffneten amtlichen Texten. Eine nicht belegbare Änderung dieser Vorschrift nicht schreiben, sondern die Fundstelle zurückmelden. `evals/` dieses Skills nicht als Rechtsquelle verwenden, außer die Nutzernachricht beschränkt diesen Lauf ausdrücklich darauf. Am Ende `python3 scripts/check.py` auf die eigene Datei ausführen.
+Keine kürzere Fassung an ihrer Stelle. Dazu nur diese Sätze: Werte nur aus geöffneten amtlichen Texten. Eine nicht belegbare Änderung dieser Vorschrift nicht schreiben, sondern die Fundstelle zurückmelden. `evals/` dieses Skills nicht als Rechtsquelle verwenden, außer die Nutzernachricht beschränkt diesen Lauf ausdrücklich darauf. Am Ende `python3 <aufgelöster Pfad>/scripts/check.py <Datei>` ausführen. Die führende Recherche setzt diesen Pfad ein.
 
 ## Abgleich
 
 Die Quelle gewinnt. Nicht mitteln. Widersprechen sich zwei geöffnete Quellen, bleiben in den Dateien die jeweiligen Werte. Der Bericht nennt beide Zellen und fragt. Keine der beiden Dateien wird auf einen mittleren Wert gezogen.
 
-Vor dem Vergleich die Prüftabelle aus `scripts/check.py --markdown`. Danach diese Tabelle im Bericht, eine Zeile je Datei:
+Vor dem Vergleich `python3 <Skill-Verzeichnis>/scripts/check.py --markdown` und die Dateipfade. Danach diese Tabelle im Bericht, eine Zeile je Datei:
 
 | Datei | Kopf | Überschriften | Normstelle | Quellen-IDs | Beträge |
 |---|---|---|---|---|---|
