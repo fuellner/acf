@@ -9,3 +9,4 @@
 | [0005-refactor-eigener-ablauf.md](0005-refactor-eigener-ablauf.md) | Migration und Refactor sind ein eigener Ablauf neben f-workflow |
 | [0006-werkzeugkette-container-eine-composer-quelle.md](0006-werkzeugkette-container-eine-composer-quelle.md) | PHP-Werkzeuge liegen im Container oder außerhalb der Anwendung; eine Composer-Quelle |
 | [0007-implement-ohne-commit.md](0007-implement-ohne-commit.md) | Implementierung legt nur den Branch an; ein Worktree pro parallelem Task |
+| [0008-f-legal-rechtsstand-am-stichtag.md](0008-f-legal-rechtsstand-am-stichtag.md) | f-legal recherchiert den deutschen Rechtsstand zu einem Stichtag aus amtlichen Fassungen |

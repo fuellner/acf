@@ -13,7 +13,7 @@ Meine Sammlung agentischer Coding-Skills (OpenCode / Claude-kompatibel).
 | `f-code-review` | Diff gegen ACs prüfen (Security, Performance, Side Effects) + Fix-Prompt |
 | `f-debug` | Strukturierte Fehlersuche (Repro → Root Cause → Fix-Vorschlag) |
 | `f-docs` | AGENTS.md, README, Architektur, Conventions aus dem Repo erzeugen |
-| `f-legal` | Regulatorische Vorgaben (DE/EU) → `docs/legal/` |
+| `f-legal` | Deutsches Recht zum Stichtag, nur amtliche Quellen → `docs/legal/` |
 | `f-feature-summary` | Implementierte Fachlogik → übersichtliche Feature-Dokumente (`docs/features/`) |
 | `f-refactor` | Eigener Ablauf: verhaltensgleiche PHP-Migration (vorrangig) oder Struktur-Refactor, Phasenmenü, Status unter `docs/refactor/` |
 | `f-workflow` | Menü für den Feature-Ablauf; übergibt Migration und Refactor an `f-refactor` |

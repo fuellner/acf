@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-10-28
+- The f-legal menu line and prompt ask for a German legal subject and a cutoff date. They no longer ask for developer requirements or EU sources.
 - Step 4 is `f-implement`. The skill-less implementation prompt is retired.
 - A migration or refactor task is not implemented from this menu. The `f-refactor` step phase may hand the code change to `f-implement` and the task must not bypass the plan.
 

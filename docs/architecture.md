@@ -13,7 +13,7 @@ Das Repository enthält agentische Coding-Skills für OpenCode / Claude-kompatib
 - **`skills/f-code-review`:** Diff gegen Acceptance Criteria prüfen, Sicherheits-/Performance-/Side-Effect-Checks, Fix-Prompt (`docs/reviews/`).
 - **`skills/f-debug`:** Strukturierte Fehlersuche (Repro → Root Cause → Fix-Vorschlag) ohne Codeänderung (`docs/debug/`). Auch ein aus einem Review entstandener Bericht liegt dort; das Review verlinkt ihn.
 - **`skills/f-docs`:** Repository analysieren und AGENTS.md, README, Architektur, Conventions, Decisions erzeugen.
-- **`skills/f-legal`:** Juristische Quellen (DE/EU) → regulatorische Dokumente in `docs/legal/`.
+- **`skills/f-legal`:** Deutsches Recht zu einem Stichtag, nur amtliche Quellen, eine Datei je Gegenstand unter `docs/legal/`. Ein ganzer Bereich beginnt mit einer Übersicht.
 - **`skills/f-feature-summary`:** Implementierte Fachlogik → übersichtliche Feature-Dokumente für Product Owner (`docs/features/`).
 - **`skills/f-refactor`:** Eigener Ablauf neben `f-workflow` für verhaltensbewahrende PHP-Migration (vorrangig) oder Strukturänderung. Phasenmenü und Status liegen unter `docs/refactor/`. Aufgaben, Tests, die Codeänderung eines Schritts, Review, Fehlersuche und ADRs bleiben bei den bestehenden Skills. `done` setzt dieser Skill nicht. Produktion ist für den Agenten gesperrt. Der lesbare Ablauf steht in [workflow.md](../skills/f-refactor/references/workflow.md), die Werkzeuge in [toolchain.md](../skills/f-refactor/references/toolchain.md).
 - **`skills/f-workflow`:** Menü und Prompt-Templates für den Feature-Ablauf. An `f-refactor` wird nur übergeben.

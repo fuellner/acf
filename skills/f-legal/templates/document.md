@@ -1,61 +1,79 @@
 ---
-description: "Vorlage für regulatorische Dokumente in docs/legal/. Verwende diese Struktur beim Anlegen oder Aktualisieren einer Datei."
+description: "Vorlage für eine Datei je Gegenstand unter docs/legal/. Kopiere den Block, ersetze die Platzhalter, übernimm die Kommentare nicht."
 ---
 
 # Dokumentvorlage
 
-Kopiere diese Struktur für jede neue Leistungsart / jeden Regelungsbereich.
+Kopiere den Block nach `docs/legal/<bereich>/<gegenstand>.md`. Die Überschriften der zweiten Ebene bleiben. Die der dritten Ebene unter der Rechtslage sind die Vorgabe für Leistungsarten und werden bei anderen Gegenständen sachlich angepasst; eine leere Ebene entfällt. Beispielrechnung und Werte im Zeitverlauf nur übernehmen, wenn `berechnung` den Wert `ja` hat. Die Vorher-nachher-Tabelle nur, wenn sich eine Zahl, ein Schwellenwert oder eine Dauer ändert. Vor jeder Tabelle eine Leerzeile lassen. Regeln: `references/schreiben.md`.
 
 ```markdown
 ---
-title: [Leistungsart / Regelungsbereich]
-bereich: [z. B. Pflegeversicherung]
-rechtsgrundlage: [z. B. SGB XI § 37]
-quelle: [offizielle URL]
-zuletzt_geprueft: YYYY-MM-DD
+titel: <Gegenstand>
+bereich: <bereich-slug>
+gegenstand: <gegenstand-slug>
+rechtsraum: DE
+rechtsgrundlagen:
+  - <Norm, Fassung>
+stichtag: <JJJJ-MM-TT; bei Jahresangabe JJJJ-01-01>
+stand_recherche: <JJJJ-MM-TT>
+rechtsstand: <Inkrafttreten der letzten berücksichtigten Änderung>
+aenderungen_geprueft_bis: <JJJJ-MM-TT>
+berechnung: <ja | nein>
 ---
 
-# [Leistungsart / Regelungsbereich]
+# <Titel>
 
-> **Rechtlicher Hinweis:** Keine Rechtsberatung. Maßgeblich ist der veröffentlichte Gesetzestext in der angegebenen Fassung. Bei unklarer Auslegung ist eine Fachperson hinzuzuziehen.
+> Zusammenfassung amtlicher Quellen, keine Rechtsberatung. Maßgeblich ist der Wortlaut der Quellen.
 
-## Kurzbeschreibung
-[1–2 Sätze: Was regelt diese Leistungsart für den Berechnungsservice / die Implementierung?]
+## Kurzüberblick
 
-## Gültigkeitszeiträume
+- <2 bis 5 Stichpunkte: was es ist, wen es betrifft, wofür, die wichtigsten Eckwerte> [Qn]
 
-### Ab YYYY-MM-DD
-**Quelle / Fassung**: [Link oder § + Datum der Fassung]
+## Rechtslage zum Stichtag <TT.MM.JJJJ>
 
-| Parameter | Wert | Voraussetzungen | Besonderheiten |
-|-----------|------|-----------------|----------------|
-| ...       | ...  | ...             | ...            |
+<!-- Dritte Ebene: Vorgabe für Leistungen. Sonst sachlich ersetzen. Leer weglassen. -->
 
-**Relevante Anforderungen für die Berechnung**:
-- ...
-- ...
+### Anspruchsberechtigte
 
-**Beispielrechnung**:
-- Vorgabe: [konkrete Eingaben, Zeitraum]
-- Berechnung: [Schritt-für-Schritt]
-- Ergebnis: [Wert]
-- Besonderheiten: [falls relevant]
+### Voraussetzungen
 
-### YYYY-MM-DD bis YYYY-MM-DD
-[gleiche Struktur wie oben]
+### Leistungsinhalt und Höhe
 
-## Hinweise für Agents
-- Bei Vorgängen im Zeitraum X–Y die Regeln aus dem entsprechenden Abschnitt verwenden.
-- Beträge und Schwellenwerte immer aus der zum Vorgangsdatum gültigen Fassung nehmen.
-- [weitere projektspezifische Hinweise]
+| Parameter | Wert | Bedingung | Quelle |
+|---|---|---|---|
 
-## Änderungshistorie
-- YYYY-MM-DD: Initiale Aufnahme
-- YYYY-MM-DD: [kurze Beschreibung der Änderung]
+### Verfahren und Fristen
+
+### Ausnahmen und Sonderfälle
+
+### Zusammenspiel mit anderen Leistungen
+
+## Änderungen ab Stichtag
+
+Chronologisch, älteste zuerst. Datum = Inkrafttreten. Nur Änderungen, die nach dem Stichtag in Kraft treten.
+
+### <JJJJ-MM-TT> – <Kurztitel der Änderung in Klartext>
+
+- <was sich geändert hat, in Klartext> [Qn]
+
+Gilt bis: <JJJJ-MM-TT oder unbefristet>
+
+| Wert | Vorher | Nachher | Quelle |
+|---|---|---|---|
+
+## Werte im Zeitverlauf
+
+<!-- Nur bei berechnung ja. Nur Werte aus der Rechtslage und der Chronik. -->
+
+| Parameter | Ab | Wert | Bedingung | Quelle |
+|---|---|---|---|---|
+
+## Beispielrechnung
+
+<!-- Nur bei berechnung ja. Annahmen, Rechenweg, Ergebnis. Nur belegte Werte. -->
+
+## Quellen
+
+| ID | Titel | Herausgeber | Fundstelle / URL | Fassung / Stand | Abgerufen |
+|---|---|---|---|---|---|
 ```
-
-## Hinweise zur Verwendung
-
-- Das Verhalten beim Aktualisieren (neue Fassung als eigener Abschnitt, Historie nicht überschreiben, Beispiele im zugehörigen Gültigkeitsabschnitt) ist in `SKILL.md` (Verhalten, Schritt 3) geregelt; dort gültigen Wortlaut verwenden.
-- Neue Fassungen oben einfügen (neueste zuerst), passend zur gezeigten Abschnittsstruktur.
-- Tabellen für Zahlenwerte und Schwellenwerte bevorzugen.
