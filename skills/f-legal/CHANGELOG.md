@@ -7,7 +7,7 @@
 - Kopf führt `rechtsgrundlagen` und `aenderungen_geprueft_bis`. Chronikeinträge nennen das Änderungsgesetz, `Gilt bis` und die Einheit. Bei Rechnung gibt es Werte im Zeitverlauf.
 - Sammelmodus: der Auftrag enthält Recherche, Schreibregeln und Vorlage im Wortlaut. Der Abschluss ist die Prüftabelle aus `scripts/check.py` und der Vergleich der Beträge.
 - Evals für gestaffeltes Inkrafttreten, eine fremde Fußnote, einen teilweisen Ausfall und einen Widerspruch zwischen zwei Dateien.
-- Aufruf ist `python3 <Skill-Verzeichnis>/scripts/check.py <Datei>`. Fehlt `python3`, läuft die Prüfung von Hand und der Bericht sagt das. Das Skript gleicht Werte im Zeitverlauf mit Rechtslage und Chronik ab und prüft, dass Übersichtslinks auf vorhandene Dateien zeigen.
+- Aufruf ist `python3 <Skill-Verzeichnis>/scripts/check.py <Datei>`, nicht für `index.md`. Fehlt `python3`, läuft die Prüfung von Hand und der Bericht sagt das. Das Skript gleicht Werte im Zeitverlauf mit Rechtslage und Chronik ab und prüft, dass Übersichtslinks auf vorhandene Dateien zeigen.
 
 ## 2026-10-28
 - Recherche des deutschen Rechts zu einem Gegenstand und einem Stichtag. Ein Jahr ist der 1. Januar. Fehlende Eingabe wird erfragt.
