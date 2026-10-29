@@ -17,8 +17,9 @@ Dieses Gesetz tritt am 1. Juni 2019 in Kraft.
 - § 1 Beispielgeld
 - § 2 Beratung
 - § 3 Zusammentreffen
+- § 4 Bonus
 
-Weitere Paragraphen führt die Inhaltsübersicht nicht.
+Der Wortlaut von § 4 Bonus ist hier nicht abgedruckt. Der Abruf dieser Vorschrift ist fehlgeschlagen. Die §§ 1 bis 3 sind vollständig.
 
 ## § 1 Beispielgeld
 

@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-29
+- Bundesgerichte aus amtlichen Sammlungen dürfen die Auslegung stützen, nicht den Betrag.
+- Anker ist die letzte Neubekanntmachung vor dem Stichtag, danach nur die betroffene Vorschrift. Fundorte und die Kette über das Gesetzblatt nennen die Recherche.
+- Angehalten wird nur, wenn diese Vorschrift am Stichtag oder eine ihrer Änderungen unbelegt ist. Andere Fußnoten stehen im Bericht. Ein unbelegter Gegenstand fehlt in der Übersicht.
+- Kopf führt `rechtsgrundlagen` und `aenderungen_geprueft_bis`. Chronikeinträge nennen das Änderungsgesetz, `Gilt bis` und die Einheit. Bei Rechnung gibt es Werte im Zeitverlauf.
+- Sammelmodus: der Auftrag enthält Recherche, Schreibregeln und Vorlage im Wortlaut. Der Abschluss ist die Prüftabelle aus `scripts/check.py` und der Vergleich der Beträge.
+- Evals für gestaffeltes Inkrafttreten, eine fremde Fußnote, einen teilweisen Ausfall und einen Widerspruch zwischen zwei Dateien.
+
 ## 2026-10-28
 - Recherche des deutschen Rechts zu einem Gegenstand und einem Stichtag. Ein Jahr ist der 1. Januar. Fehlende Eingabe wird erfragt.
 - Nur amtliche Quellen deutscher staatlicher Stellen. Die Fassung am Stichtag und die Chronik kommen aus den Änderungsgesetzen und ihrem Inkrafttreten, nicht aus einer zurückgerechneten Lesefassung. Eine unerreichbare Fassung stoppt den Lauf.

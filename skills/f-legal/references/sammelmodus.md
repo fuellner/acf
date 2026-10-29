@@ -5,30 +5,41 @@ Lies diese Datei, wenn der Auftrag einen ganzen Bereich meint, zum Beispiel alle
 ## Ablauf
 
 1. Den amtlichen Text öffnen, der die Gegenstände des Bereichs aufzählt. Die Liste aus diesem Text bilden, nicht aus dem Gedächtnis. Ein Gegenstand, den die Quelle nicht führt, kommt nicht dazu.
-2. Slugs festlegen. Zuerst `templates/uebersicht.md` nach `docs/legal/<bereich>/uebersicht.md` schreiben: welche Gegenstände es gibt, je ein Satz, wie sie sich zueinander verhalten, Link auf die geplante Datei. Keine Betragstabellen aus den Gegenstandsdateien. Dieselben Quellenregeln. `stichtag` ist derselbe wie bei den Gegenständen.
-3. Jeden Gegenstand mit derselben Vorlage `templates/document.md` und denselben Regeln schreiben. Dieselbe Recherche, derselbe Stichtag, dieselbe Form.
-4. Wenn die Laufzeit die Gegenstände an getrennte Agenten geben kann, einen Gegenstand je Agent. Sonst nacheinander. Der Auftrag unten ist jedes Mal derselbe. Die Agenten wählen nicht eine eigene Form.
-5. Danach alle Dateien selbst lesen und abgleichen. Den Abgleich nicht weggeben: er vergleicht die Dateien miteinander.
-6. `index.md` einmal nachziehen, erst wenn die Dateien stehen. Nur diese führende Recherche schreibt den Index, damit nicht mehrere Agenten dieselbe Datei ändern.
+2. Slugs festlegen. Zuerst `templates/uebersicht.md` nach `docs/legal/<bereich>/uebersicht.md` schreiben: welche Gegenstände belegt sind, je ein Satz, wie sie sich zueinander verhalten, Link auf die geplante Datei. Keine Betragstabellen aus den Gegenstandsdateien. Dieselben Quellenregeln. `stichtag` ist derselbe wie bei den Gegenständen.
+3. Jeden belegten Gegenstand mit derselben Vorlage und denselben Regeln schreiben. Dieselbe Recherche, derselbe Stichtag, dieselbe Form. „Zusammenspiel mit anderen Leistungen“ verlinkt die benachbarte Datei relativ.
+4. Wenn die Laufzeit die Gegenstände an getrennte Agenten geben kann, einen Gegenstand je Agent. Sonst nacheinander. Der Auftrag ist jedes Mal derselbe und enthält den vollständigen Wortlaut, nicht eine Zusammenfassung.
+5. `python3 scripts/check.py --markdown` auf alle geschriebenen Dateien. Fehler in den Dateien beheben und die Prüfung wiederholen.
+6. Danach alle Dateien selbst lesen und abgleichen. Den Abgleich nicht weggeben.
+7. `index.md` einmal nachziehen, erst wenn die Dateien stehen. Nur diese führende Recherche schreibt den Index.
 
-Lässt sich ein Gegenstand nicht belegen, keine Datei mit vermuteten Werten anlegen. In der Übersicht die Zeile ohne Betrag und mit dem Hinweis, dass die Fundstelle nicht erreichbar war. Im Bericht fragen. Die übrigen Gegenstände bleiben, wenn ihre eigenen Quellen gelesen sind.
+Lässt sich ein Gegenstand nicht belegen, keine Datei anlegen und keine Zeile in der Übersicht. Den fehlenden Gegenstand nur im Bericht nennen und nach der Fundstelle fragen. Die übrigen Gegenstände bleiben, wenn ihre eigenen Quellen gelesen sind.
 
 ## Auftrag an jeden Gegenstand
 
-Gegenstand, Stichtag, Ausgabepfad und dieser Auftrag gehören zusammen:
+Der Auftrag nennt Gegenstand, Stichtag und Ausgabepfad und enthält danach, vollständig und unverändert:
 
-- Lies `SKILL.md`, `references/recherche.md`, `references/schreiben.md` und `templates/document.md`, wenn sie im Auftrag liegen. Sonst gilt der Text hier.
-- Öffne die amtlichen Texte und lies sie. Werte nur daraus. Die Lesefassung ist nicht der Stand am Stichtag, solange sie die historische Fassung nicht selbst zeigt. Inkrafttreten aus dem Änderungsgesetz. Quelle nicht erreichbar: nicht schreiben, die Fundstelle zurückmelden.
-- Eine Datei, die Vorlage, Deutsch, Kopf wie die Vorlage. Im Lauftext keine Normstelle, am Satzende die Quellen-ID. Werte in Tabellen. Beispielrechnung nur bei Geld oder Rechnung und nur aus belegten Werten. Kein Abschnitt „Offene Punkte“.
-- `evals/` dieses Skills nicht als Rechtsquelle verwenden, außer die Nutzernachricht beschränkt diesen Lauf ausdrücklich darauf.
+- den Wortlaut von `references/recherche.md`
+- den Wortlaut von `references/schreiben.md`
+- den Wortlaut von `templates/document.md`
+
+Keine kürzere Fassung an ihrer Stelle. Dazu nur diese Sätze: Werte nur aus geöffneten amtlichen Texten. Eine nicht belegbare Änderung dieser Vorschrift nicht schreiben, sondern die Fundstelle zurückmelden. `evals/` dieses Skills nicht als Rechtsquelle verwenden, außer die Nutzernachricht beschränkt diesen Lauf ausdrücklich darauf. Am Ende `python3 scripts/check.py` auf die eigene Datei ausführen.
 
 ## Abgleich
 
-Die Quelle gewinnt. Weicht die Übersicht von einer Gegenstandsdatei ab, wird die Datei korrigiert, die nicht zur Quelle passt. Nicht mitteln.
+Die Quelle gewinnt. Nicht mitteln. Widersprechen sich zwei geöffnete Quellen, bleiben in den Dateien die jeweiligen Werte. Der Bericht nennt beide Zellen und fragt. Keine der beiden Dateien wird auf einen mittleren Wert gezogen.
+
+Vor dem Vergleich die Prüftabelle aus `scripts/check.py --markdown`. Danach diese Tabelle im Bericht, eine Zeile je Datei:
+
+| Datei | Kopf | Überschriften | Normstelle | Quellen-IDs | Beträge |
+|---|---|---|---|---|---|
+
+Die ersten vier Ergebnisspalten kommen aus dem Skript. `Beträge` ist `ok` oder `Widerspruch`. Ein Widerspruch nennt Parameter, beide Werte und beide Dateien. Die Beträge werden aus den Tabellen gelesen, nicht aus dem Fließtext. Dieselbe Größe muss dieselbe Zahl und dieselbe Einheit haben.
+
+Außerdem:
 
 - Derselbe `stichtag` in der Übersicht und in jeder Gegenstandsdatei. Ein Jahr überall als 1. Januar aufgelöst.
-- Dieselben Überschriften der zweiten Ebene. `berechnung` und das Vorhandensein der Beispielrechnung passen zusammen.
-- Ein Begriff je Sache, der Begriff aus dem Gesetz. Nicht in einer Datei „Grad“ und in der anderen „Stufe“, wenn die Quelle nur eines von beiden benutzt.
-- Dieselbe Größe, dieselbe Zahl, dieselbe Einheit. Ein Vorher-nachher-Wert stimmt mit der Datei überein, die dieselbe Änderung beschreibt.
-- Was die Übersicht als Verhältnis nennt, sagen die betroffenen Dateien auch: nebeneinander möglich, ausgeschlossen oder nur bis zu einer Grenze. Die Grenze ist dieselbe Zahl.
-- Jeder Link auf eine Gegenstandsdatei löst sich auf. Eine Zeile ohne Datei kommt nur vor, wenn die Fundstelle nicht erreichbar war, und nennt dann keinen Betrag.
+- Dieselben Überschriften der zweiten Ebene. `berechnung`, Werte im Zeitverlauf und die Beispielrechnung passen zusammen.
+- Ein Begriff je Sache, der Begriff aus dem Gesetz.
+- Was die Übersicht als Verhältnis nennt, sagen die betroffenen Dateien auch. Die Grenze ist dieselbe Zahl, oder der Bericht weist den Widerspruch aus.
+- Jeder Link auf eine Gegenstandsdatei löst sich auf. Die Übersicht hat keine Zeile ohne Datei.
+- „Zusammenspiel mit anderen Leistungen“ enthält den relativen Link auf die Nachbardatei.

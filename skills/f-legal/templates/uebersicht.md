@@ -4,7 +4,7 @@ description: "Vorlage für die Übersicht eines Bereichs im Sammelmodus. Kopiere
 
 # Übersichtsvorlage
 
-Kopiere den Block nach `docs/legal/<bereich>/uebersicht.md`. Zuerst schreiben, dann die Gegenstandsdateien. Keine Betragstabellen aus diesen Dateien. Eine Zeile ohne Datei nur, wenn die Fundstelle nicht erreichbar war; dann ohne Betrag. Regeln: `references/sammelmodus.md`.
+Kopiere den Block nach `docs/legal/<bereich>/uebersicht.md`. Zuerst schreiben, dann die Gegenstandsdateien. Keine Betragstabellen aus diesen Dateien. Nur Gegenstände aufnehmen, deren Text geöffnet wurde. Jede Zeile verlinkt ihre Datei. Ein nicht belegbarer Gegenstand steht nicht in dieser Datei. Regeln: `references/sammelmodus.md`.
 
 ```markdown
 ---
@@ -20,14 +20,17 @@ stand_recherche: <JJJJ-MM-TT>
 > Zusammenfassung amtlicher Quellen, keine Rechtsberatung. Maßgeblich ist der Wortlaut der Quellen.
 
 ## Kurzüberblick
+
 - <was der Bereich regelt und welche Gegenstände dazugehören> [Qn]
 
 ## Gegenstände
+
 | Gegenstand | Worum es geht | Verhältnis zu den anderen | Datei |
 |---|---|---|---|
 | <Name> | <ein Satz> | <Abgrenzung oder Zusammenspiel> | [<slug>](<slug>.md) |
 
 ## Quellen
+
 | ID | Titel | Herausgeber | Fundstelle / URL | Fassung / Stand | Abgerufen |
 |---|---|---|---|---|---|
 ```

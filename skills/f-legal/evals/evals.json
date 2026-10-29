@@ -16,11 +16,11 @@
       "assertions": [
         {
           "kind": "structure",
-          "text": "Genau eine Markdown-Datei liegt unter docs/legal/eval-leistung/beispielgeld.md. Der Kopf enthält stichtag: 2020-01-01, rechtsraum: DE und berechnung mit dem Wert ja oder nein."
+          "text": "Genau eine Markdown-Datei liegt unter docs/legal/eval-leistung/beispielgeld.md. Der Kopf enthält stichtag: 2020-01-01, rechtsraum: DE, berechnung: ja, rechtsgrundlagen und aenderungen_geprueft_bis. python3 scripts/check.py auf dieser Datei endet mit Status 0."
         },
         {
           "kind": "structure",
-          "text": "Die Überschriften Kurzüberblick, Rechtslage zum Stichtag 01.01.2020, Änderungen ab Stichtag und Quellen sind vorhanden. Einen Abschnitt Offene Punkte gibt es nicht."
+          "text": "Die Überschriften Kurzüberblick, Rechtslage zum Stichtag 01.01.2020, Änderungen ab Stichtag, Werte im Zeitverlauf und Quellen sind vorhanden. Einen Abschnitt Offene Punkte gibt es nicht."
         },
         {
           "kind": "structure",
@@ -48,7 +48,7 @@
         },
         {
           "kind": "content",
-          "text": "Eine Beispielrechnung, falls vorhanden, nennt 230 Euro nicht als Betrag am Stichtag. Sie erfindet kein Einkommen und keine Stundenzahl."
+          "text": "Eine Beispielrechnung nennt 230 Euro nicht als Betrag am Stichtag. Sie erfindet kein Einkommen und keine Stundenzahl. Werte im Zeitverlauf nennt für Grad 2 zum Stichtag 200 Euro und ab 2024-01-01 230 Euro."
         }
       ]
     },
@@ -67,7 +67,7 @@
       "assertions": [
         {
           "kind": "structure",
-          "text": "Die Chronik hat Überschriften der dritten Ebene mit ISO-Datum. Die Betragsänderung enthält eine Tabelle mit den Spalten Wert, Vorher und Nachher. berechnung ist ja, und die Beispielrechnung ist vorhanden."
+          "text": "Die Chronik hat Überschriften der Form JJJJ-MM-TT – Kurztitel. Die Betragsänderung enthält eine Tabelle mit den Spalten Wert, Vorher, Nachher und Quelle. Quelle ist genau eine ID. berechnung ist ja, Beispielrechnung und Werte im Zeitverlauf sind vorhanden. python3 scripts/check.py endet mit Status 0."
         },
         {
           "kind": "structure",
@@ -95,7 +95,7 @@
         },
         {
           "kind": "content",
-          "text": "Die Beispielrechnung erfindet kein Einkommen und keine Anzahl von Tagen. Bezieht sie sich auf den Stichtag, benutzt sie 200 oder 400 Euro. 230 Euro steht nicht als Betrag am 01.01.2020. Die Regel, den Kalendermonat mit 30 Tagen anzusetzen, steht in der Rechtslage."
+          "text": "Die Beispielrechnung erfindet kein Einkommen und keine Anzahl von Tagen. Bezieht sie sich auf den Stichtag, benutzt sie 200 oder 400 Euro. 230 Euro steht nicht als Betrag am 01.01.2020. Die Regel, den Kalendermonat mit 30 Tagen anzusetzen, steht in der Rechtslage. Der Eintrag 2021-04-01 hat die Zeile Gilt bis: 2021-12-31 und als Quelle das Änderungsgesetz BGBl. I EVAL 2021 S. 20, nicht die Lesefassung. Die Einträge 2022-07-01 und 2024-01-01 haben Gilt bis: unbefristet. Ihre Quelle ist das jeweilige Änderungsgesetz, nicht die Lesefassung."
         }
       ]
     },
@@ -110,7 +110,7 @@
       "assertions": [
         {
           "kind": "structure",
-          "text": "Die Datei docs/legal/eval-pflicht/mitteilung.md hat berechnung: nein. Eine Überschrift Beispielrechnung kommt nicht vor. Kurzüberblick, Rechtslage zum Stichtag 01.05.2022, Änderungen ab Stichtag und Quellen sind vorhanden."
+          "text": "Die Datei docs/legal/eval-pflicht/mitteilung.md hat berechnung: nein. Die Überschriften Beispielrechnung und Werte im Zeitverlauf kommen nicht vor. Kurzüberblick, Rechtslage zum Stichtag 01.05.2022, Änderungen ab Stichtag und Quellen sind vorhanden. Der Kopf enthält rechtsgrundlagen und aenderungen_geprueft_bis. python3 scripts/check.py endet mit Status 0."
         },
         {
           "kind": "structure",
@@ -160,7 +160,7 @@
     {
       "id": 5,
       "name": "sammelmodus",
-      "prompt": "Bitte alle Gegenstände des Eval-Bereichsgesetzes, Stichtag 2020, erst die Übersicht, dann eine Datei je Gegenstand. Nur die beigelegte Datei war erreichbar und gilt als amtliche Fundstelle. Zielordner: docs/legal/eval-bereich/.",
+      "prompt": "Bitte alle Gegenstände des Eval-Bereichsgesetzes, Stichtag 2020, erst die Übersicht, dann eine Datei je Gegenstand. Die beigelegte Datei ist die amtliche Fundstelle für die §§ 1 bis 3. § 4 Bonus steht nur in der Inhaltsübersicht, der Wortlaut fehlt, der Abruf ist fehlgeschlagen. Zielordner: docs/legal/eval-bereich/.",
       "expected_output": "Eine Übersicht und drei Gegenstandsdateien zum 01.01.2020. Dieselben Begriffe und dieselbe Grenze für die Sachhilfe. Beratung ohne Beispielrechnung. Kein vierter Gegenstand und kein Widerspruch zwischen den Dateien.",
       "files": [
         "evals/files/sammel/gesetz.md"
@@ -168,7 +168,7 @@
       "assertions": [
         {
           "kind": "structure",
-          "text": "Es gibt docs/legal/eval-bereich/uebersicht.md, beispielgeld.md, beratung.md und zusammentreffen.md. In allen vier Dateien ist stichtag 2020-01-01."
+          "text": "Es gibt docs/legal/eval-bereich/uebersicht.md, beispielgeld.md, beratung.md und zusammentreffen.md, keine Datei bonus.md. In den vier vorhandenen Dateien ist stichtag 2020-01-01. python3 scripts/check.py auf diesen Dateien endet mit Status 0."
         },
         {
           "kind": "structure",
@@ -180,11 +180,11 @@
         },
         {
           "kind": "content",
-          "text": "Die Übersicht nennt genau Beispielgeld, Beratung und Zusammentreffen, keinen weiteren Gegenstand. In den drei Gegenstandsdateien ist rechtsstand 2019-06-01."
+          "text": "Die Übersicht nennt genau Beispielgeld, Beratung und Zusammentreffen. Bonus hat dort keine Zeile. Die fehlende Fundstelle von Bonus steht nur im Bericht. In den drei Gegenstandsdateien ist rechtsstand 2019-06-01."
         },
         {
           "kind": "content",
-          "text": "beispielgeld.md: Personen mit Grad 2 können 200 Euro je Kalendermonat erhalten, wenn sie die Hilfe selbst sicherstellen. Ein angefangener Monat hat 30 Tage. Die Beispielrechnung benutzt 200 Euro und 30 Tage und erfindet kein Einkommen. Das Wort Pflegestufe kommt in keiner der vier Dateien vor."
+          "text": "beispielgeld.md: Personen mit Grad 2 können 200 Euro je Kalendermonat erhalten, wenn sie die Hilfe selbst sicherstellen. Ein angefangener Monat hat 30 Tage. Die Beispielrechnung benutzt 200 Euro und erfindet keine Anzahl von Tagen. Zusammenspiel verlinkt zusammentreffen.md relativ. Das Wort Pflegestufe kommt in keiner der vier Dateien vor."
         },
         {
           "kind": "content",
@@ -197,6 +197,105 @@
         {
           "kind": "content",
           "text": "Das Verhältnis in der Übersicht widerspricht den Gegenstandsdateien nicht: nebeneinander möglich, Sachhilfe höchstens die Hälfte von 500 Euro, Beratung ohne Geldbetrag. Im Ablauf wird uebersicht.md geschrieben, bevor die erste Gegenstandsdatei entsteht; das ist am Lauf zu sehen, nicht nur am Endstand."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "inkrafttreten-gestaffelt",
+      "prompt": "Leistung aus § 2 zum Stichtag 2020. Geöffnet sind nur die beigelegten Texte; sie gelten als die amtlichen Fundstellen. Die Neubekanntmachung ist der Anker. Ziel: docs/legal/eval-staffel/leistung.md.",
+      "expected_output": "Am 01.01.2020 gelten 100 Euro, 10 Tage und Beratung nur in der Wohnung. Dieselbe Novelle erzeugt zwei Chronikeinträge, 01.04.2021 für den Betrag und 01.07.2021 für die Frist, nicht den 10.03.2021. Ein zweites Gesetz vom selben Tag 01.04.2021 steht dahinter, weil es später verkündet wurde.",
+      "files": [
+        "evals/files/staffel/neubekanntmachung.md",
+        "evals/files/staffel/bgbl-a.md",
+        "evals/files/staffel/bgbl-b.md",
+        "evals/files/staffel/lesefassung.md"
+      ],
+      "assertions": [
+        {
+          "kind": "structure",
+          "text": "Die Datei docs/legal/eval-staffel/leistung.md besteht python3 scripts/check.py mit Status 0. Die Chroniküberschriften nutzen den Gedankenstrich. Jede hat eine Zeile Gilt bis."
+        },
+        {
+          "kind": "content",
+          "text": "Die Rechtslage zum 01.01.2020 nennt 100 Euro, 10 Tage und Beratung in der Wohnung. 120 Euro, 20 Tage und Telefon stehen dort nicht."
+        },
+        {
+          "kind": "content",
+          "text": "Die Chronik hat genau drei Überschriften in dieser Reihenfolge: 2021-04-01 zum Betrag, 2021-04-01 zur Beratung, 2021-07-01 zur Frist. Es gibt keine Überschrift 2021-03-10 und keine 2021-03-20."
+        },
+        {
+          "kind": "content",
+          "text": "Der Betrag wechselt am 2021-04-01 von 100 Euro auf 120 Euro. Die Quelle dieser Zeile ist BGBl. I EVAL 2021 S. 50, nicht die Lesefassung und nicht S. 60. Die Frist wechselt am 2021-07-01 von 10 Tagen auf 20 Tage und nennt dieselbe Fundstelle S. 50. Die Beratung am 2021-04-01 nennt BGBl. I EVAL 2021 S. 60. Alle drei Einträge haben Gilt bis: unbefristet."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "fremde-fussnote",
+      "prompt": "Meldepflicht aus § 3 zum Stichtag 1. Juni 2021. Die beigelegten Texte sind geöffnet. BGBl. I EVAL 2022 S. 99 hat sich nicht geöffnet. Ziel: docs/legal/eval-fremd/meldepflicht.md.",
+      "expected_output": "Eine Datei zur Meldepflicht. Die nicht geöffnete Änderung von § 9 stoppt den Lauf nicht und steht nicht im Dokument. Der Bericht nennt sie als ausgenommen.",
+      "files": [
+        "evals/files/fremd/neubekanntmachung.md",
+        "evals/files/fremd/lesefassung.md"
+      ],
+      "assertions": [
+        {
+          "kind": "structure",
+          "text": "Die Datei docs/legal/eval-fremd/meldepflicht.md existiert. berechnung ist nein. Beispielrechnung und Werte im Zeitverlauf fehlen. python3 scripts/check.py endet mit Status 0."
+        },
+        {
+          "kind": "content",
+          "text": "Die Pflicht und die Ausnahme der schriftlichen Bestätigung stehen im Dokument. Die Frist von 14 Tagen steht in einer Tabelle. Die Chronik erfindet keine Änderung von § 3."
+        },
+        {
+          "kind": "content",
+          "text": "Das Dokument beschreibt den Inhalt von § 9 nicht und nennt BGBl. I EVAL 2022 S. 99 nicht als belegte Änderung der Meldepflicht. Der Bericht nennt diese Fundstelle und den Grund, dass sie eine andere Vorschrift trifft. Der Lauf hat nicht angehalten."
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "teilausfall",
+      "prompt": "Wie hoch ist die Pauschale zum Stichtag 2020, und was hat sich danach geändert? Stammfassung und das Gesetz BGBl. I EVAL 2021 S. 10 sind geöffnet. Der Abruf von BGBl. I EVAL 2022 S. 15 ist fehlgeschlagen. Die Lesefassung liegt bei, ersetzt dieses Gesetzblatt aber nicht.",
+      "expected_output": "Keine Datei. Die Antwort fragt nach BGBl. I EVAL 2022 S. 15 und setzt 95 Euro nicht als belegte Änderung.",
+      "files": [
+        "evals/files/teilausfall/stamm.md",
+        "evals/files/teilausfall/bgbl-2021.md",
+        "evals/files/teilausfall/lesefassung.md"
+      ],
+      "assertions": [
+        {
+          "kind": "structure",
+          "text": "Unter docs/legal/ liegt keine Markdown-Datei zur Pauschale."
+        },
+        {
+          "kind": "content",
+          "text": "Die Antwort hält an und fragt nach BGBl. I EVAL 2022 S. 15. Sie nennt 95 Euro nicht als belegten neuen Betrag und schreibt keine Chronik, die diese Änderung überspringt."
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "widerspruch-zweier-dateien",
+      "prompt": "Zwei Gegenstände zum Stichtag 2020: Beispielgeld und Zusammentreffen. Jede beigelegte Datei ist die geöffnete amtliche Fundstelle ihres Gegenstands. Die Grenzen widersprechen sich. Nicht mitteln. Erst die Übersicht, dann die Dateien. Zielordner: docs/legal/eval-konflikt/.",
+      "expected_output": "Zwei Dateien und eine Übersicht. Beispielgeld nennt die Hälfte von 500 Euro, Zusammentreffen die Hälfte von 400 Euro. Kein gemittelter Wert. Der Bericht markiert den Widerspruch und fragt.",
+      "files": [
+        "evals/files/konflikt/beispielgeld.md",
+        "evals/files/konflikt/zusammentreffen.md"
+      ],
+      "assertions": [
+        {
+          "kind": "structure",
+          "text": "Es gibt docs/legal/eval-konflikt/uebersicht.md, beispielgeld.md und zusammentreffen.md. python3 scripts/check.py auf diesen Dateien endet mit Status 0. beispielgeld.md verlinkt zusammentreffen.md relativ unter Zusammenspiel."
+        },
+        {
+          "kind": "content",
+          "text": "beispielgeld.md nennt die Sachhilfe-Grenze als Hälfte von 500 Euro. zusammentreffen.md nennt sie als Hälfte von 400 Euro. Keine Datei nennt 450 Euro oder eine andere ausgeglichene Grenze."
+        },
+        {
+          "kind": "content",
+          "text": "Die Übersicht führt beide Gegenstände und legt sich nicht auf eine der beiden Grenzen als einzigen Wert fest. Der Bericht enthält die Prüftabelle und markiert den Widerspruch zwischen 500 Euro und 400 Euro. In den Dokumenten gibt es keinen Abschnitt Offene Punkte."
         }
       ]
     }
