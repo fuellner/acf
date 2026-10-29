@@ -1,4 +1,4 @@
-# acf
+# agentic coding flow
 
 Meine Sammlung agentischer Coding-Skills (OpenCode / Claude-kompatibel).
 
