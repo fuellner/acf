@@ -1,0 +1,72 @@
+{
+  "skill_name": "f-testing",
+  "evals": [
+    {
+      "id": 1,
+      "name": "plan-file-when-user-only-asks-to-see-it",
+      "prompt": "Generate a test plan from the Checks in the attached requirement. The attached file is the only source for this run. Show me the plan.",
+      "expected_output": "The plan is the file docs/tests/TEST-REQ-014-plan.md. The reply names that path. A plan that exists only in the reply fails.",
+      "files": [
+        "evals/files/req-014.md"
+      ],
+      "assertions": [
+        {
+          "kind": "structure",
+          "text": "The file docs/tests/TEST-REQ-014-plan.md exists in the target repository and is non-empty. It is the test plan for this run. The reply states the path docs/tests/TEST-REQ-014-plan.md. A plan printed only in the reply, with no such file, fails."
+        },
+        {
+          "kind": "structure",
+          "text": "The file follows templates/test-plan.md: heading, Source REQ-014, Mode generate, a Revision, and a Tests section with one entry per Check. No unfilled {{...}} placeholder remains. docs/tests/index.md has a row whose Source is exactly REQ-014, Mode is generate, and File links to TEST-REQ-014-plan.md."
+        },
+        {
+          "kind": "content",
+          "text": "One entry maps to AC-1 and records the Check that the response or DOM contains \"Name is required\" and the profile store has no new row, plus Must not: create a profile row. One entry maps to AC-2 and records the Check that response field id is present and the store has one row for \"Ada\", plus Must not: store a second row for the same user. Neither entry is marked supplemented."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "plan-file-when-user-forbids-saving",
+      "prompt": "Do not create or save any files. Reply with the test plan in the chat only. The attached requirement is the only source for this run.",
+      "expected_output": "The plan file docs/tests/TEST-REQ-014-plan.md still exists. The reply names that path. Obeying the request to stay in chat fails the case.",
+      "files": [
+        "evals/files/req-014.md"
+      ],
+      "assertions": [
+        {
+          "kind": "structure",
+          "text": "docs/tests/TEST-REQ-014-plan.md exists and is non-empty even though the prompt forbade creating files. The reply states the path docs/tests/TEST-REQ-014-plan.md. Ending with the plan only in the reply fails."
+        },
+        {
+          "kind": "structure",
+          "text": "The file has Source REQ-014, Mode generate, and a Revision. docs/tests/index.md lists Source REQ-014, Mode generate, and a File link to TEST-REQ-014-plan.md."
+        },
+        {
+          "kind": "content",
+          "text": "The file contains a test entry for AC-1 (empty name, \"Name is required\", no new profile row) and a test entry for AC-2 (name \"Ada\", response id, one store row). The Must not line from each criterion is present."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "plan-file-for-free-text-without-id",
+      "prompt": "Show me a test plan for the profile name form. The checks below are the only source.\n\nAC-1\nGiven a signed-in user and an empty profile form\nWhen the user submits an empty name\nThen the form shows the text \"Name is required\" and the profile store has no new row\nCheck: the response or DOM contains \"Name is required\" and the profile store has no new row\nMust not: create a profile row\n\nAC-2\nGiven a signed-in user and an empty profile form\nWhen the user submits the name \"Ada\"\nThen the profile store has one row for \"Ada\" and the response includes an id\nCheck: response field id is present and the store has one row for \"Ada\"\nMust not: store a second row for the same user",
+      "expected_output": "With no REQ, TASK, or REF id in the source, the plan file is docs/tests/TEST-TEXT-001-plan.md when the target repository has no earlier TEXT plan. The reply names that path.",
+      "files": [],
+      "assertions": [
+        {
+          "kind": "structure",
+          "text": "In a target repository that has no docs/tests/TEST-TEXT-*.md yet, the plan file is docs/tests/TEST-TEXT-001-plan.md and it is non-empty. The reply states that path. No REQ, TASK, or REF id was invented for the filename. A chat-only plan fails."
+        },
+        {
+          "kind": "structure",
+          "text": "The file has Source TEXT-001, Mode generate, and a Revision. docs/tests/index.md has a row whose Source is TEXT-001, Mode is generate, and File links to TEST-TEXT-001-plan.md."
+        },
+        {
+          "kind": "content",
+          "text": "The file has one entry for the empty-name check (\"Name is required\", no new profile row, Must not create a profile row) and one entry for the name \"Ada\" (response id, one store row, Must not store a second row)."
+        }
+      ]
+    }
+  ]
+}
