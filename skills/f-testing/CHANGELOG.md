@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-30
+- Every generate run writes `docs/tests/TEST-<source-id>-plan.md` and every verify run writes `docs/tests/TEST-<source-id>-coverage.md`. Workflow step 5 is a mandatory filesystem write, then a read-back that the file exists and contains Source, Mode, and Revision. The final report states that path. A chat-only plan or report does not finish the run, including when the user asks only to see the plan or asks not to save a file.
+- `source-id` is the `REQ-`, `TASK-`, or `REF-` ID that identifies the source document. A source with none of those IDs uses the next `TEXT-NNN` (three digits). The first write does not wait for an ID or for permission to save. An existing file is overwritten only on an explicit update.
+- The sentence that forbids inventing paths in verify mode applies to Verified inputs, not to the coverage file.
+- Evals under `evals/` grade that the plan file is written for a show-me request, for a request that forbids creating files, and for free text with no `REQ-`, `TASK-`, or `REF-` ID.
+
 ## 2026-10-27
 - `docs/tests/index.md` uses `Source | Mode | Revision | File` (template `templates/index.md`). Source is the exact source-id in the filename. A default two-column index in that directory is replaced by this schema.
 - A refactor or migration step can be a generate source. Entries that lock observed behavior, including quirks, are marked `*(characterization)*` and stay inside the named seam.
