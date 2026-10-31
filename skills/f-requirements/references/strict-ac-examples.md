@@ -22,11 +22,3 @@ Use these patterns when supplementing or normalizing acceptance criteria. Prefer
 **Check**: response JSON field total_after_discount == 90  
 **Must not**: promo stacking is allowed; other cart calculation logic changes  
 *(supplemented)*
-
-## Rules for strict criteria
-
-- One observable result per criterion; tightly coupled side conditions of the same action may share the criterion (for example, the rejected signup shows the error **and** creates no account).
-- Always include a concrete Check (command, test name, response field, DOM assertion, exit code).
-- Include at least one failure / edge case when relevant.
-- Explicitly state what must not change.
-- Mark any criterion that was not present in the original input with *(supplemented)*.
