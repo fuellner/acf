@@ -10,3 +10,4 @@
 | [0006-werkzeugkette-container-eine-composer-quelle.md](0006-werkzeugkette-container-eine-composer-quelle.md) | PHP-Werkzeuge liegen im Container oder außerhalb der Anwendung; eine Composer-Quelle |
 | [0007-implement-ohne-commit.md](0007-implement-ohne-commit.md) | Implementierung legt nur den Branch an; ein Worktree pro parallelem Task |
 | [0008-f-legal-rechtsstand-am-stichtag.md](0008-f-legal-rechtsstand-am-stichtag.md) | f-legal recherchiert den deutschen Rechtsstand zu einem Stichtag aus amtlichen Fassungen |
+| [0009-agents-md-optional-eine-quelle.md](0009-agents-md-optional-eine-quelle.md) | AGENTS.md ist optional; die Root-Datei ist eine normale Datei mit demselben Text wie die Vorlage |

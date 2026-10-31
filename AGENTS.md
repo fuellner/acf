@@ -1,47 +1,53 @@
 # AGENTS.md
 
-Short index for AI agents. Read this first, follow the links for details.
+Short index for humans and agents. Hard rules live here. Load a linked file only when the task needs it.
 
-## Project
+## Subagents
 
-Collection of agent-agnostic coding skills for OpenCode / Claude-compatible harnesses. Each skill is a Markdown instruction set that drives a coding workflow and writes structured documents into a target repository.
+Spawn a subagent on your own when the work splits into independent parts, needs a lot of reading (a broad search or logs), or benefits from a specialist focus such as security or test gaps.
 
-## Stack
+Leave small, sequential, or tightly coupled work on the main thread. Never have several agents edit the same files in parallel.
 
-- Markdown only — no runtime, build, or test toolchain. Exception: `skills/f-legal/scripts/check.py` (Python 3 standard library only). Self-test: `python3 skills/f-legal/scripts/check.py --self-test`
-- Skill format: `SKILL.md` with YAML frontmatter (`name`, `description`)
-- Installed by symlinking `skills/f-*` into an agent skill directory
+Each subagent returns a concise summary with file and line references, not raw logs. The parent merges those results and never delegates the same work twice.
 
-## Commands
+## Model and reasoning
 
-- Install: `mkdir -p ~/.config/opencode/skills && ln -s ~/dev/acf/skills/f-* ~/.config/opencode/skills/`
-- Verify installation: `ls -l ~/.config/opencode/skills`
-- Test / Lint / Typecheck: none — there is no toolchain, except the f-legal checker above. Validate a skill change by reading the affected `SKILL.md` and running the skill against a test repository.
+Before every spawn, classify the delegated task as one tier. Pass both the model and the reasoning level on that spawn. Pass them again even when the parent already uses the same settings.
 
-## Conventions
+| Tier | Use for | Model | Reasoning | Model id |
+|------|---------|-------|-----------|----------|
+| mechanical | search, extraction, formatting, a single-symbol lookup | cheapest/fast | low | — |
+| bounded | one clear change, a straightforward review, a limited summary | inherit | medium | — |
+| complex | architecture, multi-module debugging, security, conflicting evidence | strongest | high | — |
 
-Follow the conventions in `docs/conventions/`. The rules below always apply:
+Maintain the table by hand or let an agent update it. The Model and Reasoning columns are the defaults. A concrete model id is optional: write it in the last column for this project. When a listed id is unavailable, use inherit.
 
-- Prefer the smallest change that fully satisfies the requirement. Do not add extra features, abstractions, or improvements.
-- Never perform drive-by changes or refactorings. Only modify what is necessary for the current task.
-- Never introduce new concepts, patterns, or abstractions unless they are strictly necessary to fulfill the requirement.
-- Match the existing style, naming, and structure of the surrounding skill. Do not introduce a new style for a single change.
-- Keep skill instructions English. Exception: `f-legal` instructions, its templates, and generated `docs/legal/` are German. Human-facing documents in the target repository (README, architecture, decisions) are German. `f-feature-summary` instructions stay English; its templates and generated `docs/features/` are German. `f-refactor` instructions, its templates, and generated `docs/refactor/` are English. `f-implement` instructions, its templates, and generated `docs/implement/` are English.
-- Do not add comments or sections that merely restate what is already obvious. Only document reasons and constraints that are non-obvious.
+Pass model and reasoning level via the current tool's own fields; this file requires no model id.
+
+## Memory
+
+Keep three files in the project root. Read them before non-trivial work. Add to them during the work. Do not scan the repository to fill them up front.
+
+- `MEMORY.md` — stable, confirmed knowledge. One dated bullet per fact.
+- `LEARNINGS.md` — new, unconfirmed observations. One dated heading, then a few bullets.
+- `ERRORS.md` — recurring errors. Each entry has symptom, cause, fix, and last seen.
+
+Promote a confirmed or repeated learning from `LEARNINGS.md` to `MEMORY.md`, or to `ERRORS.md` when it is a failure mode, and remove it from `LEARNINGS.md`. Update an existing entry instead of adding a near-duplicate. Never store secrets, one-off details, or temporary state.
+
+The format is in `MEMORY.md`, `LEARNINGS.md`, and `ERRORS.md`.
 
 ## Boundaries
 
-- Ask first before renaming a skill directory or changing its frontmatter `name` — installed symlinks and invocations depend on both.
-- Never modify the remote repository (no push, no force-push, no direct remote changes of any kind).
-- Never commit `.env` files or any secrets.
-- `docs/legal/` is owned exclusively by `f-legal`. `f-docs` must never create, fill, or update it.
-- `docs/refactor/` in a target repository belongs to `f-refactor`, a separate workflow from `f-workflow`. Other skills write there only the task links and status updates those skills already define.
-- `docs/implement/` in a target repository belongs to `f-implement`. Other skills do not create that directory or edit its logs.
-- `skills/<name>/templates/` is the source of truth. Running a skill must not modify the templates in this repository; generated documents belong in the target repository.
-- Do not create a template named `AGENTS.md` — agent harnesses auto-load that filename as active instructions.
+- Ask first before adding a dependency or changing authentication, permissions, or access control.
+- Never commit `.env` files or any secrets. Never log, store, transmit, or include personal data.
+- Never manually edit generated files.
+- Never modify the remote repository, never modify any database, and never call external services at runtime unless the task explicitly requires it.
 
-## Deeper docs
+## Documentation
 
-- [docs/architecture.md](docs/architecture.md) — System structure and boundaries
-- [docs/decisions/](docs/decisions/) — Decision records
-- [docs/conventions/](docs/conventions/) — Coding standards
+Keep rules and files to the minimum. Update an existing file instead of creating a new one. Add a file only when the information is stable, reusable, and does not belong in the memory files. Keep this index short.
+
+## Where to read next
+
+- `README.md` — project, stack, and commands, when the repository has one
+- `docs/conventions/` — language rules, when that directory exists

@@ -14,4 +14,4 @@ Eine Datei mit dem Namen `AGENTS.md` wird von Agent-Harnesses automatisch als ak
 ## Konsequenzen
 
 - Neue Vorlagen, die ein Harness automatisch laden könnte, dürfen nicht den aktiven Dateinamen tragen.
-- Beim Erzeugen von `AGENTS.md` wird der Template-Kommentar entfernt und die Platzhalter werden gefüllt.
+- Beim Erzeugen von `AGENTS.md` wird der Template-Kommentar entfernt und die Platzhalter werden gefüllt. Stand 2026-10-31; Begründung in [0009-agents-md-optional-eine-quelle.md](0009-agents-md-optional-eine-quelle.md).

@@ -1,0 +1,58 @@
+{
+  "skill_name": "f-docs",
+  "evals": [
+    {
+      "id": 1,
+      "name": "existing-agents-md-left-untouched",
+      "prompt": "Refresh the project documentation and update AGENTS.md to the current template. The repository already has an AGENTS.md. Its full text is the attached file. Do not ask me whether to keep it.",
+      "expected_output": "AGENTS.md still contains the marker sentence from the attached file. The reply states that the existing file was left unchanged and does not ask whether to write, replace, or update it.",
+      "files": [
+        "evals/files/existing-agents.md"
+      ],
+      "assertions": [
+        {
+          "kind": "structure",
+          "text": "The target AGENTS.md still contains the exact sentence MARKER-AGENTS-KEEP-7f3c: hand-written policy, leave this file as it is. It still contains ## Project and the sentence This file was written by the team. Refreshing documentation must not replace it. It does not contain the template heading ## Subagents."
+        },
+        {
+          "kind": "content",
+          "text": "The reply states that the existing AGENTS.md was left unchanged. It does not ask whether to write, replace, or update AGENTS.md."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "missing-agents-md-asks",
+      "prompt": "Document this repository. It has no AGENTS.md. I have not said whether I want one.",
+      "expected_output": "The reply asks whether to write an AGENTS.md. No AGENTS.md file is created in this turn.",
+      "files": [],
+      "assertions": [
+        {
+          "kind": "structure",
+          "text": "The target repository has no file named AGENTS.md."
+        },
+        {
+          "kind": "content",
+          "text": "The reply asks the user whether it should write an AGENTS.md. It does not treat the missing answer as a yes, and it does not include the template body as the written file."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "user-declines-agents-md",
+      "prompt": "Document this repository. It has no AGENTS.md. Do not write one. I decline.",
+      "expected_output": "No AGENTS.md file exists. The reply does not ask again.",
+      "files": [],
+      "assertions": [
+        {
+          "kind": "structure",
+          "text": "The target repository has no file named AGENTS.md."
+        },
+        {
+          "kind": "content",
+          "text": "The reply accepts the decline. It does not ask again whether to write an AGENTS.md, and it does not paste an AGENTS.md body."
+        }
+      ]
+    }
+  ]
+}

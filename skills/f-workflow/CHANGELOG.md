@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-10-31
+- The f-docs menu line and prompt treat `AGENTS.md` as optional: write it only when the repository has none and the user agrees, and leave an existing file unchanged.
+
 ## 2026-10-28
 - The f-legal menu line and prompt ask for a German legal subject and a cutoff date. They no longer ask for developer requirements or EU sources.
 - Step 4 is `f-implement`. The skill-less implementation prompt is retired.
