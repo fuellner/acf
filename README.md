@@ -62,7 +62,7 @@ python3 skills/f-legal/scripts/check.py --self-test
 
 ## Vorlagen im Root
 
-`AGENTS.md`, `MEMORY.md`, `LEARNINGS.md` und `ERRORS.md` sind allgemeine Vorlagen zum Kopieren in ein Zielprojekt. `AGENTS.md` ist eine normale Datei mit demselben Text wie `skills/f-docs/templates/agents.md.tmpl`. Die drei Gedächtnis-Dateien bleiben leer, bis die Arbeit Einträge erzeugt. `f-docs` legt sie nicht an.
+`AGENTS.md`, `MEMORY.md`, `LEARNINGS.md` und `ERRORS.md` sind allgemeine Vorlagen zum Kopieren in ein Zielprojekt. `AGENTS.md` ist die Vorlage, von der kopiert wird. `skills/f-docs/templates/agents.md.tmpl` wird bei Änderungen von Hand mitgezogen, ohne Skript oder Prüfung. Die drei Gedächtnis-Dateien bleiben leer, bis die Arbeit Einträge erzeugt. `f-docs` legt sie nicht an.
 
 Regeln, die nur hier gelten (Remote, Umbenennen eines Skills, Besitz von `docs/legal/`, `docs/refactor/` und `docs/implement/`), stehen in [docs/conventions/markdown.md](docs/conventions/markdown.md).
 
