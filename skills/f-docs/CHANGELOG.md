@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-31
+- `AGENTS.md` is optional. An existing file is left unchanged and the skill does not ask about it. A missing file is written only after an explicit yes, as a byte copy of `templates/agents.md.tmpl`.
+- The template no longer carries a `TEMPLATE (f-docs)` header or project, stack, command, or language-rule sections. Language rules live in `templates/conventions/` for PHP, Python, TypeScript, and SQL. The index only points at `docs/conventions/`.
+- The skill does not create or fill `MEMORY.md`, `LEARNINGS.md`, or `ERRORS.md`.
+- Evals cover an existing `AGENTS.md`, a missing file, and a decline.
+
 ## 2026-10-28
 - `docs/legal/` index columns are `Bereich | Dokument | Stichtag | Rechtsstand | Zuletzt geprüft`. A table that still has `Rechtsgrundlage` and `Gültig ab` is rebuilt from the files. Authored prose stays.
 - `references/directory-index.md` names the `docs/implement/` schema (`Task | Mode | Status | File`). `f-docs` does not create that directory and does not edit implementation logs.

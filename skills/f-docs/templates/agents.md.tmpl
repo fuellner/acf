@@ -1,61 +1,73 @@
-<!--
-TEMPLATE (f-docs) — this file is NOT active instruction.
-It is copied to <repo>/AGENTS.md and filled in by the f-docs skill.
-Remove this comment block after filling. Until then, treat every line below
-as a placeholder, not as project policy.
-Keep only sections and boundaries that actually apply to this repository.
--->
-
 # AGENTS.md
 
-Short index for AI agents. Read this first, follow the links for details.
+Short index for humans and agents. Hard rules live here. Load a linked file only when the task needs it.
 
-## Project
-[1–2 sentences: What does this project do?]
+## Subagents
 
-## Stack
-- [Language + version]
-- [Framework / main libraries with versions]
+Spawn a subagent on your own when the work splits into independent parts, needs a lot of reading (a broad search or logs), or benefits from a specialist focus such as security or test gaps.
 
-## Commands
-- Install: `[exact command]`
-- Dev: `[exact command]`
-- Test: `[exact command]` (single file: `[command]`)
-- Lint / Typecheck: `[exact command]`
+Leave small, sequential, or tightly coupled work on the main thread. Never have several agents edit the same files in parallel.
 
-## Conventions
-Follow the language-specific conventions in `docs/conventions/`. The rules below always apply:
+Each subagent returns a concise summary with file and line references, not raw logs. The parent merges those results and never delegates the same work twice.
 
-- Prefer the smallest change that fully satisfies the requirement. Do not add extra features, abstractions, or improvements.
-- Never perform drive-by changes or refactorings; modify only what the current task requires.
-- Never introduce new concepts, patterns, or abstractions unless they are strictly necessary to fulfill the requirement.
-- Never add new dependencies unless explicitly requested.
-- Match the existing style, naming, and patterns in the surrounding code. Do not introduce a new style for a single change.
-- Prefer early returns over deeply nested conditionals when it reduces complexity.
-- Do not add comments that merely describe what the code does. Only add comments when the reason or constraint is non-obvious.
+## Model and reasoning
 
-## Boundaries
-<!-- Keep only the boundaries that apply to this repository. -->
+Before every spawn, classify the delegated task as one tier. Pass both the model and the reasoning level on that spawn. Pass them again even when the parent already uses the same settings.
 
-- Ask first before adding any new dependency.
-- Ask first before changing authentication, permissions, or access control.
-- Never modify the remote repository (no push, no force-push, no direct remote changes of any kind).
-- Never modify any database (no schema changes, no migrations, no data changes, no queries that alter state).
-- Never call external services at runtime unless the task explicitly requires it (for example reading a source document).
-- Never log, store, transmit, or include personal data (or any data that could identify a person) in context, logs, or output.
-- Never commit `.env` files or any secrets.
-- Never manually edit generated files.
+| Tier | Use for | Model | Reasoning | Model id |
+|------|---------|-------|-----------|----------|
+| mechanical | search, extraction, formatting, a single-symbol lookup | cheapest/fast | low | — |
+| bounded | one clear change, a straightforward review, a limited summary | inherit | medium | — |
+| complex | architecture, multi-module debugging, security, conflicting evidence | strongest | high | — |
 
-## Deeper docs
-<!-- Keep only paths that exist in this repository. -->
+Maintain the table by hand or let an agent update it. The Model and Reasoning columns are the defaults. A concrete model id is optional: write it in the last column for this project. When a listed id is unavailable, use inherit.
 
-- [docs/architecture.md](docs/architecture.md) — System structure and boundaries
-- [docs/decisions/](docs/decisions/) — Decision records
-- [docs/conventions/](docs/conventions/) — Coding standards
-- [docs/requirements/](docs/requirements/) — Requirements and acceptance criteria
-- [docs/tasks/](docs/tasks/) — Task breakdown
-- [docs/tests/](docs/tests/) — Test plans and coverage reports
-- [docs/implement/](docs/implement/) — Implementation logs
-- [docs/features/](docs/features/) — Feature summaries (separate skill)
-- [docs/refactor/](docs/refactor/) — Migrations and refactors (separate skill)
-- [docs/legal/](docs/legal/) — Regulatory notes (content is manual / separate skill)
+Tools differ only in the fields that carry this choice. Claude Code accepts aliases such as `opus`, `sonnet`, `haiku`, and `inherit`. Codex custom agents set `model` and `model_reasoning_effort` (`codex debug models` is experimental). OpenCode lists models with `opencode models` and sets `provider/model` on the agent. Pass the tier through the current tool's own fields. This file requires no model id.
+
+## Memory
+
+Keep three files in the project root. Read them before non-trivial work. Add to them during the work. Do not scan the repository to fill them up front.
+
+- `MEMORY.md` — stable, confirmed knowledge. One dated bullet per fact.
+- `LEARNINGS.md` — new, unconfirmed observations. One dated heading, then a few bullets.
+- `ERRORS.md` — recurring errors. Each entry has symptom, cause, fix, and last seen.
+
+Promote a confirmed or repeated learning from `LEARNINGS.md` to `MEMORY.md`, or to `ERRORS.md` when it is a failure mode, and remove it from `LEARNINGS.md`. Update an existing entry instead of adding a near-duplicate. Never store secrets, one-off details, or temporary state.
+
+Shells until the first real entry:
+
+```markdown
+# Memory
+
+Stable, confirmed knowledge only.
+
+- YYYY-MM-DD — fact
+```
+
+```markdown
+# Learnings
+
+## YYYY-MM-DD – title
+
+- observation
+```
+
+```markdown
+# Errors
+
+## Short name
+
+- Symptom:
+- Cause:
+- Fix:
+- Last seen: YYYY-MM-DD
+```
+
+## Documentation
+
+Keep rules and files to the minimum. Update an existing file instead of creating a new one. Add a file only when the information is stable, reusable, and does not belong in the memory files. Keep this index short.
+
+## Where to read next
+
+- `README.md` — project, stack, and commands, when the repository has one
+- `docs/conventions/` — language rules, when that directory exists

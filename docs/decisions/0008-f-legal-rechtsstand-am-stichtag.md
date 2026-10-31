@@ -20,7 +20,7 @@ Die bisherige Fassung zog aus Quellen developer-relevante Regeln, verlangte in j
 
 ## Konsequenzen
 
-- `f-workflow`, die Architektur und die README beschreiben `f-legal` als Recherche des deutschen Rechts zum Stichtag. `AGENTS.md` bleibt: der Skill, seine Vorlagen und `docs/legal/` sind deutsch, und das Verzeichnis gehört nur diesem Skill.
+- `f-workflow`, die Architektur und die README beschreiben `f-legal` als Recherche des deutschen Rechts zum Stichtag. Die Sprachregel und die Zuständigkeit für `docs/legal/` stehen in `docs/conventions/markdown.md`. Die allgemeine `AGENTS.md` wiederholt sie nicht. Stand 2026-10-31; Begründung in [0009-agents-md-optional-eine-quelle.md](0009-agents-md-optional-eine-quelle.md).
 - 0003 gilt weiter. Die Spalten stehen in der Index-Vorlage und sind in `skills/f-docs/references/directory-index.md` benannt. Eine alte Tabelle mit `Rechtsgrundlage` und `Gültig ab` wird aus den Dateien neu aufgebaut.
 - Der Skill nennt kein Werkzeug eines bestimmten Agenten und trägt keine Git-Identität ein. Er schreibt keine Commits.
 - Die Prüfungen liegen unter `skills/f-legal/evals/`. Fixtures dort sind keine Rechtsquellen. `scripts/check.py` prüft Kopf, Überschriften, Normstellen außerhalb der Quellenliste und die Quellen-IDs, bevor der Bericht die Beträge vergleicht.

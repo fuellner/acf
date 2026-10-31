@@ -29,6 +29,16 @@ These rules apply to all skill files in this repository.
 - A template must never be named `AGENTS.md`; use an inert name such as `agents.md.tmpl`.
 - Templates are source files. Generated documents belong in the target repository, not in `templates/`.
 
+## Repository boundaries
+
+These apply when working in this repository. The root `AGENTS.md` is a generic index shared with other projects and does not repeat them.
+
+- Ask first before renaming a skill directory or changing its frontmatter `name`. Installed symlinks and invocations depend on both.
+- Never modify the remote repository (no push, no force-push, no direct remote changes of any kind).
+- Never commit `.env` files or any secrets.
+- `docs/legal/` belongs to `f-legal`, `docs/refactor/` to `f-refactor`, and `docs/implement/` to `f-implement`. Other skills do not create those directories or edit their documents, except the index updates a skill already defines.
+- `skills/<name>/templates/` is the source of truth. Running a skill must not modify the templates in this repository. Generated documents belong in the target repository.
+
 ## Changes
 
 - Update the affected skill's `CHANGELOG.md` for every behavior change.

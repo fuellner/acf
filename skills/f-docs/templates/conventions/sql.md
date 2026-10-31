@@ -2,6 +2,13 @@
 
 These rules apply to all SQL in this repository (raw SQL and query builder usage). Primary database: [detected: name + version].
 
+## Changes
+- Prefer the smallest change that fully satisfies the requirement. Do not add extra features, abstractions, or improvements.
+- Never perform drive-by changes or refactorings; modify only what the current task requires.
+- Never introduce new concepts, patterns, or abstractions unless they are strictly necessary to fulfill the requirement.
+- Match the existing style, naming, and patterns in the surrounding code. Do not introduce a new style for a single change.
+- Do not add comments that merely describe what the code does. Only add comments when the reason or constraint is non-obvious.
+
 ## Queries
 - Never use `SELECT *` in new or modified queries. List the required columns explicitly.
 - Never concatenate user input or variables into SQL strings. Use parameterized queries, prepared statements, or the existing query builder style.

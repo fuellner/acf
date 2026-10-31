@@ -12,7 +12,7 @@ Meine Sammlung agentischer Coding-Skills (OpenCode / Claude-kompatibel).
 | `f-implement` | Task umsetzen (`tdd` oder `direct`) auf einem Dev-Branch, ohne Commit und ohne Push |
 | `f-code-review` | Diff gegen ACs prüfen (Security, Performance, Side Effects) + Fix-Prompt |
 | `f-debug` | Strukturierte Fehlersuche (Repro → Root Cause → Fix-Vorschlag) |
-| `f-docs` | AGENTS.md, README, Architektur, Conventions aus dem Repo erzeugen |
+| `f-docs` | README, Architektur, Conventions aus dem Repo; `AGENTS.md` nur wenn keine existiert und zugestimmt wird |
 | `f-legal` | Deutsches Recht zum Stichtag, nur amtliche Quellen → `docs/legal/` |
 | `f-feature-summary` | Implementierte Fachlogik → übersichtliche Feature-Dokumente (`docs/features/`) |
 | `f-refactor` | Eigener Ablauf: verhaltensgleiche PHP-Migration (vorrangig) oder Struktur-Refactor, Phasenmenü, Status unter `docs/refactor/` |
@@ -52,9 +52,23 @@ Erzeugte Dokumente landen im Zielrepo unter `docs/` (`requirements/`, `tasks/`, 
 `implement/`, `reviews/`, `debug/`, `legal/`, `features/`, `refactor/`, `conventions/`, `decisions/`).
 `f-debug` schreibt immer nach `docs/debug/`; ein Review, das die Analyse ausgelöst hat, verlinkt den Bericht.
 
+## Prüfung
+
+Eine allgemeine Test-, Lint- oder Typecheck-Kette gibt es nicht. Ausnahme:
+
+```bash
+python3 skills/f-legal/scripts/check.py --self-test
+```
+
+## Vorlagen im Root
+
+`AGENTS.md`, `MEMORY.md`, `LEARNINGS.md` und `ERRORS.md` sind allgemeine Vorlagen zum Kopieren in ein Zielprojekt. `AGENTS.md` ist ein Symlink auf `skills/f-docs/templates/agents.md.tmpl` (eine Quelle). Den Dateiinhalt kopieren, nicht den Symlink: `cp -L AGENTS.md <ziel>/AGENTS.md`. Die drei Gedächtnis-Dateien bleiben leer, bis die Arbeit Einträge erzeugt. `f-docs` legt sie nicht an.
+
+Regeln, die nur hier gelten (Remote, Umbenennen eines Skills, Besitz von `docs/legal/`, `docs/refactor/` und `docs/implement/`), stehen in [docs/conventions/markdown.md](docs/conventions/markdown.md).
+
 ## Dokumentation
 
-- [AGENTS.md](AGENTS.md) — Hinweise für AI-Agenten
+- [AGENTS.md](AGENTS.md) — allgemeine Agenten-Vorlage
 - [docs/architecture.md](docs/architecture.md) — Aufbau und Datenfluss
 - [docs/decisions/index.md](docs/decisions/index.md) — Inhaltsverzeichnis der Entscheidungen
 - [docs/conventions/index.md](docs/conventions/index.md) — Inhaltsverzeichnis der Konventionen für die Skill-Dateien

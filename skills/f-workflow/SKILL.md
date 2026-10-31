@@ -43,7 +43,7 @@ Does not perform domain work. Only displays the menu and supplies prompt templat
 
 ### Optional / Outside Core
 
-- **f-docs** — Generate or refresh project documentation (AGENTS.md, README, architecture, conventions).  
+- **f-docs** — Generate or refresh project documentation (README, architecture, conventions). `AGENTS.md` only when the repository has none and the user agrees.  
 - **f-legal** — Research German official law as of a cutoff date into `docs/legal/` (one file per subject; a whole area starts with an overview).
 - **f-feature-summary** — Create or update scannable feature summaries (individual units + overall overview) for product owners.
 
@@ -111,7 +111,7 @@ Please use the f-refactor skill. It is a separate workflow with its own phase me
 
 ### f-docs
 ```
-Please use the f-docs skill to analyze the repository and create or update the project documentation (AGENTS.md, README, architecture, conventions as applicable).
+Please use the f-docs skill to analyze the repository and create or update the project documentation (README, architecture, conventions as applicable). Write AGENTS.md only when the repository has none and I agree. Leave an existing AGENTS.md unchanged.
 
 [Optional: specific focus or notes]
 ```
