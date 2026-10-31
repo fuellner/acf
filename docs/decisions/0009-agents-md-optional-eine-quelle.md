@@ -19,7 +19,7 @@ Die Vorlage hat `AGENTS.md` bisher immer geschrieben und allgemeine Änderungsre
 
 ## Konsequenzen
 
-- 0002 gilt für den Dateinamen `agents.md.tmpl`. Der `TEMPLATE (f-docs)`-Kopf und das Füllen von Platzhaltern in `AGENTS.md` entfallen.
+- 0002, letzte Konsequenz, verweist auf diese Entscheidung. Der Dateiname `agents.md.tmpl` bleibt. Der `TEMPLATE (f-docs)`-Kopf und das Füllen von Platzhaltern entfallen.
 - Die Sprachregel für `f-legal` und der Besitz von `docs/legal/` stehen in `docs/conventions/markdown.md`, nicht in der allgemeinen `AGENTS.md`. 0008 verweist darauf.
 - Grenzen, die nur dieses Repository betreffen (Remote, Umbenennen eines Skills, Besitz von `docs/refactor/` und `docs/implement/`), stehen dort ebenfalls. Prüfbefehl und die Einordnung der Root-Vorlagen stehen in der README.
 - `f-workflow` nennt `AGENTS.md` im f-docs-Prompt als optional.

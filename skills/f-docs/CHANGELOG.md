@@ -6,6 +6,8 @@
 - The skill does not create or fill `MEMORY.md`, `LEARNINGS.md`, or `ERRORS.md`.
 - Evals cover an existing `AGENTS.md`, a missing file, and a decline.
 - The repository root `AGENTS.md` is the original. `templates/agents.md.tmpl` is updated alongside it by hand, with no script or check.
+- The description again includes when to use the skill.
+- `templates/agents.md.tmpl` names no tool-specific model fields, points at `MEMORY.md`, `LEARNINGS.md`, and `ERRORS.md` for the memory format, and has a short Boundaries block.
 
 ## 2026-10-28
 - `docs/legal/` index columns are `Bereich | Dokument | Stichtag | Rechtsstand | Zuletzt geprüft`. A table that still has `Rechtsgrundlage` and `Gültig ab` is rebuilt from the files. Authored prose stays.

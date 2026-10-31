@@ -1,5 +1,5 @@
 # Learnings
 
-## YYYY-MM-DD – title
+## YYYY-MM-DD — title
 
 - observation

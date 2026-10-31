@@ -22,7 +22,7 @@ Before every spawn, classify the delegated task as one tier. Pass both the model
 
 Maintain the table by hand or let an agent update it. The Model and Reasoning columns are the defaults. A concrete model id is optional: write it in the last column for this project. When a listed id is unavailable, use inherit.
 
-Tools differ only in the fields that carry this choice. Claude Code accepts aliases such as `opus`, `sonnet`, `haiku`, and `inherit`. Codex custom agents set `model` and `model_reasoning_effort` (`codex debug models` is experimental). OpenCode lists models with `opencode models` and sets `provider/model` on the agent. Pass the tier through the current tool's own fields. This file requires no model id.
+Pass model and reasoning level via the current tool's own fields; this file requires no model id.
 
 ## Memory
 
@@ -34,34 +34,14 @@ Keep three files in the project root. Read them before non-trivial work. Add to 
 
 Promote a confirmed or repeated learning from `LEARNINGS.md` to `MEMORY.md`, or to `ERRORS.md` when it is a failure mode, and remove it from `LEARNINGS.md`. Update an existing entry instead of adding a near-duplicate. Never store secrets, one-off details, or temporary state.
 
-Shells until the first real entry:
+The format is in `MEMORY.md`, `LEARNINGS.md`, and `ERRORS.md`.
 
-```markdown
-# Memory
+## Boundaries
 
-Stable, confirmed knowledge only.
-
-- YYYY-MM-DD — fact
-```
-
-```markdown
-# Learnings
-
-## YYYY-MM-DD – title
-
-- observation
-```
-
-```markdown
-# Errors
-
-## Short name
-
-- Symptom:
-- Cause:
-- Fix:
-- Last seen: YYYY-MM-DD
-```
+- Ask first before adding a dependency or changing authentication, permissions, or access control.
+- Never commit `.env` files or any secrets. Never log, store, transmit, or include personal data.
+- Never manually edit generated files.
+- Never modify the remote repository, never modify any database, and never call external services at runtime unless the task explicitly requires it.
 
 ## Documentation
 

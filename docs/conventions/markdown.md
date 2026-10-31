@@ -41,6 +41,11 @@ These apply when working in this repository. The root `AGENTS.md` is a generic i
 
 ## Changes
 
+- Prefer the smallest change that fully satisfies the requirement. Do not add extra features, abstractions, or improvements.
+- Never perform drive-by changes or refactorings. Only modify what is necessary for the current task.
+- Never introduce new concepts, patterns, or abstractions unless they are strictly necessary to fulfill the requirement.
+- Match the existing style, naming, and structure of the surrounding skill. Do not introduce a new style for a single change.
+- Do not add comments or sections that merely restate what is already obvious. Only document reasons and constraints that are non-obvious.
 - Update the affected skill's `CHANGELOG.md` for every behavior change.
 - Changelog format: `## YYYY-MM-DD` headings, newest first, bullet list of changes.
 - Keep changes scoped to one skill unless the change explicitly affects the workflow or a shared contract.

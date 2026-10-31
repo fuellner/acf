@@ -1,6 +1,6 @@
 ---
 name: f-docs
-description: Creates or updates project documentation (README, architecture, conventions, decisions) based on repository analysis. Writes AGENTS.md only when none exists and the user agrees; never modifies an existing AGENTS.md. Do not use for legal content, memory files, or non-documentation tasks.
+description: Creates or updates project documentation (README, architecture, conventions, decisions) based on repository analysis. Writes AGENTS.md only when none exists and the user agrees; never modifies an existing AGENTS.md. Use when the user wants documentation generated or refreshed for a repository. Do not use for legal content, memory files, or non-documentation tasks.
 ---
 
 # f-docs
