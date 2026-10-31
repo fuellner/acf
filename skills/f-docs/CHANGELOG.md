@@ -5,6 +5,7 @@
 - The template no longer carries a `TEMPLATE (f-docs)` header or project, stack, command, or language-rule sections. Language rules live in `templates/conventions/` for PHP, Python, TypeScript, and SQL. The index only points at `docs/conventions/`.
 - The skill does not create or fill `MEMORY.md`, `LEARNINGS.md`, or `ERRORS.md`.
 - Evals cover an existing `AGENTS.md`, a missing file, and a decline.
+- The repository root `AGENTS.md` is a regular file with the same text as `templates/agents.md.tmpl`.
 
 ## 2026-10-28
 - `docs/legal/` index columns are `Bereich | Dokument | Stichtag | Rechtsstand | Zuletzt geprüft`. A table that still has `Rechtsgrundlage` and `Gültig ab` is rebuilt from the files. Authored prose stays.

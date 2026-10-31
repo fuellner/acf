@@ -1,4 +1,4 @@
-# AGENTS.md ist optional und hat eine Quelle
+# AGENTS.md ist optional
 
 **Status:** accepted  
 **Datum:** 2026-10-31
@@ -9,13 +9,13 @@
 
 - Existiert sie im Zielrepository, fragt der Skill nicht und schreibt sie nicht um.
 - Fehlt sie, fragt er einmal. Nur ein ausdrückliches Ja erzeugt die Datei, als bytegleiche Kopie von `skills/f-docs/templates/agents.md.tmpl`. Ein Nein oder eine offene Frage lässt sie fehlen.
-- Der Text steht nur in dieser Vorlage. Die Root-`AGENTS.md` dieses Repositories ist ein relativer Symlink darauf. In ein Zielprojekt wird der Dateiinhalt kopiert (`cp -L`), nicht der Symlink.
+- Die Root-`AGENTS.md` dieses Repositories ist eine normale Datei mit demselben Text wie `skills/f-docs/templates/agents.md.tmpl`. Diese Entscheidung richtet keinen Abgleich der beiden Dateien ein.
 - Sprachregeln stehen in den Konventionsvorlagen für PHP, Python, TypeScript und SQL. `AGENTS.md` verweist auf `docs/conventions/`.
 - `MEMORY.md`, `LEARNINGS.md` und `ERRORS.md` im Root sind leere Vorlagen zum Kopieren. Der Skill legt sie nicht an und füllt sie nicht. Einträge entstehen bei der Arbeit.
 
 ## Kontext
 
-Die Vorlage hat `AGENTS.md` bisher immer geschrieben und allgemeine Änderungsregeln mit den Sprachdateien vermischt. Die Root-Datei dieses Repositories war zusätzlich projektspezifisch und damit als Kopiervorlage unbrauchbar. Eine zweite Textfassung würde auseinanderlaufen, wie zuvor bei den Verzeichnisindex-Regeln (0003).
+Die Vorlage hat `AGENTS.md` bisher immer geschrieben und allgemeine Änderungsregeln mit den Sprachdateien vermischt. Die Root-Datei dieses Repositories war zusätzlich projektspezifisch und damit als Kopiervorlage unbrauchbar. Sie ist wieder eine eigene normale Datei und trägt denselben Text wie die Vorlage.
 
 ## Konsequenzen
 

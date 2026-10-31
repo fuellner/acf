@@ -27,7 +27,7 @@ This skill does not create or fill `MEMORY.md`, `LEARNINGS.md`, or `ERRORS.md`. 
 
 Templates live in this skill directory and are copied only when the individual target file does not exist. Existing target files are maintained and supplemented, including on the first skill invocation. Templates in the skill directory remain untouched.
 
-`templates/agents.md.tmpl` is the only text of `AGENTS.md`. On a yes, copy it byte for byte to the target root as a regular file, not as a symlink. Edit that wording only in the template. The template is deliberately not named `AGENTS.md`: a file with that name is auto-loaded by agent harnesses as active instructions. Do not create a template with that name.
+On a yes, copy `templates/agents.md.tmpl` byte for byte to the target root as a regular file. The template is deliberately not named `AGENTS.md`: a file with that name is auto-loaded by agent harnesses as active instructions. Do not create a template with that name.
 
 ## Behavior
 
