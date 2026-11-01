@@ -2,7 +2,7 @@
 name: f-workflow
 description: >
   Presents the feature-cycle skills as an ordered menu. Separates that cycle from
-  optional skills (f-docs, f-legal, f-feature-summary) and from the separate
+  optional skills (f-docs, f-feature-summary) and from the separate
   f-refactor workflow, which appears only as a handoff. When a menu item is selected,
   outputs the skill handle plus a ready-to-use prompt template.
   Use only when the user explicitly asks for the skill menu or menu navigation:
@@ -11,7 +11,7 @@ description: >
   Do NOT trigger on the bare word "workflow" or on workflow-related topics in
   general (CI workflows, workflow engines, process diagrams). Do NOT use for
   executing the actual work of any listed skill (requirements, tasks, testing,
-  implementation, review, debug, docs, legal, or feature summaries). Do NOT use for a migration
+  implementation, review, debug, docs, or feature summaries). Do NOT use for a migration
   or a refactor; that workflow is f-refactor.
 ---
 
@@ -44,7 +44,6 @@ Does not perform domain work. Only displays the menu and supplies prompt templat
 ### Optional / Outside Core
 
 - **f-docs** — Generate or refresh project documentation (README, architecture, conventions). `AGENTS.md` only when the repository has none and the user agrees.  
-- **f-legal** — Research German official law as of a cutoff date into `docs/legal/` (one file per subject; a whole area starts with an overview).
 - **f-feature-summary** — Create or update scannable feature summaries (individual units + overall overview) for product owners.
 
 ### Separate workflow
@@ -114,15 +113,6 @@ Please use the f-refactor skill. It is a separate workflow with its own phase me
 Please use the f-docs skill to analyze the repository and create or update the project documentation (README, architecture, conventions as applicable). Write AGENTS.md only when the repository has none and I agree. Leave an existing AGENTS.md unchanged.
 
 [Optional: specific focus or notes]
-```
-
-### f-legal
-```
-Please use the f-legal skill to research the following German legal subject as of a cutoff date and write it to docs/legal/. Read the official texts. Do not fill amounts from memory.
-
-Subject: [statute, provision, or benefit, for example Pflegegeld]
-Stichtag: [date, or a year]
-Whole area (optional): [for example all benefit types of one statute]
 ```
 
 ### f-feature-summary

@@ -4,21 +4,17 @@ Short index for humans and agents. Hard rules live here. Load a linked file only
 
 ## Conventions
 
-- Prefer the smallest change that fully satisfies the requirement. Do not add extra features, abstractions, or improvements.
-- Never perform drive-by changes or refactorings. Only modify what is necessary for the current task.
-- Never introduce new concepts, patterns, or abstractions unless they are strictly necessary to fulfill the requirement.
-- Match the existing style, naming, and structure of the surrounding skill. Do not introduce a new style for a single change.
+- Make the smallest change that fully satisfies the requirement: no extra features, abstractions, refactorings, or drive-by changes.
+- Introduce a new concept or pattern only when the task cannot be met without it; otherwise match the existing style, naming, and structure.
 - Do not add comments or sections that merely restate what is already obvious. Only document reasons and constraints that are non-obvious.
-- Never add new dependencies unless explicitly requested.
-- Prefer early returns over deeply nested conditionals when it reduces complexity.
 
 ## Boundaries
 
-- Ask first before adding any new dependency.
+- Ask first before adding a new dependency.
 - Ask first before changing authentication, permissions, or access control.
 - Never modify the remote repository (no push, no force-push, no direct remote changes of any kind).
 - Never modify any database (no schema changes, no migrations, no data changes, no queries that alter state).
-- Never call external APIs.
+- Never call external APIs or services unless the task explicitly requires it.
 - Never log, store, transmit, or include personal data (or any data that could identify a person) in context, logs, or output.
 - Never commit `.env` files or any secrets.
 - Never manually edit generated files.
@@ -31,38 +27,31 @@ Leave small, sequential, or tightly coupled work on the main thread. Never have 
 
 Each subagent returns a concise summary with file and line references, not raw logs. The parent merges those results and never delegates the same work twice.
 
-## Model and reasoning
-
-Before every spawn, classify the delegated task as one tier. Pass both the model and the reasoning level on that spawn. Pass them again even when the parent already uses the same settings.
+Before every spawn, classify the task as one tier and pass both its model and reasoning level on that spawn, even when the parent uses the same settings.
 
 | Tier | Use for | Model | Reasoning | Model id |
 |------|---------|-------|-----------|----------|
-| mechanical | search, extraction, formatting, a single-symbol lookup | cheapest/fast | low | — |
-| bounded | one clear change, a straightforward review, a limited summary | inherit | medium | — |
-| complex | architecture, multi-module debugging, security, conflicting evidence | strongest | high | — |
+| mechanical | search, extraction, formatting, a single-symbol lookup | cheapest capable | low | — |
+| bounded | one clear change, a straightforward review, a limited summary | inherited | medium | — |
+| complex | architecture, multi-module debugging, security, conflicting evidence | strongest available | high | — |
 
-Maintain the table by hand or let an agent update it. The Model and Reasoning columns are the defaults. A concrete model id is optional: write it in the last column for this project. When a listed id is unavailable, use inherit.
-
-Pass model and reasoning level via the current tool's own fields; this file requires no model id.
+Resolve the model from the harness model list and pass it through the tool's own fields. A project may pin concrete ids in the last column; an empty cell means resolve at runtime. When two tiers fit, start with the lower one and escalate only after it fails. Update the pinned ids when the harness model list changes.
 
 ## Memory
 
-Keep three files in the project root. Read them before non-trivial work. Add to them during the work. Do not scan the repository to fill them up front.
+Three files in the project root. Create a file when it is missing and you have its first entry; do not scan the repository to fill them up front. Read them before a change that spans more than one file, in an unfamiliar area, and when debugging.
 
-- `MEMORY.md` — stable, confirmed knowledge. One dated bullet per fact.
-- `LEARNINGS.md` — new, unconfirmed observations. One dated heading, then a few bullets.
-- `ERRORS.md` — recurring errors. Each entry has symptom, cause, fix, and last seen.
+| File | Content | Limit | Format |
+|------|---------|-------|--------|
+| `MEMORY.md` | stable, confirmed facts | ~50 | `# Memory` heading, one bullet per fact: `- YYYY-MM-DD — fact` |
+| `LEARNINGS.md` | new, unconfirmed observations | ~10 open | `# Learnings` heading, per entry `## YYYY-MM-DD — title`, then bullets; the date is the first observation |
+| `ERRORS.md` | recurring failures | ~20 | `# Errors` heading, per entry `## YYYY-MM-DD — short name`, then bullets `Symptom:`, `Cause:`, `Fix:`, `Last seen: YYYY-MM-DD` |
 
-Promote a confirmed or repeated learning from `LEARNINGS.md` to `MEMORY.md`, or to `ERRORS.md` when it is a failure mode, and remove it from `LEARNINGS.md`. Update an existing entry instead of adding a near-duplicate. Never store secrets, one-off details, or temporary state.
+Code and docs win over memory. On a conflict, verify and correct the entry instead of following it. If memory files differ between machines, re-verify the contested fact before keeping either version.
 
-The format is in `MEMORY.md`, `LEARNINGS.md`, and `ERRORS.md`.
+Add a fact to `MEMORY.md` only after verifying it (command, test, or authoritative file); the date is the verification date. Promote a confirmed or repeated learning from `LEARNINGS.md` to `MEMORY.md`, or to `ERRORS.md` when it is a failure mode, and remove it from `LEARNINGS.md`. Update an existing entry instead of adding a near-duplicate. When a file reaches its limit, drop outdated entries or merge them. Remove template placeholder lines with the first real entry. Never store secrets, one-off details, or temporary state.
 
-## Boundaries
-
-- Ask first before adding a dependency or changing authentication, permissions, or access control.
-- Never commit `.env` files or any secrets. Never log, store, transmit, or include personal data.
-- Never manually edit generated files.
-- Never modify the remote repository, never modify any database, and never call external services at runtime unless the task explicitly requires it.
+Keep `MEMORY.md` and `ERRORS.md` in version control; add `LEARNINGS.md` to the project's `.gitignore`.
 
 ## Documentation
 
@@ -70,8 +59,9 @@ Keep rules and files to the minimum. Update an existing file instead of creating
 
 ## Deeper docs
 
-read if present and context requires it
+Read when present:
 
-- [docs/architecture.md](docs/architecture.md) — System structure and boundaries
-- [docs/decisions/](docs/decisions/) — Decision records
-- [docs/conventions/](docs/conventions/) — Coding standards
+- `README.md` — project, stack, and commands
+- `docs/architecture.md` — system structure and boundaries
+- `docs/decisions/` — decision records
+- `docs/conventions/` — coding standards

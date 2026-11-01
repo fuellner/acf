@@ -21,7 +21,7 @@ Lightweight, agent-agnostic documentation skill. Analyzes a repository and creat
 - If the target repository already has an `AGENTS.md`, leave it untouched. Do not ask. Do not create, modify, overwrite, or propose a rewrite.
 - If it has none, ask once whether to write one. Write it only after an explicit yes. A decline or no answer yet means it stays absent. Continue with the other documents either way.
 
-`docs/legal/` is **owned by f-legal**. This skill never creates, fills, or updates it.
+`docs/legal/` is out of scope. This skill never creates, fills, or updates it.
 
 This skill does not create or fill `MEMORY.md`, `LEARNINGS.md`, or `ERRORS.md`. Those files grow during later work. There is no initial-fill pass.
 
@@ -45,11 +45,11 @@ On a yes, copy `templates/agents.md.tmpl` byte for byte to the target root as a 
 5. Only create convention files for languages that are actually detected. Language rules live in those files. `AGENTS.md` only points at `docs/conventions/`.
 6. Only create individual decision records when the decision is unambiguous from code or existing docs. An index of existing decisions does not require inventing a new decision.
 7. After writing the individual documents, create or refresh `index.md` by following `references/directory-index.md` in every generated or maintained documentation directory under `docs/`, including `docs/conventions/`, `docs/decisions/`, and nested directories. Repair missing indexes in existing convention and decision directories even when no new individual document is needed.
-8. Do not create or modify `docs/legal/` — that directory belongs to f-legal. Do not create `docs/implement/` and do not edit implementation logs — `f-implement` owns them. If `docs/implement/` already exists, refresh only its `index.md` using the implement schema in `references/directory-index.md`.
+8. Do not create or modify `docs/legal/`. Do not create `docs/implement/` and do not edit implementation logs — `f-implement` owns them. If `docs/implement/` already exists, refresh only its `index.md` using the implement schema in `references/directory-index.md`.
 9. Only include sections in generated files when they can be meaningfully filled. Finalize README documentation links after generating directory indexes:
    - Reference documentation in a `docs/` subdirectory through that directory's `index.md`, e.g. `docs/decisions/index.md`. Do not link individual documents inside the subdirectory or the directory path itself from the README; its index is the table of contents.
    - Link standalone documents directly under `docs/`, such as `docs/architecture.md`, directly from the README.
-   - Apply this rule to new and existing README documentation links, preserving surrounding authored prose and meaningful descriptions. Use relative links and include only existing targets. If an index is missing, generate it within this skill's scope; for directories owned by another skill, such as `docs/legal/`, report the missing index instead of creating it or falling back to an individual document or directory link.
+   - Apply this rule to new and existing README documentation links, preserving surrounding authored prose and meaningful descriptions. Use relative links and include only existing targets. If an index is missing, generate it within this skill's scope; for out-of-scope directories such as `docs/legal/`, report the missing index instead of creating it or falling back to an individual document or directory link.
 10. At the end: short report of what was created or updated, which placeholders were filled, and whether `AGENTS.md` was left unchanged, skipped, or copied.
 
 ## References
@@ -71,7 +71,7 @@ All templates are located in `templates/` relative to this skill:
 - Prefer the smallest change that fulfills the requirement.
 - Never invent content that cannot be derived from the repository.
 - Keep documentation as short and simple as possible while remaining complete enough for humans and agents.
-- AGENTS.md and skill instructions are in English. Exception: `f-legal` instructions, its templates, and `docs/legal/` are German; this skill does not create or edit them. Human-facing documents (README, architecture, decisions) are in German. `f-feature-summary` instructions stay English; its templates and `docs/features/` are German.
+- AGENTS.md and skill instructions are in English. Human-facing documents (README, architecture, decisions) are in German. `f-feature-summary` instructions stay English; its templates and `docs/features/` are German.
 - Progressive disclosure: AGENTS.md is the short index; deeper docs are linked.
 
 ## Before you finish
