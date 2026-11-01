@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-01
+- `templates/agents.md.tmpl` and the repository root `AGENTS.md` are identical again: one Boundaries block, three Conventions bullets, a merged Subagents/Model section, and an inline memory format.
+- The memory section defines creation on first entry, read trigger, precedence, verification, limits, and commit policy.
+- `f-legal` is gone: `docs/legal/` is out of scope, and the README template no longer links a legal index.
+- The memory format now names file headings, entry shape, placeholder cleanup, and cross-machine conflicts.
+
 ## 2026-10-31
 - `AGENTS.md` is optional. An existing file is left unchanged and the skill does not ask about it. A missing file is written only after an explicit yes, as a byte copy of `templates/agents.md.tmpl`.
 - The template no longer carries a `TEMPLATE (f-docs)` header or project, stack, command, or language-rule sections. Language rules live in `templates/conventions/` for PHP, Python, TypeScript, and SQL. The index only points at `docs/conventions/`.

@@ -46,4 +46,3 @@
 - [docs/architecture.md](docs/architecture.md) — Architektur
 - [Entscheidungen](docs/decisions/index.md) — Inhaltsverzeichnis der Entscheidungsdokumente
 - [Konventionen](docs/conventions/index.md) — Inhaltsverzeichnis der Konventionen
-- [Regulatorische Hinweise](docs/legal/index.md) — Inhaltsverzeichnis der regulatorischen Dokumentation

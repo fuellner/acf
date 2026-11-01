@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-01
+- The `f-legal` menu line and prompt are removed; the optional section lists `f-docs` and `f-feature-summary`.
+
 ## 2026-10-31
 - The f-docs menu line and prompt treat `AGENTS.md` as optional: write it only when the repository has none and the user agrees, and leave an existing file unchanged.
 
