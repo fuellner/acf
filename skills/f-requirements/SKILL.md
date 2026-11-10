@@ -93,6 +93,14 @@ All templates live relative to this skill:
 
 Write all output under `docs/requirements/` in the target repository.
 
+## Workflow overview
+
+End every response with this short overview:
+
+- **Cycle:** `f-requirements` → `f-tasks` → `f-testing` → `f-implement` → `f-code-review`
+- **Now:** Requirements: the REQ document was created or updated.
+- **Next:** `f-tasks` to break the requirement into tasks, or a human review of the REQ.
+
 ## Before you finish
 
 - Every acceptance criterion carries a unique `AC-n`; existing identifiers are unchanged. Every new or changed criterion has a concrete `Check` and a `Must not`; behavioral criteria use Given/When/Then.

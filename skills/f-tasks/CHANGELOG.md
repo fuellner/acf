@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-11-10
+- Each response ends with a workflow overview: the cycle steps, the current step, and the next step.
 - The `f-refactor` plan source and its step-to-task rules are removed. Tasks come from requirements, ad-hoc descriptions, or review findings.
 - Untrusted input is stated explicitly.
 - The task template has an optional `**Mode**` line, and the complexity table uses the `mechanical`/`bounded`/`complex` tiers from `AGENTS.md`.

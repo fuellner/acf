@@ -115,6 +115,14 @@ Write the log and the index under `docs/implement/` in the target repository. Do
 
 Follow `references/directory-index.md` whenever creating or updating documentation under `docs/`.
 
+## Workflow overview
+
+End every response with this short overview:
+
+- **Cycle:** `f-requirements` → `f-tasks` → `f-testing` → `f-implement` → `f-code-review`
+- **Now:** Implementation: the task sits on its dev branch, uncommitted.
+- **Next:** `f-testing` in verify mode, then `f-code-review`.
+
 ## Before you finish
 
 - The task was resolved by exact ID. More than one task ran only when the set was independent and the user had approved that set.

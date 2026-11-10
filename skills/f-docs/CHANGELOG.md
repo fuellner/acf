@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-11-10
+- Each response ends with a workflow overview: the cycle steps, the current step, and the next step.
 - The `docs/refactor/` index schema and its directory exceptions are removed from `references/directory-index.md`.
 - Untrusted input is stated explicitly.
 - The language rule covers `docs/conventions/`.

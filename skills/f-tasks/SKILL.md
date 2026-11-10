@@ -149,6 +149,14 @@ Write all output under `docs/tasks/` in the target repository.
 
 Follow `references/directory-index.md` whenever creating or updating documentation under `docs/`. Serialize shared index updates against the latest contents.
 
+## Workflow overview
+
+End every response with this short overview:
+
+- **Cycle:** `f-requirements` → `f-tasks` → `f-testing` → `f-implement` → `f-code-review`
+- **Now:** Tasks: the task list was created or updated.
+- **Next:** `f-testing` for the first task, then `f-implement`.
+
 ## Before you finish
 
 - Every task states a verifiable completion criterion, the files to touch, and its dependencies.

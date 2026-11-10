@@ -141,6 +141,14 @@ Follow `references/directory-index.md` whenever creating or updating documentati
 - `references/directory-index.md` — shared `index.md` rules. Follow it when writing documentation.
 - `references/check-to-test-examples.md` — read when you need concrete mapping patterns.
 
+## Workflow overview
+
+End every response with this short overview:
+
+- **Cycle:** `f-requirements` → `f-tasks` → `f-testing` → `f-implement` → `f-code-review`
+- **Now:** Testing: the test plan or coverage report was written.
+- **Next:** `f-implement` after a test plan; `f-code-review` after a coverage report.
+
 ## Before you finish
 
 - The plan or coverage file is on the filesystem at the resolved path. After a write, a read of that path succeeded and the file is non-empty and contains this run's Source, Mode, and Revision. The final report states that repository-relative path. A plan or report that appears only in the chat is unfinished. When the path already existed and the user did not ask for an update, the report names that file and does not carry a replacement plan.
@@ -150,6 +158,6 @@ Follow `references/directory-index.md` whenever creating or updating documentati
 - Anything added beyond the Checks is marked `*(supplemented)*`.
 - The file follows the naming rule and states source + mode + revision.
 - `docs/tests/index.md` lists each plan and coverage file with Source, Mode, Revision, and File. Source is the exact source-id used in the filename.
-- Verify reports identify the inspected AC/test inputs and their SHA-256 hashes, or explicitly disclose why those inputs cannot be validated. Test references and coverage gaps are concrete; no test execution is claimed.
+- Coverage reports identify the inspected AC/test inputs and their SHA-256 hashes, or explicitly disclose why those inputs cannot be validated. Test references and coverage gaps are concrete; no test execution is claimed.
 - No unfilled `{{...}}` placeholder or `…` filler remains in new or edited sections.
 - Every affected documentation directory and parent below `docs/` has an up-to-date `index.md` per `references/directory-index.md`; entries match existing contents and all generated links resolve.

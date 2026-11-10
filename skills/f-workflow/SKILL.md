@@ -120,6 +120,14 @@ Prefer tables and structured bullets. Generate individuals first, then the overv
 - Do not reorder the core cycle. Step 4 is `f-implement`.
 - Do not execute any of the listed skills.
 
+## Workflow overview
+
+End every response with this short overview:
+
+- **Cycle:** `f-requirements` → `f-tasks` → `f-testing` → `f-implement` → `f-code-review`
+- **Now:** Menu: the workflow menu was shown.
+- **Next:** Run the selected skill.
+
 ## Before you finish
 
 - The menu is shown exactly as structured, unless behavior step 2 skipped it.

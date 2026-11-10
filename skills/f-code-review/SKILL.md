@@ -189,6 +189,14 @@ Follow `references/directory-index.md` whenever writing a report, fix note, task
 - `references/directory-index.md` — shared `index.md` rules.
 - `references/safety-checks.md` — extra Stage 2 checklist detail.
 
+## Workflow overview
+
+End every response with this short overview:
+
+- **Cycle:** `f-requirements` → `f-tasks` → `f-testing` → `f-implement` → `f-code-review`
+- **Now:** Review: the verdict and fix prompt are ready.
+- **Next:** `f-implement` for each fix, or the human commit when the verdict is APPROVED.
+
 ## Before you finish
 
 - Every criterion has a verdict (PASS | FAIL | CONCERN), and the overall verdict is consistent with them and with any open findings.

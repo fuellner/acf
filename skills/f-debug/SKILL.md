@@ -107,6 +107,14 @@ Follow `references/directory-index.md` whenever saving documentation under `docs
 
 Read the templates before generating output. Keep generated reports concise.
 
+## Workflow overview
+
+End every response with this short overview:
+
+- **Cycle:** `f-requirements` → `f-tasks` → `f-testing` → `f-implement` → `f-code-review`
+- **Now:** Debug (side branch): the root cause and fix proposal are ready.
+- **Next:** `f-implement` with the fix prompt, or `f-tasks` when the finding needs its own task.
+
 ## Before you finish
 
 - Every claim cites concrete evidence (frame, log line, assertion, code location); hypotheses are labelled as such.

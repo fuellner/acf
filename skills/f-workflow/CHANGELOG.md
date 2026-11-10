@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-11-10
+- Each response ends with a workflow overview: the cycle steps, the current step, and the next step.
 - The `f-refactor` handoff, menu section, prompt template, and related rules are removed. The menu has Core and Optional sections only.
 - `f-debug` is listed as a side branch, not as core step 6.
 - The implementation prompt and menu allow commit or push only on explicit request.

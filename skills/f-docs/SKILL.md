@@ -74,6 +74,14 @@ All templates are located in `templates/` relative to this skill:
 - AGENTS.md and skill instructions are in English. Human-facing documents (README, architecture, decisions) are in German. `f-feature-summary` instructions stay English; its templates and `docs/features/` are German. `docs/conventions/` documents follow the project's language; the bundled convention templates are English.
 - Progressive disclosure: AGENTS.md is the short index; deeper docs are linked.
 
+## Workflow overview
+
+End every response with this short overview:
+
+- **Cycle:** `f-requirements` → `f-tasks` → `f-testing` → `f-implement` → `f-code-review`
+- **Now:** Docs (side lane): the documentation was created or updated.
+- **Next:** Continue the cycle at `f-requirements` or `f-tasks`, or a human review of the docs.
+
 ## Before you finish
 
 - An existing `AGENTS.md` is unchanged, and the run did not ask about it.

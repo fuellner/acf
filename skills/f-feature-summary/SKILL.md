@@ -101,6 +101,14 @@ Write all output under `docs/features/` in the target repository.
 
 Follow `references/directory-index.md` whenever creating or updating documentation under `docs/`. Use the features schema (`ID | Title | Status | File`). When `overview.md` exists, add a row for it in that table (ID `—`, file `overview.md`, its Status) so every direct document is listed.
 
+## Workflow overview
+
+End every response with this short overview:
+
+- **Cycle:** `f-requirements` → `f-tasks` → `f-testing` → `f-implement` → `f-code-review`
+- **Now:** Feature summary (optional lane): the unit or overview document was created or updated.
+- **Next:** Continue the cycle at `f-requirements` or `f-tasks`, or a human review of the summary.
+
 ## Before you finish
 
 - No unfilled placeholder or template HTML comment remains in new or edited sections. Empty optional sections were removed.

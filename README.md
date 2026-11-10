@@ -2,14 +2,15 @@
 
 [![skills](https://img.shields.io/badge/skills-9-blue)](#-skills)
 [![runtime](https://img.shields.io/badge/runtime-none-informational)](#-quality)
-[![agents](https://img.shields.io/badge/agents-OpenCode%20%7C%20Claude--compatible-8A2BE2)](#-install)
+[![agents](https://img.shields.io/badge/agents-OpenCode%20%7C%20Claude%20%7C%20Codex-8A2BE2)](#-install)
 
 > A collection of reusable coding-agent skills that turn an ad-hoc chat into a disciplined
 > feature cycle: requirements → tasks → tests → implementation → review, with debugging
 > and docs lanes around it.
 
-The skills are plain Markdown instruction sets. They run in any agent harness that reads
-`SKILL.md` files — OpenCode or a Claude-compatible setup.
+The skills are plain Markdown instruction sets. They run in any agent harness that can
+read repository files: OpenCode and Claude Code load `SKILL.md` natively, and Codex,
+Cursor, or a plain chat can follow the same files when you reference them.
 
 > **Languages:** skill instructions are English. Human-facing documents that the skills
 > generate in a target repository (README, architecture, decisions, feature summaries)
@@ -74,6 +75,8 @@ flowchart LR
   back into the normal steps.
 - `f-workflow` is the entry point with the menu and ready-to-paste prompts for
   every step.
+- Every skill ends its response with a short workflow overview: the cycle steps, the
+  current step, and the next step.
 
 ---
 
@@ -158,7 +161,3 @@ writes the target's root `README.md` and, with your agreement, `AGENTS.md`.
 - Skills produce documents; code changes flow exclusively through `f-implement`,
   inside one task's uncommitted dev branch.
 - Each rule has one home: hard boundaries live in `AGENTS.md`, workflow phases in the skill.
-
-## 🔗 Further reading
-
-- [AGENTS.md](AGENTS.md) — the template master

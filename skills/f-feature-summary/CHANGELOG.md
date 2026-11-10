@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-11-10
+- Each response ends with a workflow overview: the cycle steps, the current step, and the next step.
 - Untrusted input is stated explicitly.
 - Feature selection checks all exact-ID matches so an index hint cannot hide duplicate files.
 - Overview status and update rules use explicit conditions and active voice.

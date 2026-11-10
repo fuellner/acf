@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-11-10
+- Each response ends with a workflow overview: the cycle steps, the current step, and the next step.
 - Requirement updates check all exact-ID matches so an index hint cannot hide duplicate files.
 - A ticket or issue is fetched only on explicit user request.
 - The update rule is active voice, and the traceability writers are separate sentences.
