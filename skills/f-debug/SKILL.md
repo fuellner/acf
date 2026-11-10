@@ -30,7 +30,7 @@ Follow these phases in order. Complete each before moving to the next. Stop and 
 
 1. **Reproduce**
    - Confirm whether the failure is reproducible. Do not change code, data, or configuration to make it reproduce.
-   - Run the failing test or replay the reported command only when the run stays inside an isolated test environment: local fixtures, a throwaway database, no calls to external services, and no writes outside a temp or test sandbox. If that isolation is not evident, ask the user before running anything.
+   - Run the failing test or replay the reported command only when the run stays inside an isolated test environment: local fixtures, a throwaway database, no calls to external services unless the user explicitly requests them, and no writes outside a temp or test sandbox. If that isolation is not evident, ask the user before running anything.
    - Inspecting logs, stack traces, and code does not require that check.
    - Record exact steps, environment assumptions, and observed vs. expected behavior.
    - If not reproducible with the given information, state what is missing and request it. Do not proceed to root-cause claims.
@@ -54,7 +54,7 @@ Follow these phases in order. Complete each before moving to the next. Stop and 
 - One pass only. Do not iterate on your own analysis within this skill.
 - Minimal scope: propose only the smallest change that fixes the isolated cause. Do not apply that change.
 - No inventions: every claim must be tied to provided evidence or an explicit request for missing evidence.
-- Executing a test or reproduction command is allowed only inside the isolated test environment defined in Reproduce; otherwise ask. Inspecting logs, stack traces, and code needs no run. Never modify code, config, or application data. Never run migrations, writes against a shared or production database, calls to external services, or installs that alter the repo. Writes that stay inside the isolated test environment are part of that run. Never update task status. Writing the report, fix prompt, directory indexes, and the review cross-link described below is allowed.
+- Executing a test or reproduction command is allowed only inside the isolated test environment defined in Reproduce; otherwise ask. Inspecting logs, stack traces, and code needs no run. Never modify code, config, or application data. Do not run migrations, writes against a shared or production database, calls to external services, or installs that alter the repo unless the user explicitly requests it; ask if unclear. Writes that stay inside the isolated test environment are part of that run. Never update task status. Writing the report, fix prompt, directory indexes, and the review cross-link described below is allowed.
 - Clear boundaries:
   - This skill = analysis + proposal.
   - Implementing agent = applies the fix and runs verification.

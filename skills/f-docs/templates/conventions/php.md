@@ -20,7 +20,7 @@ These rules apply to all PHP code in this repository.
 - Prefer typed properties and return types when the surrounding code already uses them.
 
 ## Dependencies
-- Add a dependency only when the task explicitly requests it, and only via Composer. Never manually edit `composer.json` or `vendor/`.
+- Add a dependency only when the user explicitly requests or approves it, and only via Composer. If unclear, ask. Never manually edit `composer.json` or `vendor/`.
 
 ## Error Handling
 - Do not introduce empty catch blocks.

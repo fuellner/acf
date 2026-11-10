@@ -11,7 +11,7 @@ These rules apply to all TypeScript code in this repository. Framework: [detecte
 - Do not add comments that merely describe what the code does. Only add comments when the reason or constraint is non-obvious.
 
 ## Dependencies
-- Add a dependency only when the task explicitly requests it. Use the package manager already present in the repository.
+- Add a dependency only when the user explicitly requests or approves it. If unclear, ask. Use the package manager already present in the repository.
 
 ## Types
 - Avoid `any`. Only use it if the surrounding code already uses it in the same way or the task explicitly requires it.

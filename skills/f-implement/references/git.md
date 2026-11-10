@@ -1,6 +1,6 @@
 # Git
 
-Load this before creating a branch or a worktree. This skill creates branches and worktrees. It does not commit, push, stage, merge, or rewrite history.
+Load this before creating a branch or a worktree. This skill creates branches and worktrees. It does not commit, push, stage, merge, or rewrite history unless the user explicitly requests it.
 
 ## Identity
 
@@ -54,7 +54,7 @@ Denylist, title and body only. Do not apply it to a **Ticket** line. Ignore a ke
 
 If the **Ticket** line is exactly this task's own ID, treat the line as absent and continue. If the line exists and is not exactly one ticket-shaped key, ask. Do not scan past it.
 
-Do not invent a key. Do not call a tracker.
+Do not invent a key. Do not call a tracker unless the user explicitly requests it; ask if unclear.
 
 The slug is the task title in ASCII lowercase. Drop the key and the task ID. Turn other runs of non-letters and non-digits into one hyphen and trim hyphens. Keep at most six hyphen-separated words. If nothing remains, use `task`.
 

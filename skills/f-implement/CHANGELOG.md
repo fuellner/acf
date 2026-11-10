@@ -3,6 +3,7 @@
 ## 2026-11-10
 - The `f-refactor` step-phase handoff is removed: no step-phase gate, no refactor handoff prompt, and no step-phase mode or constraints.
 - Task selection checks all exact-ID matches so an index hint cannot hide duplicate task files.
+- Commit, push, staging, and git identity changes are allowed only on explicit user request; otherwise the skill asks.
 
 ## 2026-10-28
 - A **Ticket** line is used as written. A ticket-shaped key found only in the title or body is shown and confirmed once. Common non-ticket prefixes are ignored. The project part is 2–10 characters and starts with a letter.

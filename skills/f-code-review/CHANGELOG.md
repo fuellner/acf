@@ -3,6 +3,7 @@
 ## 2026-11-10
 - The `f-refactor` integration is removed: no behavior-preservation stage and no refactor-step status propagation.
 - Output language is stated as English.
+- The skill does not fetch URLs, issues, tickets, or PRs unless the user explicitly asks for it.
 
 ## 2026-10-27
 - Review filenames use one placeholder, `<unit>` (TASK-ID, else REQ-ID, else branch slug), in the report, the fix note, and status propagation.

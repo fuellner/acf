@@ -2,7 +2,7 @@
 name: f-implement
 description: >
   Implements one task from the task index on a new dev branch, without
-  committing or pushing. Mode is tdd (red-green-refactor, one acceptance
+  committing or pushing unless the user explicitly requests it. Mode is tdd (red-green-refactor, one acceptance
   criterion at a time) or direct (implement, then hand off for verification).
   Checks the git identity and does not change it. A human reviews and commits
   the diff. Independent tasks can run in separate git worktrees, which are not
@@ -34,7 +34,7 @@ If the ID, the file, or the mode is unclear, ask once and wait. Do not guess.
 
 1. Resolve the task. Load `references/selection.md`. The default is one task.
 2. Resolve the mode. Load `references/modes.md`. Precedence is task, then the user. If those name different modes, ask once. If none names a mode, ask once.
-3. Load `references/git.md`. Check the git identity. Create the dev branch, or one worktree and one branch per task when more than one task was approved. Do not commit, push, stage, or change the identity.
+3. Load `references/git.md`. Check the git identity. Create the dev branch, or one worktree and one branch per task when more than one task was approved. Do not commit, push, stage, or change the identity unless the user explicitly requests it; ask if unclear.
 4. Set the task **Status** to `in-progress`, update **Updated**, and update that row in `docs/tasks/index.md`. A `changes-requested` task moves to `in-progress` the same way. Read the latest index in this worktree first and preserve other rows.
 5. Write `docs/implement/<TASK-ID>-log.md` from `templates/implementation-log.md` before editing application code. Remove every unfilled `{{...}}` placeholder. On resume, load `references/resume.md` and continue the existing log, branch, and worktree.
 6. Implement only what the task requires, in the resolved mode. Stay inside **Files to touch**. Record notable findings as follow-up suggestions in the log. Do not write task files; `f-tasks` does that.
@@ -58,11 +58,11 @@ Please use the f-code-review skill to review the uncommitted changes on branch <
 
 Stop and ask before adding a dependency, running a database migration or backfill, deploying, or deleting a file the task does not list.
 
-No production access: no production shell, database, logs, or deploy.
+Do not access production (shell, database, logs, deploy) unless the user explicitly requests it; ask if unclear.
 
 No secret values in code, logs, the implementation log, or the report. Record a secret as file and line only.
 
-Do not set the git identity. Do not commit. Do not push. Do not stage. Do not remove a worktree, delete its directory, or discard local changes.
+Do not set the git identity, commit, push, or stage unless the user explicitly requests it; ask if unclear. Do not remove a worktree, delete its directory, or discard local changes.
 
 ## Status
 
@@ -119,7 +119,7 @@ Follow `references/directory-index.md` whenever creating or updating documentati
 
 - The task was resolved by exact ID. More than one task ran only when the set was independent and the user had approved that set.
 - The mode is `tdd` or `direct` and came from the task or the user.
-- The branch is `dev/<KEY>-<short-kebab-title>`. Nothing was committed, pushed, staged, or written into the git identity.
+- The branch is `dev/<KEY>-<short-kebab-title>`. Nothing was committed, pushed, staged, or written into the git identity unless the user explicitly requested it.
 - An unset or mismatched identity was asked, not repaired, and the address was not written into the log.
 - Every worktree from `git worktree list` is in the report. No worktree was removed.
 - The log matches the template. Each acceptance criterion has a command and a result, or the gap is explicit and the status is not `ready-for-review`.

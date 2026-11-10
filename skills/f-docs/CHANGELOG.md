@@ -6,6 +6,11 @@
 - The language rule covers `docs/conventions/`.
 - `templates/agents.md.tmpl` mirrors the updated `AGENTS.md` boundaries.
 - The project memory feature is removed: `MEMORY.md`, `LEARNINGS.md`, and `ERRORS.md` are gone, and the template no longer carries a memory contract.
+- The boundary on external APIs and services now requires explicit user approval or request and warns about data leaving the machine and possible side effects.
+- The remote-repository boundary now requires explicit user approval or request instead of an absolute ban.
+- The dependency rules in the convention templates require explicit user approval or request.
+- The SQL convention template allows schema and data changes only on explicit user request or approval, and schema work only against an isolated test database.
+- The `AGENTS.md` boundaries are permission-based: gated actions are allowed on explicit user request or approval, and unclear cases ask first.
 
 ## 2026-11-01
 - `templates/agents.md.tmpl` and the repository root `AGENTS.md` are identical again: one Boundaries block, three Conventions bullets, a merged Subagents/Model section, and an inline memory format.

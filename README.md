@@ -84,7 +84,7 @@ flowchart LR
 | `f-requirements` | Turn free text, tickets, or notes into requirement documents with strict, checkable acceptance criteria (Given/When/Then + Check + Must-not). | `docs/requirements/` |
 | `f-tasks` | Break requirements or review findings into agent-sized tasks with complexity, priority, dependencies, and parallel groups. | `docs/tasks/` |
 | `f-testing` | Derive test plans from the Check statements of acceptance criteria, or verify existing coverage. Characterization tests lock current behavior. | `docs/tests/` |
-| `f-implement` | Implement exactly one task on a dev branch (TDD or direct mode). No commit, no push. | `docs/implement/` |
+| `f-implement` | Implement exactly one task on a dev branch (TDD or direct mode). No commit or push unless explicitly requested. | `docs/implement/` |
 | `f-code-review` | Review a diff against the acceptance criteria plus security, performance, and side effects; deliver a ready-to-use fix prompt. | `docs/reviews/` |
 | `f-debug` | Structured, evidence-based debugging: reproduce → isolate root cause → minimal fix proposal. Does not implement the fix. | `docs/debug/` |
 | `f-docs` | Create or refresh README, architecture, conventions, and decisions from repository analysis. Writes `AGENTS.md` only when none exists and you agree. | README, `docs/architecture.md`, `docs/conventions/`, `docs/decisions/` |
@@ -145,9 +145,9 @@ writes the target's root `README.md` and, with your agreement, `AGENTS.md`.
 - **Markdown only.** No runtime, no build, no toolchain — nothing to install or update.
 - **Skill contract:** every skill ships `SKILL.md` (YAML frontmatter: `name`,
   `description`) and a `CHANGELOG.md`; templates ship only what the skill actually owns.
-- **Discipline by design:** skills never commit, never push, never touch databases or
-  remotes; implementation and review stay in uncommitted working trees, and a human
-  merges after review.
+- **Discipline by design:** skills commit, push, or touch databases or remotes only
+  when explicitly requested; implementation and review stay in uncommitted working
+  trees by default, and a human merges after review.
 - **Verification is manual:** read the affected `SKILL.md`, then run the skill against
   a scratch repository. After editing the root `AGENTS.md`, mirror the change into
   `skills/f-docs/templates/agents.md.tmpl` and re-check with `cmp` (byte-identical).

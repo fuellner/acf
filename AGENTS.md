@@ -10,13 +10,15 @@ Short index for humans and agents. Hard rules live here. Load a linked file only
 
 ## Boundaries
 
-- Ask first before adding a new dependency.
-- Ask first before changing authentication, permissions, or access control.
-- Never modify the remote repository (no push, no force-push, no direct remote changes of any kind).
-- Never commit, push, stage, or change the git identity without explicit user approval.
-- Never touch a production or shared database. Ask before any schema change, migration, backfill, or data change; run such work only against an isolated test database.
-- No production access: no production shell, database, logs, or deploy.
-- Never call external APIs or services unless the task explicitly requires it.
+Ask first whenever it is unclear whether the user has explicitly requested or approved an action.
+
+- Add a dependency only when the user explicitly requests or approves it.
+- Change authentication, permissions, or access control only when the user explicitly requests or approves it.
+- Commit, stage, or change the git identity only when the user explicitly requests or approves it.
+- Push, force-push, or otherwise change the remote repository only when the user explicitly requests or approves it.
+- Touch a production or shared database only when the user explicitly requests or approves it; ask before any schema change, migration, backfill, or data change, and run such work against an isolated test database unless the user explicitly approves production.
+- Access production (shell, database, logs, deploy) only when the user explicitly requests or approves it.
+- Call external APIs or services only when the user explicitly requests or approves it; warn what data leaves the machine and what side effects the call can have.
 - Never log, store, transmit, or include personal data (or any data that could identify a person) in context, logs, or output.
 - Never commit `.env` files or any secrets.
 - Never manually edit generated files.

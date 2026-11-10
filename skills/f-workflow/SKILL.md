@@ -35,7 +35,7 @@ Does not perform domain work. Only displays the menu and supplies prompt templat
 1. **f-requirements** — Capture and normalize requirements into strict, checkable acceptance criteria.  
 2. **f-tasks** — Break requirements, ad-hoc work, or review findings into agent-sized tasks.  
 3. **f-testing** — Derive concrete test plans from Checks or verify existing coverage.  
-4. **f-implement** — Implement one task on a dev branch. No commit and no push.  
+4. **f-implement** — Implement one task on a dev branch. No commit or push unless explicitly requested.  
 5. **f-code-review** — Review a diff against acceptance criteria and safety concerns; produce fix prompts.
 
 ### Side branch
@@ -73,7 +73,7 @@ Mode: generate | verify
 
 ### f-implement
 ```
-Please use the f-implement skill on this task. Stay inside the task. Create the dev branch only; do not commit or push.
+Please use the f-implement skill on this task. Stay inside the task. Create the dev branch; do not commit or push unless I explicitly ask for it.
 
 Task: [exact ID, such as TASK-001]
 Mode: tdd | direct | ask

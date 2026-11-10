@@ -5,6 +5,7 @@
 - Untrusted input is stated explicitly.
 - The task template has an optional `**Mode**` line, and the complexity table uses the `mechanical`/`bounded`/`complex` tiers from `AGENTS.md`.
 - Task selection checks all exact-ID matches so an index hint cannot hide duplicate task files.
+- A tracker is called only on explicit user request.
 
 ## 2026-10-28
 - Optional **Ticket** line on the task template. It is copied only when the source already contains one ticket key (2–10 characters, starting with an uppercase letter, then a hyphen and a number). Workflow IDs and common non-ticket prefixes are not tickets. No tracker is called and no key is invented. Tasks without the line stay valid.

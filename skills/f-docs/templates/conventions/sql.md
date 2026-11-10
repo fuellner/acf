@@ -16,8 +16,8 @@ These rules apply to all SQL in this repository (raw SQL and query builder usage
 - When using a query builder (the framework in use), prefer the builder methods over raw SQL unless the existing code or the requirement makes raw SQL clearer.
 
 ## Schema & Changes
-- Never modify database schema, create migrations, or alter existing tables unless the task explicitly requires it.
-- Never execute queries that modify data (INSERT, UPDATE, DELETE, TRUNCATE) unless the task explicitly requires it.
+- Modify database schema, create migrations, or alter existing tables only when the user explicitly requests or approves it, and only against an isolated test database. If unclear, ask.
+- Execute queries that modify data (INSERT, UPDATE, DELETE, TRUNCATE) only when the user explicitly requests or approves it. If unclear, ask.
 
 ## Naming & Structure
 - Follow the naming conventions of the existing tables and columns. Do not introduce a new naming style.

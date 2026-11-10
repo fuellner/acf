@@ -22,7 +22,7 @@ These rules apply to all Python code in this repository.
 - Keep imports at the top of the file. Match the existing import style.
 
 ## Dependencies
-- Add a dependency only when the task explicitly requests it.
+- Add a dependency only when the user explicitly requests or approves it. If unclear, ask.
 - Use the package manager already present in the repository (`uv.lock`, `poetry.lock`, `Pipfile`, or `requirements.txt`). Do not introduce another one.
 
 ## Error Handling
