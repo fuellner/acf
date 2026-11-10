@@ -23,7 +23,7 @@ Lightweight, agent-agnostic documentation skill. Analyzes a repository and creat
 
 `docs/legal/` is out of scope. This skill never creates, fills, or updates it.
 
-Templates live in this skill directory and are copied only when the individual target file does not exist. Existing target files are maintained and supplemented, including on the first skill invocation. Templates in the skill directory remain untouched.
+Templates live in this skill directory. Copy a template only when the individual target file does not exist. Maintain and supplement existing target files, including on the first skill invocation. Do not change templates in the skill directory.
 
 On a yes, copy `templates/agents.md.tmpl` byte for byte to the target root as a regular file. The template is deliberately not named `AGENTS.md`: a file with that name is auto-loaded by agent harnesses as active instructions. Do not create a template with that name.
 
@@ -79,8 +79,8 @@ All templates are located in `templates/` relative to this skill:
 - An existing `AGENTS.md` is unchanged, and the run did not ask about it.
 - When `AGENTS.md` was missing and the user did not agree, it is still absent.
 - When `AGENTS.md` was written, it matches `templates/agents.md.tmpl` and has no added section and no unfilled placeholder.
-- Newly generated files other than that copy have no template markers or unfilled placeholders. Authored content in pre-existing files is preserved.
+- Newly generated files other than that copy have no template markers or unfilled placeholders. Preserve authored content in pre-existing files.
 - Links created or updated in `README.md` resolve. Any unresolved pre-existing links or proposed policy changes are reported without deleting authored content. The `AGENTS.md` link is omitted when that file does not exist.
-- README references to documentation in `docs/` subdirectories target the corresponding `index.md`; standalone files directly under `docs/` are linked directly. No individual subdirectory documents or bare directory paths remain as README documentation links.
+- README references to documentation in `docs/` subdirectories target the corresponding `index.md`. For a standalone file directly under `docs/`, link the file itself. Do not leave individual subdirectory documents or bare directory paths as README documentation links.
 - No rule contradicts the detected stack, and no `docs/legal/` content or implementation log was written.
 - Every affected documentation directory and parent below `docs/` has an up-to-date `index.md` per `references/directory-index.md`; entries match existing contents and all generated links resolve. `docs/legal/` remains excluded.

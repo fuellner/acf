@@ -4,6 +4,8 @@
 - The `f-refactor` integration is removed: no behavior-preservation stage and no refactor-step status propagation.
 - Output language is stated as English.
 - The skill does not fetch URLs, issues, tickets, or PRs unless the user explicitly asks for it.
+- Long status and spec-compliance rules are split, and the verdict order is an explicit list.
+- `references/coverage-evidence.md` calls the artifact `coverage report`, matching `f-testing`.
 
 ## 2026-10-27
 - Review filenames use one placeholder, `<unit>` (TASK-ID, else REQ-ID, else branch slug), in the report, the fix note, and status propagation.

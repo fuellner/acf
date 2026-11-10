@@ -8,6 +8,7 @@
 - The project memory feature is removed: `MEMORY.md`, `LEARNINGS.md`, and `ERRORS.md` are gone, and the template no longer carries a memory contract.
 - The boundary on external APIs and services now requires explicit user approval or request and warns about data leaving the machine and possible side effects.
 - The remote-repository boundary now requires explicit user approval or request instead of an absolute ban.
+- Template, generated-file, and README link rules use active voice and are split into short sentences.
 - The dependency rules in the convention templates require explicit user approval or request.
 - The SQL convention template allows schema and data changes only on explicit user request or approval, and schema work only against an isolated test database.
 - The `AGENTS.md` boundaries are permission-based: gated actions are allowed on explicit user request or approval, and unclear cases ask first.

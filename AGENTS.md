@@ -5,7 +5,7 @@ Short index for humans and agents. Hard rules live here. Load a linked file only
 ## Conventions
 
 - Make the smallest change that fully satisfies the requirement: no extra features, abstractions, refactorings, or drive-by changes.
-- Introduce a new concept or pattern only when the task cannot be met without it; otherwise match the existing style, naming, and structure.
+- Introduce a new concept or pattern only when the task cannot be met without it. If you do not introduce one, match the existing style, naming, and structure.
 - Do not add comments or sections that merely restate what is already obvious. Only document reasons and constraints that are non-obvious.
 
 ## Boundaries
@@ -16,9 +16,9 @@ Ask first whenever it is unclear whether the user has explicitly requested or ap
 - Change authentication, permissions, or access control only when the user explicitly requests or approves it.
 - Commit, stage, or change the git identity only when the user explicitly requests or approves it.
 - Push, force-push, or otherwise change the remote repository only when the user explicitly requests or approves it.
-- Touch a production or shared database only when the user explicitly requests or approves it; ask before any schema change, migration, backfill, or data change, and run such work against an isolated test database unless the user explicitly approves production.
+- Touch a production or shared database only when the user explicitly requests or approves it. Ask before any schema change, migration, backfill, or data change. If the user does not explicitly approve production, run such work against an isolated test database.
 - Access production (shell, database, logs, deploy) only when the user explicitly requests or approves it.
-- Call external APIs or services only when the user explicitly requests or approves it; warn what data leaves the machine and what side effects the call can have.
+- Call external APIs or services only when the user explicitly requests or approves it. Warn what data leaves the machine and what side effects the call can have.
 - Never log, store, transmit, or include personal data (or any data that could identify a person) in context, logs, or output.
 - Never commit `.env` files or any secrets.
 - Never manually edit generated files.

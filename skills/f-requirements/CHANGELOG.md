@@ -3,6 +3,7 @@
 ## 2026-11-10
 - Requirement updates check all exact-ID matches so an index hint cannot hide duplicate files.
 - A ticket or issue is fetched only on explicit user request.
+- The update rule is active voice, and the traceability writers are separate sentences.
 
 ## 2026-10-31
 - Strict-AC rules live only in `SKILL.md`; `references/strict-ac-examples.md` keeps pattern examples only, removing the duplicated (and already diverging) rules section.

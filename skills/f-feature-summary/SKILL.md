@@ -53,13 +53,15 @@ Both modes support initial creation and subsequent updates.
    - For creation, write `docs/features/FEAT-<nnn>-<short-slug>.md` using `templates/feature.md` with **Status** `current`. `<nnn>` is the three-digit number (`001` in `FEAT-001`). The template's ID placeholder is that same number, so the heading reads `FEAT-001`. For an update, edit the resolved file in place and update **Updated** when its content changes.
 3. For overview:
    - Read all feature documents under `docs/features/` (or the ones explicitly named).
-   - Synthesize a compact overview using `templates/overview.md` into `docs/features/overview.md`. Set **Status** to `current` only when every summarized unit is `current`; otherwise use `outdated`, unless the overview was re-verified against the implementation.
+   - Synthesize a compact overview using `templates/overview.md` into `docs/features/overview.md`.
+   - Set the overview **Status** to `current` only when every summarized unit is `current`, or when the overview was re-verified against the implementation.
+   - If neither condition is true, set the overview **Status** to `outdated`.
    - Prefer linking to the individual documents rather than duplicating detail.
    - On update, merge only the requested changes and preserve authored content that was not requested to change. Apply the Status transitions above. Remove unfilled placeholders, template HTML comments, and empty optional sections (including **Übergreifende Hinweise**).
 4. Update `docs/features/index.md` (create from `templates/index.md` if missing) after any change to individual units or to `overview.md`, following `references/directory-index.md`.
 5. Report what was created or updated.
 
-Updates to existing documents are allowed when the user explicitly requests an update (e.g. “update FEAT-003”, “refresh the overview”, “add the new special case to the payment feature”).
+Update an existing document only when the user explicitly requests an update (e.g. “update FEAT-003”, “refresh the overview”, “add the new special case to the payment feature”).
 
 ## Status
 

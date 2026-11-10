@@ -5,6 +5,7 @@
 - A fix prompt is required whenever a fix is proposed.
 - The template summary lists the report headings in template order, and the output language is stated as English.
 - External service calls, migrations, shared or production database writes, and repo-altering installs are allowed only on explicit user request.
+- Long guardrail and report-save rules are split, and the unit key is an ordered list.
 
 ## 2026-10-27
 - A named failing test or replayable command counts as reproduction. The skill stops only when neither a reproduction nor concrete evidence is present.

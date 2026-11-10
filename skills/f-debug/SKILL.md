@@ -54,7 +54,13 @@ Follow these phases in order. Complete each before moving to the next. Stop and 
 - One pass only. Do not iterate on your own analysis within this skill.
 - Minimal scope: propose only the smallest change that fixes the isolated cause. Do not apply that change.
 - No inventions: every claim must be tied to provided evidence or an explicit request for missing evidence.
-- Executing a test or reproduction command is allowed only inside the isolated test environment defined in Reproduce; otherwise ask. Inspecting logs, stack traces, and code needs no run. Never modify code, config, or application data. Do not run migrations, writes against a shared or production database, calls to external services, or installs that alter the repo unless the user explicitly requests it; ask if unclear. Writes that stay inside the isolated test environment are part of that run. Never update task status. Writing the report, fix prompt, directory indexes, and the review cross-link described below is allowed.
+- Run a test or reproduction command only inside the isolated test environment defined in Reproduce. If that environment is not defined, ask first.
+- Inspecting logs, stack traces, and code needs no run.
+- Do not modify code, config, or application data.
+- Run migrations, writes to a shared or production database, external service calls, and repo-altering installs only when the user explicitly requests them. If unclear, ask.
+- Writes that stay inside the isolated test environment are part of that run.
+- Do not update task status.
+- You may write the report, fix prompt, directory indexes, and the review cross-link described below.
 - Clear boundaries:
   - This skill = analysis + proposal.
   - Implementing agent = applies the fix and runs verification.
@@ -66,9 +72,21 @@ Follow these phases in order. Complete each before moving to the next. Stop and 
 
 Produce a Debug Report using the template at `templates/debug-report.md`.
 
-When a fix is proposed, also produce a short Fix Prompt using `templates/fix-prompt.md`. The Fix Prompt is written for the implementing agent and should be copy-paste ready. Findings in the fix prompt use the severity scale Critical / High / Medium / Low (the same scale as `f-code-review`); a complete analysis typically has one finding, for its isolated root cause.
+When a fix is proposed, also produce a short Fix Prompt using `templates/fix-prompt.md`. Write the Fix Prompt for the implementing agent. Make it copy-paste ready. Findings in the fix prompt use the severity scale Critical / High / Medium / Low (the same scale as `f-code-review`). A complete analysis typically has one finding, for its isolated root cause.
 
-Save the report under `docs/debug/<unit>-debug.md`, including when the failure originated from a review finding. The unit key is the Task ID when one is known (`TASK-042`), otherwise `<unit>` from the originating review file `docs/reviews/<unit>-review.md`, otherwise the Requirement ID, otherwise a short slug of the failure. When a fix is proposed, also save the fix prompt from `templates/fix-prompt.md` to `docs/debug/<unit>-fix-prompt.md`. Do not put the prompt inside the report and do not use a different unit key for it. Create `docs/debug/` only if needed. On an explicit re-analysis of the same unit, overwrite those same files, increment `Revision`, and update `**Updated**` inside the report; do not add version suffixes — Git is the history. If this analysis proposes no fix, do not write a prompt file, and remove a stale `<unit>-fix-prompt.md` from an earlier revision. Do not write the report or prompt into `docs/reviews/`.
+Save the report under `docs/debug/<unit>-debug.md`, including when the failure originated from a review finding.
+
+Resolve the unit key in this order:
+1. The Task ID when one is known (`TASK-042`).
+2. `<unit>` from the originating review file `docs/reviews/<unit>-review.md`.
+3. The Requirement ID.
+4. A short slug of the failure.
+
+When a fix is proposed, also save the fix prompt from `templates/fix-prompt.md` to `docs/debug/<unit>-fix-prompt.md`. Do not put the prompt inside the report. Do not use a different unit key for the prompt.
+
+Create `docs/debug/` only if needed. On an explicit re-analysis of the same unit, overwrite those same files, increment `Revision`, and update `**Updated**` inside the report. Do not add version suffixes — Git is the history.
+
+If this analysis proposes no fix, do not write a prompt file. Remove a stale `<unit>-fix-prompt.md` from an earlier revision. Do not write the report or prompt into `docs/reviews/`.
 
 When the failure originated from a review and exactly one review file for that unit exists under `docs/reviews/`, add a `Debug:` bullet under `## Residual Risk` in that review (create that heading at the end if it is missing), linking to this report with a relative path (`../debug/<file>` from `docs/reviews/`). Do not add a second bullet for the same report. Link that review from the debug report's Notes. If the review file is missing or ambiguous, name it in the debug report and do not create a review document.
 

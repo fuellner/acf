@@ -17,13 +17,13 @@ Resolve:
 
 Read every unique match. Apply the evidence rules below to each coverage report on its own. Cite the file that supports each coverage state.
 
-## Test plans and verify reports
+## Test plans and coverage reports
 
 Paths: `docs/tests/TEST-<source-id>-plan.md` and `docs/tests/TEST-<source-id>-coverage.md`. When a reviewed task's Source is a REQ-ID, those two filenames for that REQ-ID are paths as well.
 
-A test plan describes intended coverage, not implemented tests. A verify report describes statically inspected tests. Neither proves that tests ran successfully.
+A test plan describes intended coverage, not implemented tests. A coverage report describes statically inspected tests. Neither proves that tests ran successfully.
 
-Before using a verify report, validate its `Verified inputs` table:
+Before using a coverage report, validate its `Verified inputs` table:
 
 - Each repository-relative path must exist.
 - Its SHA-256 must match the raw file contents in the reviewed revision or working tree, as appropriate.
@@ -37,8 +37,8 @@ Missing metadata, unavailable inputs, changed hashes, or an AC source that canno
 
 A `Check` is the concrete verification statement of an acceptance criterion (defined by `f-requirements`; mapped to tests by `f-testing`). State test coverage as `covered`, `missing`, or `unverified`:
 
-- `covered` from a current verify report with a concrete matching test reference, or focused inspection of a test and its identifiable assertion that satisfies the Check in the reviewed revision or working tree.
-- `missing` from a current verify report that documents the gap, or direct evidence from the diff and focused inspection of relevant tests. Cite the Check, the evidence, and the inspected scope; for a deleted required test, check for a replacement. A test absent from the diff or a filename search alone does not establish a gap. A plan alone is never evidence of implemented or missing tests.
+- `covered` from a current coverage report with a concrete matching test reference. Alternatively, `covered` from focused inspection of a test and its identifiable assertion that satisfies the Check in the reviewed revision or working tree.
+- `missing` from a current coverage report that documents the gap, or direct evidence from the diff and focused inspection of relevant tests. Cite the Check, the evidence, and the inspected scope; for a deleted required test, check for a replacement. A test absent from the diff or a filename search alone does not establish a gap. A plan alone is never evidence of implemented or missing tests.
 - `unverified` when neither a current report nor focused inspection establishes coverage or a concrete gap; disclose any inspection limits.
 
 Rules:

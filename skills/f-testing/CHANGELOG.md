@@ -4,6 +4,7 @@
 - The `f-refactor` integration is removed: no `REF-` source-id and no safety-net or step rule. Characterization still applies when the source asks to lock current behavior.
 - The evals no longer mention a `REF` id.
 - Untrusted input is stated explicitly.
+- The source-id rule is a list, passive update rules use active voice, and `verify report` is renamed to `coverage report`.
 
 ## 2026-10-30
 - Every generate run writes `docs/tests/TEST-<source-id>-plan.md` and every verify run writes `docs/tests/TEST-<source-id>-coverage.md`. Workflow step 5 is a mandatory filesystem write, then a read-back that the file exists and contains Source, Mode, and Revision. The final report states that path. A chat-only plan or report does not finish the run, including when the user asks only to see the plan or asks not to save a file.
