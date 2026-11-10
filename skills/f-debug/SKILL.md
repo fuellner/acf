@@ -109,11 +109,11 @@ Read the templates before generating output. Keep generated reports concise.
 
 ## Workflow overview
 
-End every response with this short overview:
+End every response with this short overview. Fill the next prompt with the IDs from this run.
 
 - **Cycle:** `f-requirements` → `f-tasks` → `f-testing` → `f-implement` → `f-code-review`
 - **Now:** Debug (side branch): the root cause and fix proposal are ready.
-- **Next:** `f-implement` with the fix prompt, or `f-tasks` when the finding needs its own task.
+- **Next:** `f-implement` when a fix is proposed — `Use f-implement on <TASK-ID> and apply the fix prompt.`
 
 ## Before you finish
 

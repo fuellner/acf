@@ -2,6 +2,7 @@
 
 ## 2026-11-10
 - Each response ends with a workflow overview: the cycle steps, the current step, and the next step.
+- The workflow overview prints a ready-to-paste prompt for the next step.
 - The `f-refactor` unit rule is removed. Production logs are still not read, and secrets or customer data are not copied into the report.
 - A fix prompt is required whenever a fix is proposed.
 - The template summary lists the report headings in template order, and the output language is stated as English.

@@ -2,6 +2,7 @@
 
 ## 2026-11-10
 - Each response ends with a workflow overview: the cycle steps, the current step, and the next step.
+- The workflow overview prints a ready-to-paste prompt for the next step.
 - The `f-refactor` integration is removed: no `REF-` source-id and no safety-net or step rule. Characterization still applies when the source asks to lock current behavior.
 - The evals no longer mention a `REF` id.
 - Untrusted input is stated explicitly.

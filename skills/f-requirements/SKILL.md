@@ -95,11 +95,11 @@ Write all output under `docs/requirements/` in the target repository.
 
 ## Workflow overview
 
-End every response with this short overview:
+End every response with this short overview. Fill the next prompt with the IDs from this run.
 
 - **Cycle:** `f-requirements` → `f-tasks` → `f-testing` → `f-implement` → `f-code-review`
 - **Now:** Requirements: the REQ document was created or updated.
-- **Next:** `f-tasks` to break the requirement into tasks, or a human review of the REQ.
+- **Next:** `f-tasks` — `Use f-tasks on <REQ-ID>.`
 
 ## Before you finish
 

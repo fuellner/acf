@@ -2,6 +2,7 @@
 
 ## 2026-11-10
 - Each response ends with a workflow overview: the cycle steps, the current step, and the next step.
+- The workflow overview prints a ready-to-paste prompt for the next step.
 - The `f-refactor` step-phase handoff is removed: no step-phase gate, no refactor handoff prompt, and no step-phase mode or constraints.
 - Task selection checks all exact-ID matches so an index hint cannot hide duplicate task files.
 - Commit, push, staging, and git identity changes are allowed only on explicit user request; otherwise the skill asks.
