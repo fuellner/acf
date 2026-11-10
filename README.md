@@ -1,12 +1,12 @@
 # agentic coding flow
 
-[![skills](https://img.shields.io/badge/skills-10-blue)](#-skills)
+[![skills](https://img.shields.io/badge/skills-9-blue)](#-skills)
 [![runtime](https://img.shields.io/badge/runtime-none-informational)](#-quality)
 [![agents](https://img.shields.io/badge/agents-OpenCode%20%7C%20Claude--compatible-8A2BE2)](#-install)
 
 > A collection of reusable coding-agent skills that turn an ad-hoc chat into a disciplined
-> feature cycle: requirements → tasks → tests → implementation → review, with debugging,
-> docs, and refactor lanes around it.
+> feature cycle: requirements → tasks → tests → implementation → review, with debugging
+> and docs lanes around it.
 
 The skills are plain Markdown instruction sets. They run in any agent harness that reads
 `SKILL.md` files — OpenCode or a Claude-compatible setup.
@@ -66,21 +66,12 @@ flowchart LR
     C -->|"ready for review"| H["✋ human reviews<br>and commits"]
 
     F["f-workflow — skill menu"] -.->|"starts step"| R
-
-    RF["🚚 f-refactor —<br>PHP migration / structural refactor"] -.->|"reuses"| T
-    RF -.-> E
-    RF -.-> I
-    RF -.-> C
-    RF -.-> D
 ```
 
 - **Sidecars** (not steps of the cycle): `f-docs` for project documentation,
   `f-feature-summary` for product-owner feature overviews.
 - **Debugging** (`f-debug`) is the side branch when something fails — findings feed
   back into the normal steps.
-- **Refactoring** (`f-refactor`) is a separate workflow with its own phase menu. It
-  reuses `f-tasks`, `f-testing`, `f-implement`, `f-code-review`, `f-debug`, and
-  `f-docs`, and hands each step's code change to `f-implement`.
 - `f-workflow` is the entry point with the menu and ready-to-paste prompts for
   every step.
 
@@ -91,14 +82,13 @@ flowchart LR
 | Skill | Role | Writes to |
 |-------|------|-----------|
 | `f-requirements` | Turn free text, tickets, or notes into requirement documents with strict, checkable acceptance criteria (Given/When/Then + Check + Must-not). | `docs/requirements/` |
-| `f-tasks` | Break requirements, review findings, or refactor plans into agent-sized tasks with complexity, priority, dependencies, and parallel groups. | `docs/tasks/` |
+| `f-tasks` | Break requirements or review findings into agent-sized tasks with complexity, priority, dependencies, and parallel groups. | `docs/tasks/` |
 | `f-testing` | Derive test plans from the Check statements of acceptance criteria, or verify existing coverage. Characterization tests lock current behavior. | `docs/tests/` |
 | `f-implement` | Implement exactly one task on a dev branch (TDD or direct mode). No commit, no push. | `docs/implement/` |
 | `f-code-review` | Review a diff against the acceptance criteria plus security, performance, and side effects; deliver a ready-to-use fix prompt. | `docs/reviews/` |
 | `f-debug` | Structured, evidence-based debugging: reproduce → isolate root cause → minimal fix proposal. Does not implement the fix. | `docs/debug/` |
 | `f-docs` | Create or refresh README, architecture, conventions, and decisions from repository analysis. Writes `AGENTS.md` only when none exists and you agree. | README, `docs/architecture.md`, `docs/conventions/`, `docs/decisions/` |
 | `f-feature-summary` | Turn implemented business logic into scannable feature documents (individual units plus overall overview). | `docs/features/` |
-| `f-refactor` | Own phase menu for behavior-preserving PHP migrations (primary) or structural refactors — status lives in `docs/refactor/`. | `docs/refactor/` |
 | `f-workflow` | Ordered menu of everything above with copy-paste prompt templates. Pure navigation. | — |
 
 Each skill follows one shape:
@@ -108,6 +98,7 @@ skills/<name>/
   SKILL.md        # YAML frontmatter (name, description) + behavior
   templates/      # artifacts written into the target repo
   references/     # detail knowledge, loaded on demand
+  evals/          # optional grading fixtures (f-docs, f-testing)
   CHANGELOG.md
 ```
 
@@ -155,9 +146,10 @@ acf/
   docs/               # internal artifacts (e.g. review reports), untracked by design
 ```
 
-Every artifact a skill produces lands under `docs/` in the *target* repository
+Most artifacts a skill produces land under `docs/` in the *target* repository
 (`requirements/`, `tasks/`, `tests/`, `implement/`, `reviews/`, `debug/`,
-`features/`, `refactor/`, `conventions/`, `decisions/`) — never in this one.
+`features/`, `conventions/`, `decisions/`) — never in this one. `f-docs` also
+writes the target's root `README.md` and, with your agreement, `AGENTS.md`.
 `skills/<name>/templates/` is the single source of truth for those artifacts.
 
 ---
@@ -184,5 +176,3 @@ Every artifact a skill produces lands under `docs/` in the *target* repository
 ## 🔗 Further reading
 
 - [AGENTS.md](AGENTS.md) — the template master, including the exact memory format
-- [f-refactor workflow](skills/f-refactor/references/workflow.md) — phases, artifacts, status handoffs
-- [f-refactor toolchain](skills/f-refactor/references/toolchain.md) — isolated PHP tooling, outside the application

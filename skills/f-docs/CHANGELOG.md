@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-10
+- The `docs/refactor/` index schema and its directory exceptions are removed from `references/directory-index.md`.
+- Untrusted input is stated explicitly.
+- The language rule covers `docs/conventions/`.
+- `templates/agents.md.tmpl` mirrors the updated `AGENTS.md` boundaries.
+
 ## 2026-11-01
 - `templates/agents.md.tmpl` and the repository root `AGENTS.md` are identical again: one Boundaries block, three Conventions bullets, a merged Subagents/Model section, and an inline memory format.
 - The memory section defines creation on first entry, read trigger, precedence, verification, limits, and commit policy.

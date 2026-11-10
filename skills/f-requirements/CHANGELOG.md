@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-10
+- Requirement updates check all exact-ID matches so an index hint cannot hide duplicate files.
+
 ## 2026-10-31
 - Strict-AC rules live only in `SKILL.md`; `references/strict-ac-examples.md` keeps pattern examples only, removing the duplicated (and already diverging) rules section.
 - Removed the duplicate `references/directory-index.md` instruction sentences; the References listing, the workflow step, and the self-check remain.

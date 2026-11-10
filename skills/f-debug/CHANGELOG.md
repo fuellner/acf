@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-10
+- The `f-refactor` unit rule is removed. Production logs are still not read, and secrets or customer data are not copied into the report.
+- A fix prompt is required whenever a fix is proposed.
+- The template summary lists the report headings in template order, and the output language is stated as English.
+
 ## 2026-10-27
 - A named failing test or replayable command counts as reproduction. The skill stops only when neither a reproduction nor concrete evidence is present.
 - The fix is proposed, not applied. A test or reproduction command runs only in an isolated test environment; otherwise the skill asks first.

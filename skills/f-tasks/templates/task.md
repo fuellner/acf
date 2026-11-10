@@ -4,8 +4,9 @@
 **Ticket**: {{TICKET}}  
 **Priority**: {{PRIORITY}}  
 **Complexity**: {{COMPLEXITY}}  
-**Model recommendation**: {{MODEL (tier + reasoning level)}}  
+**Model recommendation**: {{MODEL (mechanical | bounded | complex + reasoning level)}}  
 **Dependencies**: {{DEPENDENCIES}}  
+**Mode**: {{MODE (tdd | direct)}}  
 **Status**: todo  
 **Created**: {{CREATED}}  
 **Updated**: {{UPDATED}}

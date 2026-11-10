@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-10
+- The `f-refactor` plan source and its step-to-task rules are removed. Tasks come from requirements, ad-hoc descriptions, or review findings.
+- Untrusted input is stated explicitly.
+- The task template has an optional `**Mode**` line, and the complexity table uses the `mechanical`/`bounded`/`complex` tiers from `AGENTS.md`.
+- Task selection checks all exact-ID matches so an index hint cannot hide duplicate task files.
+
 ## 2026-10-28
 - Optional **Ticket** line on the task template. It is copied only when the source already contains one ticket key (2–10 characters, starting with an uppercase letter, then a hyphen and a number). Workflow IDs and common non-ticket prefixes are not tickets. No tracker is called and no key is invented. Tasks without the line stay valid.
 - A refactor or migration task still belongs to the `f-refactor` step phase. That phase may hand the code change to `f-implement`. The task tells `f-implement` not to take the work outside that phase.

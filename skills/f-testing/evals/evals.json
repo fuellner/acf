@@ -51,12 +51,12 @@
       "id": 3,
       "name": "plan-file-for-free-text-without-id",
       "prompt": "Show me a test plan for the profile name form. The checks below are the only source.\n\nAC-1\nGiven a signed-in user and an empty profile form\nWhen the user submits an empty name\nThen the form shows the text \"Name is required\" and the profile store has no new row\nCheck: the response or DOM contains \"Name is required\" and the profile store has no new row\nMust not: create a profile row\n\nAC-2\nGiven a signed-in user and an empty profile form\nWhen the user submits the name \"Ada\"\nThen the profile store has one row for \"Ada\" and the response includes an id\nCheck: response field id is present and the store has one row for \"Ada\"\nMust not: store a second row for the same user",
-      "expected_output": "With no REQ, TASK, or REF id in the source, the plan file is docs/tests/TEST-TEXT-001-plan.md when the target repository has no earlier TEXT plan. The reply names that path.",
+      "expected_output": "With no REQ or TASK id in the source, the plan file is docs/tests/TEST-TEXT-001-plan.md when the target repository has no earlier TEXT plan. The reply names that path.",
       "files": [],
       "assertions": [
         {
           "kind": "structure",
-          "text": "In a target repository that has no docs/tests/TEST-TEXT-*.md yet, the plan file is docs/tests/TEST-TEXT-001-plan.md and it is non-empty. The reply states that path. No REQ, TASK, or REF id was invented for the filename. A chat-only plan fails."
+          "text": "In a target repository that has no docs/tests/TEST-TEXT-*.md yet, the plan file is docs/tests/TEST-TEXT-001-plan.md and it is non-empty. The reply states that path. No REQ or TASK id was invented for the filename. A chat-only plan fails."
         },
         {
           "kind": "structure",

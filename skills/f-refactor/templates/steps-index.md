@@ -1,5 +1,0 @@
-# Steps
-
-| Document | Description |
-|----------|-------------|
-{{ROWS}}

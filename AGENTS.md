@@ -13,7 +13,9 @@ Short index for humans and agents. Hard rules live here. Load a linked file only
 - Ask first before adding a new dependency.
 - Ask first before changing authentication, permissions, or access control.
 - Never modify the remote repository (no push, no force-push, no direct remote changes of any kind).
-- Never modify any database (no schema changes, no migrations, no data changes, no queries that alter state).
+- Never commit, push, stage, or change the git identity without explicit user approval.
+- Never touch a production or shared database. Ask before any schema change, migration, backfill, or data change; run such work only against an isolated test database.
+- No production access: no production shell, database, logs, or deploy.
 - Never call external APIs or services unless the task explicitly requires it.
 - Never log, store, transmit, or include personal data (or any data that could identify a person) in context, logs, or output.
 - Never commit `.env` files or any secrets.

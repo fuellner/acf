@@ -59,13 +59,14 @@ Follow these phases in order. Complete each before moving to the next. Stop and 
   - This skill = analysis + proposal.
   - Implementing agent = applies the fix and runs verification.
   - f-code-review = later review of the resulting change.
-- When the failure is inside an `f-refactor` unit, the proposed fix stays inside that unit's Type. A migration break is not a reason to redesign or to bump a version. Do not read production logs yourself. Do not copy secrets or customer data into the report.
+- Do not read production logs yourself. Do not copy secrets or customer data into the report.
+- Language: English.
 
 ## Output
 
 Produce a Debug Report using the template at `templates/debug-report.md`.
 
-Optionally (and by default when a fix is proposed) also produce a short Fix Prompt using `templates/fix-prompt.md`. The Fix Prompt is written for the implementing agent and should be copy-paste ready. Findings in the fix prompt use the severity scale Critical / High / Medium / Low (the same scale as `f-code-review`); a complete analysis typically has one finding, for its isolated root cause.
+When a fix is proposed, also produce a short Fix Prompt using `templates/fix-prompt.md`. The Fix Prompt is written for the implementing agent and should be copy-paste ready. Findings in the fix prompt use the severity scale Critical / High / Medium / Low (the same scale as `f-code-review`); a complete analysis typically has one finding, for its isolated root cause.
 
 Save the report under `docs/debug/<unit>-debug.md`, including when the failure originated from a review finding. The unit key is the Task ID when one is known (`TASK-042`), otherwise `<unit>` from the originating review file `docs/reviews/<unit>-review.md`, otherwise the Requirement ID, otherwise a short slug of the failure. When a fix is proposed, also save the fix prompt from `templates/fix-prompt.md` to `docs/debug/<unit>-fix-prompt.md`. Do not put the prompt inside the report and do not use a different unit key for it. Create `docs/debug/` only if needed. On an explicit re-analysis of the same unit, overwrite those same files, increment `Revision`, and update `**Updated**` inside the report; do not add version suffixes — Git is the history. If this analysis proposes no fix, do not write a prompt file, and remove a stale `<unit>-fix-prompt.md` from an earlier revision. Do not write the report or prompt into `docs/reviews/`.
 
@@ -81,7 +82,7 @@ Follow `references/directory-index.md` whenever saving documentation under `docs
 
 ## Templates and References
 
-- `templates/debug-report.md` — structured report (Metadata, Reproduction, Problem, Evidence, Root Cause, Proposed Fix, Verification, Notes).
+- `templates/debug-report.md` — structured report (Problem, Reproduction, Evidence, Root Cause, Proposed Fix, Verification, Notes).
 - `templates/fix-prompt.md` — short, focused prompt for the implementing agent.
 - `references/debugging-notes.md` — optional lightweight heuristics (load only if the failure type is unusual).
 - `references/directory-index.md` — shared `index.md` rules. Follow it when saving documentation.

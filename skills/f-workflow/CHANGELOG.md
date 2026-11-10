@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-10
+- The `f-refactor` handoff, menu section, prompt template, and related rules are removed. The menu has Core and Optional sections only.
+- `f-debug` is listed as a side branch, not as core step 6.
+
 ## 2026-11-01
 - The `f-legal` menu line and prompt are removed; the optional section lists `f-docs` and `f-feature-summary`.
 

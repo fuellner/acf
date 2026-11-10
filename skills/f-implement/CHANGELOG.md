@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-10
+- The `f-refactor` step-phase handoff is removed: no step-phase gate, no refactor handoff prompt, and no step-phase mode or constraints.
+- Task selection checks all exact-ID matches so an index hint cannot hide duplicate task files.
+
 ## 2026-10-28
 - A **Ticket** line is used as written. A ticket-shaped key found only in the title or body is shown and confirmed once. Common non-ticket prefixes are ignored. The project part is 2–10 characters and starts with a letter.
 - Identity is read with `git var GIT_AUTHOR_IDENT` and `git var GIT_COMMITTER_IDENT`. On a public forge, an address that is neither a public mailbox nor that forge's noreply domain is asked once. The identity is never written.
