@@ -1,6 +1,6 @@
 ---
 name: f-docs
-description: Creates or updates project documentation (README, architecture, conventions, decisions) based on repository analysis. Writes AGENTS.md only when none exists and the user agrees; never modifies an existing AGENTS.md. Use when the user wants documentation generated or refreshed for a repository. Do not use for legal content, memory files, or non-documentation tasks.
+description: Creates or updates project documentation (README, architecture, conventions, decisions) based on repository analysis. Writes AGENTS.md only when none exists and the user agrees; never modifies an existing AGENTS.md. Use when the user wants documentation generated or refreshed for a repository. Do not use for legal content or non-documentation tasks.
 ---
 
 # f-docs
@@ -22,8 +22,6 @@ Lightweight, agent-agnostic documentation skill. Analyzes a repository and creat
 - If it has none, ask once whether to write one. Write it only after an explicit yes. A decline or no answer yet means it stays absent. Continue with the other documents either way.
 
 `docs/legal/` is out of scope. This skill never creates, fills, or updates it.
-
-This skill does not create or fill `MEMORY.md`, `LEARNINGS.md`, or `ERRORS.md`. Those files grow during later work. There is no initial-fill pass.
 
 Templates live in this skill directory and are copied only when the individual target file does not exist. Existing target files are maintained and supplemented, including on the first skill invocation. Templates in the skill directory remain untouched.
 
@@ -84,5 +82,5 @@ All templates are located in `templates/` relative to this skill:
 - Newly generated files other than that copy have no template markers or unfilled placeholders. Authored content in pre-existing files is preserved.
 - Links created or updated in `README.md` resolve. Any unresolved pre-existing links or proposed policy changes are reported without deleting authored content. The `AGENTS.md` link is omitted when that file does not exist.
 - README references to documentation in `docs/` subdirectories target the corresponding `index.md`; standalone files directly under `docs/` are linked directly. No individual subdirectory documents or bare directory paths remain as README documentation links.
-- No rule contradicts the detected stack, and no `docs/legal/` content, implementation log, or memory file was written.
+- No rule contradicts the detected stack, and no `docs/legal/` content or implementation log was written.
 - Every affected documentation directory and parent below `docs/` has an up-to-date `index.md` per `references/directory-index.md`; entries match existing contents and all generated links resolve. `docs/legal/` remains excluded.

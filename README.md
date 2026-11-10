@@ -104,29 +104,16 @@ skills/<name>/
 
 ---
 
-## 🧠 AGENTS.md & project memory templates
+## 🧠 AGENTS.md template
 
-The repository root carries four copy-templates for target projects:
+The repository root carries a copy-template for target projects:
 
 | File | Purpose |
 |------|---------|
-| `AGENTS.md` | Hard rules: conventions, boundaries, subagent delegation with model/reasoning tiers, and the memory contract. |
-| `MEMORY.md` | Stable, verified facts. Max ~50, one dated bullet each. |
-| `LEARNINGS.md` | New, unconfirmed observations (max ~10); get promoted to `MEMORY.md`/`ERRORS.md` or removed. |
-| `ERRORS.md` | Recurring failures with symptom, cause, fix, and first/last seen dates. |
+| `AGENTS.md` | Hard rules: conventions, boundaries, and subagent delegation with model/reasoning tiers. |
 
-How it plays out in a target project:
-
-- The agent **creates** a missing memory file the moment it has the first real entry —
-  no manual copy into new repos is strictly required.
-- Facts enter `MEMORY.md` only after verification (command run, test passed, or
-  authoritative file read); the date is the verification date.
-- **Code, README, and docs always outlast memory.** On conflict, the agent verifies
-  and corrects the memory entry instead of following it.
-- `MEMORY.md` and `ERRORS.md` stay in version control; agents add `LEARNINGS.md` to
-  the project's `.gitignore`.
-- When a target project has no `AGENTS.md` and you agree, `f-docs` writes one as
-  a byte-exact copy of `skills/f-docs/templates/agents.md.tmpl`.
+When a target project has no `AGENTS.md` and you agree, `f-docs` writes one as
+a byte-exact copy of `skills/f-docs/templates/agents.md.tmpl`.
 
 ---
 
@@ -135,7 +122,6 @@ How it plays out in a target project:
 ```text
 acf/
   AGENTS.md           # template master — the active ruleset for target projects
-  MEMORY.md / LEARNINGS.md / ERRORS.md   # memory template set (see above)
   README.md
   skills/
     f-*/
@@ -175,4 +161,4 @@ writes the target's root `README.md` and, with your agreement, `AGENTS.md`.
 
 ## 🔗 Further reading
 
-- [AGENTS.md](AGENTS.md) — the template master, including the exact memory format
+- [AGENTS.md](AGENTS.md) — the template master
