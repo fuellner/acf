@@ -117,11 +117,11 @@ Follow `references/directory-index.md` whenever creating or updating documentati
 
 ## Workflow overview
 
-End every response with this short overview:
+End every response with this short overview. Fill the next prompt with the IDs from this run.
 
 - **Cycle:** `f-requirements` → `f-tasks` → `f-testing` → `f-implement` → `f-code-review`
 - **Now:** Implementation: the task sits on its dev branch, uncommitted.
-- **Next:** `f-testing` in verify mode, then `f-code-review`.
+- **Next:** `f-testing` — `Use f-testing in verify mode on <TASK-ID>.`
 
 ## Before you finish
 

@@ -2,6 +2,7 @@
 
 ## 2026-11-10
 - Each response ends with a workflow overview: the cycle steps, the current step, and the next step.
+- The workflow overview prints a ready-to-paste prompt for the next step.
 - The `f-refactor` integration is removed: no behavior-preservation stage and no refactor-step status propagation.
 - Output language is stated as English.
 - The skill does not fetch URLs, issues, tickets, or PRs unless the user explicitly asks for it.

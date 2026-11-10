@@ -191,11 +191,11 @@ Follow `references/directory-index.md` whenever writing a report, fix note, task
 
 ## Workflow overview
 
-End every response with this short overview:
+End every response with this short overview. Fill the next prompt with the IDs from this run.
 
 - **Cycle:** `f-requirements` → `f-tasks` → `f-testing` → `f-implement` → `f-code-review`
 - **Now:** Review: the verdict and fix prompt are ready.
-- **Next:** `f-implement` for each fix, or the human commit when the verdict is APPROVED.
+- **Next:** `f-implement` for each fix — `Use f-implement on <TASK-ID> and apply the fix prompt.` On APPROVED, the human commits.
 
 ## Before you finish
 

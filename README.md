@@ -76,7 +76,8 @@ flowchart LR
 - `f-workflow` is the entry point with the menu and ready-to-paste prompts for
   every step.
 - Every skill ends its response with a short workflow overview: the cycle steps, the
-  current step, and the next step.
+  current step, and the next step. When the next step is fixed, it includes a
+  ready-to-paste prompt.
 
 ---
 

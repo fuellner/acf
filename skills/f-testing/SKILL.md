@@ -143,11 +143,12 @@ Follow `references/directory-index.md` whenever creating or updating documentati
 
 ## Workflow overview
 
-End every response with this short overview:
+End every response with this short overview. Fill the next prompt with the IDs from this run.
 
 - **Cycle:** `f-requirements` → `f-tasks` → `f-testing` → `f-implement` → `f-code-review`
 - **Now:** Testing: the test plan or coverage report was written.
-- **Next:** `f-implement` after a test plan; `f-code-review` after a coverage report.
+- **Next (generate):** `f-implement` — `Use f-implement on <TASK-ID>.`
+- **Next (verify):** `f-code-review` — `Use f-code-review on the uncommitted changes for <TASK-ID>.`
 
 ## Before you finish
 
